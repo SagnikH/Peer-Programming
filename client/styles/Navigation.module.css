@@ -8,7 +8,28 @@
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
+.navbrand{
+    text-decoration: none;
+    color: white;
+    font-size: 30px;
+    font-family: 'Carattere', cursive;
+}
+
+.navbrand:hover{
+    color: #ff7d19;
+}
+
 .navIcon{
     background-color: #edc4ff;
     border-radius: 50%;
+}
+
+.navlink{
+    text-decoration: none;
+    margin: 0 10px 0 10px;
+    color: white;
+}
+
+.navlink:hover{
+    color: #ff7d19;
 }

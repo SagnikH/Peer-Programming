@@ -1,17 +1,24 @@
 import { Navbar, NavItem, NavDropdown, MenuItem, Nav, Container } from 'react-bootstrap';
 import styles from '../styles/Navigation.module.css'
+import {useSelector} from 'react-redux';
+import {handleAuth} from '../store/authSlice';
+import Link from 'next/Link'
 
 const Navigation = () => {
+    const isLoggedIn = useSelector(handleAuth);
+    const redirect = isLoggedIn ? '/dashboard' : '/signin'
     return (  
         <Navbar className={styles.navbar} expand="lg">
             <Container >
-                <Navbar.Brand className='text-light' href="#home">Apes-collab</Navbar.Brand>
+                <Link  href="/">
+                    <a className={styles.navbrand}>Apes-Collab</a>
+                </Link>
                 <Navbar.Toggle className={styles.navIcon} aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse className='navbar-light' id="basic-navbar-nav">
                 <div className = {styles.navlinks}>
                     <Nav className="me-auto">
-                        <Nav.Link className='text-light' href="#home">Sign In</Nav.Link>
-                        <Nav.Link className='text-light' href="#link">Dashboard</Nav.Link>
+                        <Link  href="/signin"><a className={styles.navlink}>Sign In</a></Link>
+                        <Link href={redirect}><a className={styles.navlink}>Dashboard</a></Link>
                     </Nav>
                 </div>
                 </Navbar.Collapse>
