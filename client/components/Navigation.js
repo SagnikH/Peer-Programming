@@ -2,7 +2,10 @@ import { Navbar, NavItem, NavDropdown, MenuItem, Nav, Container } from 'react-bo
 import styles from '../styles/Navigation.module.css'
 import {useSelector} from 'react-redux';
 import {handleAuth} from '../store/authSlice';
-import Link from 'next/Link'
+import Link from 'next/Link';
+import Image from 'next/image';
+
+// <a className={styles.navbrand}>Apes-Collab</a>
 
 const Navigation = () => {
     const isLoggedIn = useSelector(handleAuth);
@@ -11,7 +14,7 @@ const Navigation = () => {
         <Navbar className={styles.navbar} expand="lg">
             <Container >
                 <Link  href="/">
-                    <a className={styles.navbrand}>Apes-Collab</a>
+                    <Image className={styles.navbrand} src='/favicon.png' width='60' height='60' />
                 </Link>
                 <Navbar.Toggle className={styles.navIcon} aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse className='navbar-light' id="basic-navbar-nav">
