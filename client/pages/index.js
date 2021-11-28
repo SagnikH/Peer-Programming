@@ -41,7 +41,11 @@ const Home = () => {
 						with your peers and friends, in real-time. So what are you waiting
 						for? Let's dive in.
 					</div>
-					<Button className={styles.button}>Sign In</Button>
+					<div className={styles.button}>
+						<a href="http://localhost:4000/auth/google">
+							<div className={styles.navlink}>Sign In</div>
+						</a>
+					</div>
 				</div>
 			</div>
 		</>
