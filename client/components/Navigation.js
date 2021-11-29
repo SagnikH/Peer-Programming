@@ -13,22 +13,20 @@ const Navigation = () => {
         <Navbar className={styles.navbar} expand="lg">
             <Container >
                 <Link  href="/">
-                    <Image className={styles.navbrand} src='/favicon.png' width='60' height='60' />
+                    <a><Image className={styles.navbrand} src='/favicon.png' width='60' height='60' /></a>
                 </Link>
                 <Navbar.Toggle className={styles.navIcon} aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse className='navbar-light' id="basic-navbar-nav">
                 <div className = {styles.navlinks}>
-					<Nav className="me-auto">
-						<Nav.Link href="http://localhost:4000/auth/google">
-							<div className={styles.navlink}>Sign In</div>
-						</Nav.Link>
-						<Nav.Link href="http://localhost:4000/auth/logout">
-							<div className={styles.navlink}>Log Out</div>
-						</Nav.Link>
-						<Link href="/dashboard">
-							<div className={styles.navlink}>Dashboard</div>
-						</Link>
-					</Nav>
+                    <Nav.Link className="px-0" href="http://localhost:4000/auth/google">
+                        <div className={styles.navlink}>Sign In</div>
+                    </Nav.Link>
+                    <Nav.Link className="px-0" href="http://localhost:4000/auth/logout">
+                        <div className={styles.navlink}>Log Out</div>
+                    </Nav.Link>
+                    <Link href="/dashboard">
+                        <div className={styles.navlink}>Dashboard</div>
+                    </Link>
                 </div>
                 </Navbar.Collapse>
             </Container>

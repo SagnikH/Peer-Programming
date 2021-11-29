@@ -1,5 +1,7 @@
 .navlinks{
     margin-left: auto;
+    display: flex;
+    align-items: center;
 }
 
 .navbar{
@@ -27,9 +29,11 @@
 }
 
 .navlink{
-    text-decoration: none;
-    margin: 0 10px 0 10px;
     color: white;
+    height: 26px;
+    font-size: 18px;
+    margin: 0 15px 0 15px;
+    cursor: pointer;
 }
 
 .navlink:hover{

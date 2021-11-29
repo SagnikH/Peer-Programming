@@ -5,22 +5,10 @@
   align-items: center; 
 }
 
-.cover{
-  background-color: rgba(0, 0, 0, 0.19);
-  border-radius: 50px;
-  box-shadow: 5px 5px 12px 5px rgba(0, 0, 0, 0.2), 0 10px 25px 10px rgba(0, 0, 0, 0.19);
-  display: block;
-  margin-top: 20px;
-}
-
-.coverImg{
-  border-radius: 50px;
-}
 
 .contents{
   height: 500px;
   width: 600px;
-  /*background-color: grey;*/
   padding: 30px;
   display: flex;
   flex-direction: column;
@@ -47,11 +35,18 @@
 }
 
 .button{
+  text-decoration: none;
+  padding: 6px;
   width: 200px;
   margin: 30px;
+  border-radius: 8px;
+  display: block;
+  text-align: center;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   background-color: #4c3b4d;
   border: none;
+  color: white;
+  
 }
 .button:hover{
   background-color: #511957;
