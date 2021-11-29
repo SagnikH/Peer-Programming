@@ -2,10 +2,14 @@ import Head from "next/head";
 import Image from "next/image";
 import { useEffect } from "react";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { login, logout } from "../store/authSlice";
 import styles from "../styles/Home.module.css";
 import { Button } from "react-bootstrap";
 
 const Home = () => {
+	const dispatch = useDispatch();
+
 	useEffect(async () => {
 		try {
 			const res = await axios.get("http://localhost:4000/profile", {
@@ -13,6 +17,7 @@ const Home = () => {
 			});
 			//we get the user here, update the state now with user info and set authenticated flag
 			if (res) console.log(res);
+			dispatch(login());
 		} catch (e) {
 			//clear user state and unset authenticated flag
 			console.log(e.response.status);

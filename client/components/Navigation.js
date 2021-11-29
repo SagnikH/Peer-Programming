@@ -8,10 +8,12 @@ import {
 } from "react-bootstrap";
 import styles from "../styles/Navigation.module.css";
 import { useSelector } from "react-redux";
-import { handleAuth } from "../store/authSlice";
 import Link from "next/Link";
 
 const Navigation = () => {
+	const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+	console.log(isLoggedIn);
+
 	return (
 		<Navbar className={styles.navbar} expand="lg">
 			<Container>
@@ -25,14 +27,23 @@ const Navigation = () => {
 				<Navbar.Collapse className="navbar-light" id="basic-navbar-nav">
 					<div className={styles.navlinks}>
 						<Nav className="me-auto">
-							<Nav.Link href="http://localhost:4000/auth/google">
-								<div className={styles.navlink}>Sign In</div>
-							</Nav.Link>
-							<Nav.Link href="http://localhost:4000/auth/logout">
-								<div className={styles.navlink}>Log Out</div>
-							</Nav.Link>
-							<Link href="/dashboard">
-								<div className={styles.navlink}>Dashboard</div>
+							{isLoggedIn ? (
+								<Link
+									className={styles.navlink}
+									href="http://localhost:4000/auth/logout"
+								>
+									Log Out
+								</Link>
+							) : (
+								<Link
+									className={styles.navlink}
+									href="http://localhost:4000/auth/google"
+								>
+									Sign In
+								</Link>
+							)}
+							<Link className={styles.navlink} href="/dashboard">
+								Dashboard
 							</Link>
 						</Nav>
 					</div>
