@@ -5,7 +5,6 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { login, logout } from "../store/authSlice";
 import styles from "../styles/Home.module.css";
-import { Button } from "react-bootstrap";
 
 const Home = () => {
 	const dispatch = useDispatch();
