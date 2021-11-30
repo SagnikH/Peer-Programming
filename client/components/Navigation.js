@@ -21,9 +21,6 @@ const Navigation = () => {
                     <Nav.Link className="px-0" href="http://localhost:4000/auth/google">
                         <div className={styles.navlink}>Sign In</div>
                     </Nav.Link>
-                    <Nav.Link className="px-0" href="http://localhost:4000/auth/logout">
-                        <div className={styles.navlink}>Log Out</div>
-                    </Nav.Link>
                     <Link href="/dashboard">
                         <div className={styles.navlink}>Dashboard</div>
                     </Link>
