@@ -11,8 +11,8 @@ import { useSelector } from "react-redux";
 import Link from "next/Link";
 
 const Navigation = () => {
-	const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-	console.log(isLoggedIn);
+	const token = useSelector((state) => state.auth.token);
+	// console.log(token);
 
 	return (
 		<Navbar className={styles.navbar} expand="lg">
@@ -27,7 +27,7 @@ const Navigation = () => {
 				<Navbar.Collapse className="navbar-light" id="basic-navbar-nav">
 					<div className={styles.navlinks}>
 						<Nav className="me-auto">
-							{isLoggedIn ? (
+							{token ? (
 								<Link
 									className={styles.navlink}
 									href="http://localhost:4000/auth/logout"

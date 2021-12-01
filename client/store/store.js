@@ -1,8 +1,19 @@
 import { configureStore } from "@reduxjs/toolkit";
-import authReducer from "./authSlice";
+import authReducer from "./authTokenSlice";
+import userReducer from "./userSlice";
 
-export default configureStore({
+const store = configureStore({
 	reducer: {
 		auth: authReducer,
+		user: userReducer,
 	},
 });
+
+// const state = store.getState();
+// console.log(state);
+
+// store.subscribe(() => {
+// 	console.log("state changed");
+// });
+
+export default store;

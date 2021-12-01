@@ -1,8 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from "next/server";
+// import { useSelector } from "react-redux";
 
 export function middleware(req, ev) {
-    if(false){
-        return Response.redirect("/");
-    }
-  return NextResponse.next();
+	// const token = useSelector((state) => state.auth.token);
+
+	if (true) {
+		return NextResponse.next();
+	}
+	return Response.redirect("/");
 }

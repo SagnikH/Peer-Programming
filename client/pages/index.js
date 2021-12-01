@@ -1,26 +1,56 @@
 import Head from "next/head";
 import Image from "next/image";
 import { useEffect } from "react";
-import axios from "axios";
 import { useDispatch } from "react-redux";
-import { login, logout } from "../store/authSlice";
+import axios from "axios";
+import { addUser, removeUser } from "../store/userSlice";
+import { addToken, removeToken } from "../store/authTokenSlice";
 import styles from "../styles/Home.module.css";
 
 const Home = () => {
 	const dispatch = useDispatch();
 
-	useEffect(async () => {
-		try {
-			const res = await axios.get("http://localhost:4000/profile", {
-				withCredentials: true,
-			});
-			//we get the user here, update the state now with user info and set authenticated flag
-			if (res) console.log(res);
-			dispatch(login());
-		} catch (e) {
-			//clear user state and unset authenticated flag
-			console.log(e.response.status);
+	const handleStateChange = (res) => {
+		if (res) {
+			const user = res.data.user;
+			const { _id, email, name, googleID, picture } = user;
+			const userPayload = { _id, email, name, googleID, picture };
+			const TOKEN = JSON.stringify(userPayload); //for local storage
+			console.log(userPayload);
+
+			//adding user to user state in redux store
+			dispatch(addUser(userPayload));
+			dispatch(addToken(TOKEN));
+
+			//add user to local storage
+			localStorage.setItem("authUserInfo", TOKEN);
+		} else {
+			//clear user state and auth token
+			dispatch(removeToken());
+			dispatch(removeUser());
 		}
+	};
+
+	useEffect(() => {
+		let res = async () => {
+			try {
+				const userData = await axios.get("http://localhost:4000/profile", {
+					withCredentials: true,
+				});
+
+				return userData;
+			} catch (e) {
+				console.log(e);
+			}
+		};
+
+		res()
+			.then((now) => {
+				handleStateChange(now);
+			})
+			.catch((e) => {
+				console.log(e);
+			});
 	}, []);
 
 	return (
