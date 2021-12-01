@@ -1,8 +1,8 @@
-import Head from "next/Head";
 import Image from "next/image";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
+import Cookies from "js-cookie";
 import { addUser, removeUser } from "../store/userSlice";
 import { addToken, removeToken } from "../store/authTokenSlice";
 import styles from "../styles/Home.module.css";
@@ -33,12 +33,18 @@ const Home = () => {
 
 				//add user to local storage
 				localStorage.setItem("authUserInfo", TOKEN);
+
+				//add a cookie
+				Cookies.set("nextAuthCookie", TOKEN, { sameSite: "strict" });
 			} catch (e) {
-        // console.log(e.response.status);
+				// console.log(e.response.status);
 				dispatch(removeToken());
 				localStorage.removeItem("authUserInfo");
 				dispatch(removeUser());
 				console.log(e);
+
+				//remove cookie
+        Cookies.remove("nextAuthCookie");
 			}
 		})();
 	}, []);
