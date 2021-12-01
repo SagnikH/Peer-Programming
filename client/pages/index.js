@@ -1,16 +1,18 @@
-import Head from "next/head";
+import Head from "next/Head";
 import Image from "next/image";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { addUser, removeUser } from "../store/userSlice";
 import { addToken, removeToken } from "../store/authTokenSlice";
 import styles from "../styles/Home.module.css";
+import { Button, Form } from "react-bootstrap";
 
 const Home = () => {
 	const dispatch = useDispatch();
+	const isLoggedIn = useSelector((state) => state.auth.token);
 
-  //both login and logout is handled here as both the times we are redirected to this page
+	//both login and logout is handled here as both the times we are redirected to this page
 	useEffect(() => {
 		(async () => {
 			try {
@@ -33,26 +35,31 @@ const Home = () => {
 				localStorage.setItem("authUserInfo", TOKEN);
 			} catch (e) {
 				dispatch(removeToken());
-        localStorage.removeItem("authUserInfo");
+				localStorage.removeItem("authUserInfo");
 				dispatch(removeUser());
 				console.log(e);
 			}
 		})();
 	}, []);
 
+	const createLinkHandler = (e) => {
+		e.preventDefault();
+		if (!isLoggedIn) {
+			window.location.href = "http://localhost:4000/auth/google";
+		}
+	};
+	const joinLinkHandler = (e) => {
+		e.preventDefault();
+		if (!isLoggedIn) {
+			window.location.href = "http://localhost:4000/auth/google";
+		}
+	};
+
 	return (
 		<>
-			<Head>
-				<title>Apes collab</title>
-			</Head>
 			<div className={styles.homepage}>
-				<div className={styles.cover} height="400" width="400">
-					<Image
-						className={styles.coverImg}
-						src="/cover.jpeg"
-						height="400"
-						width="400"
-					/>
+				<div className="mt-3" height="500" width="500">
+					<Image src="/co-working.svg" height="500" width="500" />
 				</div>
 				<div className={styles.contents}>
 					<div className={styles.subHeading}>Think and Code Together, in</div>
@@ -62,10 +69,25 @@ const Home = () => {
 						with your peers and friends, in real-time. So what are you waiting
 						for? Let's dive in.
 					</div>
-					<div className={styles.button}>
-						<a href="http://localhost:4000/auth/google">
-							<div className={styles.navlink}>Sign In</div>
-						</a>
+					<div className="d-flex w-100 justify-content-around">
+						<Button className={styles.formButton} onClick={createLinkHandler}>
+							Create Link
+						</Button>
+
+						<Form className="d-flex">
+							<Form.Control
+								className={styles.formInput}
+								type="text"
+								placeholder="Enter link"
+							/>
+							<Button
+								className={styles.formButton}
+								type="submit"
+								onClick={joinLinkHandler}
+							>
+								Join Link
+							</Button>
+						</Form>
 					</div>
 				</div>
 			</div>
