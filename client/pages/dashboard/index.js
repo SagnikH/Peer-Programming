@@ -26,9 +26,9 @@ const dashboard = () => {
 				<div className={styles.userInfoSection}>
 					<div className={styles.heading}>User Information</div>
 					<div className={styles.userContents}>
+						
 						<Image
-							src="/../public/cover.jpeg"
-							alt="Image"
+							src="/favicon.png"
 							width="200"
 							height="200"
 							className={styles.userImage}
@@ -149,3 +149,24 @@ const dashboard = () => {
 };
 
 export default dashboard;
+
+
+/*
+<img
+	src="/favicon.png"
+	width="200"
+	height="200"
+	className={styles.userImage}
+></img>
+						*/
+
+/*
+<div className={styles.userImage}>
+
+</div>
+*/
+
+/* was giving me weird errors regarding webpack that I didn't understand.
+Then I installed npm module 'jest-worker'
+and now it's working fine. The webpack errors are not there anymore
+But the browser errors are still there*/
