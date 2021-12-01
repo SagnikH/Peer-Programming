@@ -10,6 +10,7 @@ import styles from "../styles/Home.module.css";
 const Home = () => {
 	const dispatch = useDispatch();
 
+  //both login and logout is handled here as both the times we are redirected to this page
 	useEffect(() => {
 		(async () => {
 			try {
@@ -32,6 +33,7 @@ const Home = () => {
 				localStorage.setItem("authUserInfo", TOKEN);
 			} catch (e) {
 				dispatch(removeToken());
+        localStorage.removeItem("authUserInfo");
 				dispatch(removeUser());
 				console.log(e);
 			}

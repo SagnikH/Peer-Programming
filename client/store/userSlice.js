@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-const _ = require("lodash");
 
 export const useSlice = createSlice({
 	name: "user",
