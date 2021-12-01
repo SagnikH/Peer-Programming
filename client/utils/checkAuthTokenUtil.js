@@ -2,6 +2,7 @@
 //this function is called everytime before a component is mount to check if user token exists in LOCAL STORAGE
 
 // import { useDispatch, useSelector } from "react-redux";
+import Router from "next/router";
 import { addUser, removeUser } from "../store/userSlice";
 import { addToken, removeToken } from "../store/authTokenSlice";
 import store from "../store/store";
@@ -24,6 +25,9 @@ const checkAuthToken = async (user) => {
 		//clears the state in case our localStorage doesn't have the authUserInfo token
 		store.dispatch(removeToken());
 		store.dispatch(removeUser());
+
+    //simple implementation -> flash of protected data being shown, handle that
+		Router.push("/");
 	}
 };
 

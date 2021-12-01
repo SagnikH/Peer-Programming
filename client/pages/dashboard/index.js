@@ -6,6 +6,7 @@ import Alert from "../../components/Alert.js";
 import Image from "next/image";
 
 const dashboard = () => {
+	//passed as a prop to modal to be used as a callback to logout
 	const logoutHandler = (e) => {
 		window.location.href = "http://localhost:4000/auth/logout";
 	};
@@ -27,7 +28,7 @@ const dashboard = () => {
 					<div className={styles.heading}>User Information</div>
 					<div className={styles.userContents}>
 						<Image
-							src="/../public/cover.jpeg"
+							src="/cover.jpeg"
 							alt="Image"
 							width="200"
 							height="200"

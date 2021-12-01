@@ -34,6 +34,7 @@ const Home = () => {
 				//add user to local storage
 				localStorage.setItem("authUserInfo", TOKEN);
 			} catch (e) {
+        // console.log(e.response.status);
 				dispatch(removeToken());
 				localStorage.removeItem("authUserInfo");
 				dispatch(removeUser());

@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 
 export function middleware(req, ev) {
 	// const token = useSelector((state) => state.auth.token);
+	console.log("middleware :");
+	// console.log(req.cookies);
 
 	if (true) {
 		return NextResponse.next();
