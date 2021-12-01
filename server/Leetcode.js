@@ -1,6 +1,7 @@
 import cors from 'cors';
 import puppeteer from 'puppeteer'
 import * as cheerio from 'cheerio';
+import setImage from './setImage.js';
 import fs from 'fs'
 
 cors({ origin: true });
@@ -42,7 +43,7 @@ export default class LeetCode {
 
         const details = {
             'title': title,
-            'decription': descp
+            'description': descp
         }
 
         this.details = details
@@ -59,8 +60,15 @@ export default class LeetCode {
     }
 
     getDescription() {
-        this.details.decription;
+        this.details.description;
     }
 
 }
 
+const lc = new LeetCode('https://leetcode.com/problems/balance-a-binary-search-tree/');
+
+const res = await lc.fetch();
+//console.log(res);
+const temp = setImage(res.description);
+const leetcodeJSX = {...res, description: temp};
+console.log(leetcodeJSX);
