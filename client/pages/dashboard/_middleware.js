@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
-// import { useSelector } from "react-redux";
 
 export function middleware(req, ev) {
-	// const token = useSelector((state) => state.auth.token);
+	console.log("middleware :");
 
-	if (true) {
+  const cookie = req.cookies["nextAuthCookie"];
+  console.log(cookie);
+
+	if (cookie) {
 		return NextResponse.next();
 	}
 	return Response.redirect("/");
