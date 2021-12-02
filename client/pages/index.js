@@ -64,7 +64,7 @@ const Home = () => {
 	};
 
 	return (
-		<Layout>
+		<>
 			<div className={styles.homepage}>
 				<div className="mt-3" height="500" width="500">
 					<Image src="/co-working.svg" height="500" width="500" />
@@ -99,7 +99,7 @@ const Home = () => {
 					</div>
 				</div>
 			</div>
-		</Layout>
+		</>
 	);
 };
 

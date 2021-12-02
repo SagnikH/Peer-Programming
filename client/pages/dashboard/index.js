@@ -22,7 +22,7 @@ const dashboard = () => {
 		//probably the token will the there as checkAuthToken mainly handles the loss of state values
 	}, []);
 	return (
-		<Layout>
+		<>
 			<div className={styles.dashboard}>
 				<div className={styles.userInfoSection}>
 					<div className={styles.heading}>User Information</div>
@@ -146,7 +146,7 @@ const dashboard = () => {
 			<div className={styles.logoutButton}>
 				<Alert alertFunction={logoutHandler} />
 			</div>
-		</Layout>
+		</>
 	);
 };
 

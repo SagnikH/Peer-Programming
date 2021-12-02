@@ -4,6 +4,7 @@ const setImage = (lc) => {
     const endIdxs = [];
     const styleStartIdxs = [];
     const eraseStrings = [];
+    const widths = [];
     let itr = 0;
     //console.log(img.indexOf('$', 11284));
     
@@ -30,10 +31,27 @@ const setImage = (lc) => {
     }
 
     for (let i=0; i<eraseStrings.length; i++){
-        img = img.replace(eraseStrings[i], '/');
+        let tempWidthStr = img.substr(styleStartIdxs[i]+14, 3);
+        widths.push(Number(tempWidthStr));
+        
     }
 
-    img = img.replaceAll('<img', '<Image');
+    let mx = 0;
+    widths.forEach((width)=>{
+        mx = Math.max(mx, width);
+    })
+    let viewport = 500;
+    if (mx > viewport){
+        let ratio = mx/viewport;
+        let newWidths = widths.map((width)=> {
+            return width/ratio;
+        })
+        for (let i=0; i<eraseStrings.length; i++){
+            img = img.replace(eraseStrings[i], `width="${Math.round(newWidths[i])}" /`);
+        }
+    }
+    
+//
     return img;
 }
  

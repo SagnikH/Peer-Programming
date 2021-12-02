@@ -8,14 +8,14 @@ const doc = () => {
     '\n' +
     '<p>&nbsp;</p>\n' +
     '<p><strong>Example 1:</strong></p>\n' +
-    '<img alt="" src="https://assets.leetcode.com/uploads/2021/08/10/balance1-tree.jpg" width="500" />\n' +
+    '<img alt="" src="https://assets.leetcode.com/uploads/2021/08/10/balance1-tree.jpg" style="width: 500px; height: 319px;">\n' +
     '<pre><strong>Input:</strong> root = [1,null,2,null,3,null,4,null,null]\n' +
     '<strong>Output:</strong> [2,1,3,null,null,null,4]\n' +
     '<b>Explanation:</b> This is not the only correct answer, [3,1,4,null,2] is also correct.\n' +
     '</pre>\n' +
     '\n' +
     '<p><strong>Example 2:</strong></p>\n' +
-    '<img alt="" src="https://assets.leetcode.com/uploads/2021/08/10/balanced2-tree.jpg" width="500" />\n' +
+    '<img alt="" src="https://assets.leetcode.com/uploads/2021/08/10/balanced2-tree.jpg" style="width: 224px; height: 145px;">\n' +
     '<pre><strong>Input:</strong> root = [2,1,3]\n' +
     '<strong>Output:</strong> [2,1,3]\n' +
     '</pre>\n' +
@@ -31,12 +31,16 @@ const doc = () => {
     const reactLc = ReactHtmlParser(lc);
     console.log(reactLc[0].props.children);
     return ( 
-        <div className={styles.question}>
-            <div
-            dangerouslySetInnerHTML={{__html: lc}}>
+        <div className={styles.docContainer}>
+            <div className={styles.question}>
+                <div
+                dangerouslySetInnerHTML={{__html: lc}}>
+                </div>
+            </div>
+            <div className={styles.block}>
+
             </div>
         </div>
-        
      );
 }
  

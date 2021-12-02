@@ -16,14 +16,14 @@ const Custom404 = () => {
 		//probably the token will the there as checkAuthToken mainly handles the loss of state values
 	}, []);
     return ( 
-        <Layout>
+        <>
             <div className='d-flex justify-content-center align-items-center flex-column'>
                 <Image src="/error.svg" width="300" height="300"></Image>
                 <h2> Error: Page Not Found!</h2>
                 <div>Please check the URL again.</div>
                 <div>Sorry for the inconvenience!</div>
             </div>
-        </Layout>
+        </>
         
      );
 }
