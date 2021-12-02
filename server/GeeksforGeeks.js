@@ -1,12 +1,11 @@
+import * as cheerio from 'cheerio';
 import cors from 'cors';
 import puppeteer from 'puppeteer'
-import * as cheerio from 'cheerio';
-import setImage from './setImage.js';
-import fs from 'fs'
+
 
 cors({ origin: true });
 
-export default class LeetCode {
+export default class GeeksforGeeks {
 
     constructor(link) {
         //TODO check validity
@@ -34,28 +33,27 @@ export default class LeetCode {
         $.html();
 
 
-        let title = $('div[data-cy=question-title]').text();
+        let title = $('span[class=problem-tab__name]').text();
         title = title.trim();
 
-        let descp = $('div .question-content__JfgR').get();
+        let descp = $('div .problem-statement').get();
         descp = $.html(descp)
 
-        const boilerPlateLine = [];
-        $('span[role=presentation]').each(function (i, elem) {
-            boilerPlateLine[i] = $(this).text();
-        });
+        // const boilerPlateLine = [];
+        // $('div .ace-content').each(function (i, elem) {
+        //     boilerPlateLine[i] = $(this).text();
+        // });
 
+        const boilerPlate = $('div.ace_scroller').text()
         await browser.close();
 
         const details = {
             'title': title,
             'decription': descp,
-            'boilerPlate': boilerPlateLine.join("\n")
+            'boilerPlate': boilerPlate
         }
 
         this.details = details;
-        console.log(details);
-
 
         return details;
     }
@@ -74,10 +72,7 @@ export default class LeetCode {
 
 }
 
-const lc = new LeetCode('https://leetcode.com/problems/balance-a-binary-search-tree/');
+const gfg = new GeeksforGeeks('https://practice.geeksforgeeks.org/problems/construct-bst-from-post-order/1/');
 
-const res = await lc.fetch();
+const res = await gfg.fetch();
 console.log(res);
-// const temp = setImage(res.description);
-// const leetcodeJSX = {...res, description: temp};
-// console.log(leetcodeJSX);
