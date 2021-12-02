@@ -15,7 +15,7 @@ export default class LeetCode {
         this.details = {
             'title': null,
             'decription': null,
-            'biolerPlate': ""
+            'boilerPlate': ""
         }
 
     };
@@ -49,7 +49,7 @@ export default class LeetCode {
         const details = {
             'title': title,
             'decription': descp,
-            'biolerPlate': boilerPlateLine.join("\n")
+            'boilerPlate': boilerPlateLine.join("\n")
         }
 
         this.details = details;
@@ -76,7 +76,7 @@ export default class LeetCode {
 const lc = new LeetCode('https://leetcode.com/problems/balance-a-binary-search-tree/');
 
 const res = await lc.fetch();
-//console.log(res);
-const temp = setImage(res.description);
-const leetcodeJSX = {...res, description: temp};
-console.log(leetcodeJSX);
+console.log(res);
+// const temp = setImage(res.description);
+// const leetcodeJSX = {...res, description: temp};
+// console.log(leetcodeJSX);
