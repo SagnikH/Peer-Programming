@@ -6,6 +6,7 @@ const cors = require("cors");
 require("./utils/authUtils");
 const authRoutes = require("./routes/authRoutes");
 const profileRoutes = require("./routes/profileRoutes");
+const apiRoutes = require("./routes/apiRoutes");
 const checkUser = require("./middlewares/authMiddleware");
 require("dotenv").config();
 
@@ -56,6 +57,8 @@ app.listen(PORT, () => {
 
 app.use("/auth", authRoutes);
 app.use("/profile", checkUser, profileRoutes);
+//TODO: checkUser middleware implement later
+app.use("/api", apiRoutes);
 
 app.get("/", (req, res) => {
 	// console.log(req.user);

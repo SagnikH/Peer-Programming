@@ -22,8 +22,18 @@ const userSchema = new Schema(
 		picture: {
 			type: String,
 		},
+
+		sharedSessionId: {
+			type: [mongoose.ObjectId],
+			default: [],
+		},
+
+		userSessionId: {
+			type: [mongoose.ObjectId],
+			default: [],
+		},
 	},
-	{ strict: true }
+	{ strict: true, minimize: false }
 );
 
 module.exports = mongoose.model("passportusers", userSchema);
