@@ -13,7 +13,8 @@ export default class LeetCode {
 
         this.details = {
             'title': null,
-            'decription': null
+            'decription': null,
+            'biolerPlate': ""
         }
 
     };
@@ -33,19 +34,26 @@ export default class LeetCode {
 
 
         const title = $('div[data-cy=question-title]').text();
+
         let descp = $('div .question-content__JfgR').get();
         descp = $.html(descp)
 
-        // console.log($.html(descp));
+        const boilerPlateLine = [];
+        $('span[role=presentation]').each(function (i, elem) {
+            boilerPlateLine[i] = $(this).text();
+        });
 
         await browser.close();
 
         const details = {
             'title': title,
-            'decription': descp
+            'decription': descp,
+            'biolerPlate': boilerPlateLine.join("\n")
         }
 
-        this.details = details
+        this.details = details;
+        console.log(details);
+
 
         return details;
     }
@@ -63,4 +71,3 @@ export default class LeetCode {
     }
 
 }
-
