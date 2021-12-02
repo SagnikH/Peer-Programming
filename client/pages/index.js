@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Layout from '../components/Layout.js'
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
@@ -63,7 +64,7 @@ const Home = () => {
 	};
 
 	return (
-		<>
+		<Layout>
 			<div className={styles.homepage}>
 				<div className="mt-3" height="500" width="500">
 					<Image src="/co-working.svg" height="500" width="500" />
@@ -98,7 +99,7 @@ const Home = () => {
 					</div>
 				</div>
 			</div>
-		</>
+		</Layout>
 	);
 };
 

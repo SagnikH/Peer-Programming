@@ -17,3 +17,20 @@ a {
 * {
   box-sizing: border-box;
 }
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  border-left: 1px solid grey;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #715872;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #342935;
+}

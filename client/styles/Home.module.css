@@ -90,4 +90,7 @@
   .description{
     font-size: 16px;
   }
+  .formButton, .formInput{
+    height: 60px;
+  }
 }

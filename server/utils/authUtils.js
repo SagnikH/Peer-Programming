@@ -27,6 +27,7 @@ passport.use(
 			clientSecret: process.env.CLIENT_SECRET,
 			callbackURL: `http://localhost:${PORT}/auth/google/callback`,
 		},
+		
 		async function (accessToken, refreshToken, bearer, info, done) {
 			const { email, name, sub, picture } = info._json;
 

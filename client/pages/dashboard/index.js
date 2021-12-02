@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import checkAuthToken from "../../utils/checkAuthTokenUtil";
 import styles from "../../styles/Dashboard.module.css";
 import Alert from "../../components/Alert.js";
-import Image from "next/image";
+import Layout from '../../components/Layout.js';
 
 const dashboard = () => {
 	//passed as a prop to modal to be used as a callback to logout
@@ -22,24 +22,24 @@ const dashboard = () => {
 		//probably the token will the there as checkAuthToken mainly handles the loss of state values
 	}, []);
 	return (
-		<>
+		<Layout>
 			<div className={styles.dashboard}>
 				<div className={styles.userInfoSection}>
 					<div className={styles.heading}>User Information</div>
 					<div className={styles.userContents}>
 						
-						<Image
-							src="/cover.jpeg"
+						<img
+							src={user.picture}
 							alt="Image"
 							width="200"
 							height="200"
 							className={styles.userImage}
-						></Image>
+						></img>
 						<div className={styles.userDetails}>
 							<h6>Name:</h6>
-							<h6>Sattam Bandyopadhyay</h6>
+							<h6>{user.name}</h6>
 							<h6>Email Id:</h6>
-							<h6> bsattam@gmail.com</h6>
+							<h6> {user.email}</h6>
 						</div>
 					</div>
 				</div>
@@ -146,7 +146,7 @@ const dashboard = () => {
 			<div className={styles.logoutButton}>
 				<Alert alertFunction={logoutHandler} />
 			</div>
-		</>
+		</Layout>
 	);
 };
 

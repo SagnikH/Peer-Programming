@@ -20,11 +20,7 @@ const Navigation = () => {
 						/>
 					</a>
 				</Link>
-				<Navbar.Toggle
-					className={styles.navIcon}
-					aria-controls="basic-navbar-nav"
-				/>
-				<Navbar.Collapse className="navbar-light" id="basic-navbar-nav">
+				<div className="navbar-light" id="basic-navbar-nav">
 					<div className={styles.navlinks}>
 						{!isLoggedIn && (
 							<Link href="http://localhost:4000/auth/google">
@@ -37,7 +33,7 @@ const Navigation = () => {
 							</Link>
 						)}
 					</div>
-				</Navbar.Collapse>
+				</div>
 			</Container>
 		</Navbar>
 	);
