@@ -1,20 +1,20 @@
 const router = require("express").Router();
+const {
+	createSession,
+	getSession,
+	updateSession,
+	deleteSession,
+} = require("../controllers/sessionHandler");
 
-router.post("/", (req, res) => {
-	res.json("user send request to create a session").status(200);
-});
+router.post("/", createSession);
 
-router.get("/:id", (req, res) => {
-	res.json("user requests to get session info").status(200);
-});
+router.get("/:id", getSession);
 
 //sends a portion of the data to update existing data
-router.patch("/:id", (req, res) => {
-	res.json("user sends down data to update session").status(200);
-});
+//TODO: NOTE: update session document when we create/ delete a document
+//(in the document router handler)
+router.patch("/:id", updateSession);
 
-router.delete("/:id", (req, res) => {
-	res.json("deletes specified session").status(200);
-});
+router.delete("/:id", deleteSession);
 
 module.exports = router;

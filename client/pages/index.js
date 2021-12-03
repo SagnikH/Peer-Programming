@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Layout from '../components/Layout.js'
+import Layout from "../components/Layout.js";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
@@ -17,7 +17,7 @@ const Home = () => {
 	useEffect(() => {
 		(async () => {
 			try {
-				const res = await axios.get("http://localhost:4000/profile", {
+				const res = await axios.get("http://localhost:4000/api/user", {
 					withCredentials: true,
 				});
 
@@ -45,7 +45,7 @@ const Home = () => {
 				console.log(e);
 
 				//remove cookie
-        Cookies.remove("nextAuthCookie");
+				Cookies.remove("nextAuthCookie");
 			}
 		})();
 	}, []);

@@ -8,18 +8,20 @@ const documentSchema = new Schema(
 			required: true,
 		},
 
+		//custom or leetcode
 		type: {
 			type: String,
 			required: true,
 		},
 
 		//can be a string (JSON.stringyfy())
-		//can be an Object
+		//can be an Object ->custom or scraped from leetcode
 		question: {
-			type: Schema.Types.Mixed,
-			default: {},
+			type: String,
+			required: true,
 		},
 
+		//leetcode link (optional)
 		link: {
 			type: String,
 		},
@@ -42,3 +44,5 @@ const documentSchema = new Schema(
 	},
 	{ timestamps: true, minimize: false }
 );
+
+module.exports = mongoose.model("document", documentSchema);

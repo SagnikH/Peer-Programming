@@ -23,17 +23,17 @@ const userSchema = new Schema(
 			type: String,
 		},
 
-		sharedSessionId: {
-			type: [mongoose.ObjectId],
+		sharedSessions: {
+			type: [Schema.Types.Mixed],
 			default: [],
 		},
 
-		userSessionId: {
-			type: [mongoose.ObjectId],
+		userSessions: {
+			type: [Schema.Types.Mixed],
 			default: [],
 		},
 	},
 	{ strict: true, minimize: false }
 );
 
-module.exports = mongoose.model("passportusers", userSchema);
+module.exports = mongoose.model("pair-programming-users", userSchema);

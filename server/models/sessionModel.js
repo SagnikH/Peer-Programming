@@ -3,17 +3,23 @@ const Schema = mongoose.Schema;
 
 const sessionSchema = new Schema(
 	{
+		name: {
+			type: String,
+			required: true,
+		},
+
 		userId: {
 			type: mongoose.ObjectId,
 			required: true,
 		},
 
 		//array of objects
-		documents: [Schema.Types.Mixed],
+		documents: {
+			type: [Schema.Types.Mixed],
+			default: [],
+		},
 	},
-	{
-		timestamps: true,
-	}
+	{ timestamps: true, minimize: false }
 );
 
 module.exports = mongoose.model("sessiondata", sessionSchema);

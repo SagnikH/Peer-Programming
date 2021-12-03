@@ -8,7 +8,7 @@ const PORT = process.env.PORT;
 //the callback inside the statergy calls this function to create a cookie and send it to the browser
 passport.serializeUser((user, done) => {
 	const id = user._id.toString();
-	console.log("inside serializeUser");
+	// console.log("inside serializeUser");
 	done(null, id);
 });
 

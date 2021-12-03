@@ -1,8 +1,7 @@
 const router = require("express").Router();
+const { createDocument } = require("../controllers/documentHandler");
 
-router.post("/", (req, res) => {
-	res.json("user send request to create a document").status(200);
-});
+router.post("/", createDocument);
 
 router.get("/:id", (req, res) => {
 	res.json("user requests to get document info").status(200);

@@ -1,3 +1,4 @@
+const express = require("express");
 const app = require("express")();
 const passport = require("passport");
 const mongoose = require("mongoose");
@@ -7,6 +8,7 @@ require("./utils/authUtils");
 const authRoutes = require("./routes/authRoutes");
 const apiRoutes = require("./routes/apiRoutes");
 const checkUser = require("./middlewares/authMiddleware");
+const { DatabaseError } = require("./utils/errors/baseErrors");
 require("dotenv").config();
 
 const URI = process.env.MONGODB_URI;
@@ -14,6 +16,7 @@ const COOKIE_KEYS = process.env.COOKIE_KEYS;
 const PORT = process.env.PORT;
 
 app.set("view engine", "ejs");
+app.use(express.json());
 
 app.use(
 	cookieSession({
@@ -61,4 +64,18 @@ app.use("/api", apiRoutes);
 app.get("/", (req, res) => {
 	// console.log(req.user);
 	res.send("homepage");
+});
+
+//error handler should be handled at the end
+app.use((err, req, res, next) => {
+	// console.log(err);
+	if (res.headersSent) {
+		return next(err);
+	}
+
+	if (err instanceof DatabaseError) {
+		res.status(err.statusCode).json(err.message);
+	} else {
+		res.status(500);
+	}
 });
