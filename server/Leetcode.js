@@ -2,12 +2,15 @@ const cors = require('cors');
 const puppeteer = require('puppeteer');
 const cheerio = require('cheerio');
 const setImage = require('./setImage');
+const axios = require('axios');
 
 cors({ origin: true });
-module.export = class LeetCode {
+class LeetCode {
 
     constructor(link) {
         //TODO check validity
+        const pos = this.getPosition(link, "/", 5)
+        if (pos != -1) link = link.substring(0, pos)
         this.link = link;
 
         this.details = {
@@ -19,12 +22,20 @@ module.export = class LeetCode {
     };
 
     async fetch() {
+        const isValid = await this.validate(this.link);
+        if (!isValid) return null;
+
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
 
 
         console.log("Fetching", this.link);
-        await page.goto(this.link, { waitUntil: 'networkidle0', timeout: 0 });
+        try {
+            await page.goto(this.link, { waitUntil: 'networkidle0', timeout: 0 });
+        }
+        catch (e) {
+            return null;
+        }
 
 
         const html = await page.content();
@@ -58,6 +69,25 @@ module.export = class LeetCode {
         return details;
     }
 
+    async validate(link) {
+        const re = new RegExp('^https://leetcode.com/problems/.+');
+
+        if (!re.test(link)) return false;
+
+        try {
+            const res = await axios.head(link)
+            console.log(res.status);
+            if (res.status != 200) return false;
+        }
+        catch (e) {
+            return false;
+        }
+
+
+        return true;
+
+    }
+
     getDetails() {
         return this.details;
     }
@@ -70,7 +100,13 @@ module.export = class LeetCode {
         this.details.description;
     }
 
+    getPosition(string, subString, index) {
+        return string.split(subString, index).join(subString).length;
+    }
+
 }
+
+module.exports = LeetCode;
 
 // const lc = new LeetCode('https://leetcode.com/problems/balance-a-binary-search-tree/');
 
