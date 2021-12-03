@@ -1,11 +1,11 @@
-import * as cheerio from 'cheerio';
-import cors from 'cors';
-import puppeteer from 'puppeteer'
+const cors = require('cors');
+const puppeteer = require('puppeteer');
+const cheerio = require('cheerio');
 
 
 cors({ origin: true });
 
-export default class GeeksforGeeks {
+module.export = class GeeksforGeeks {
 
     constructor(link) {
         //TODO check validity
@@ -72,7 +72,7 @@ export default class GeeksforGeeks {
 
 }
 
-const gfg = new GeeksforGeeks('https://practice.geeksforgeeks.org/problems/construct-bst-from-post-order/1/');
+// const gfg = new GeeksforGeeks('https://practice.geeksforgeeks.org/problems/construct-bst-from-post-order/1/');
 
-const res = await gfg.fetch();
-console.log(res);
+// const res = await gfg.fetch();
+// console.log(res);

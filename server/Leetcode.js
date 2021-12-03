@@ -1,12 +1,10 @@
-import cors from 'cors';
-import puppeteer from 'puppeteer'
-import * as cheerio from 'cheerio';
-import setImage from './setImage.js';
-import fs from 'fs'
+const cors = require('cors');
+const puppeteer = require('puppeteer');
+const cheerio = require('cheerio');
+const setImage = require('./setImage');
 
 cors({ origin: true });
-
-export default class LeetCode {
+module.export = class LeetCode {
 
     constructor(link) {
         //TODO check validity
@@ -74,10 +72,10 @@ export default class LeetCode {
 
 }
 
-const lc = new LeetCode('https://leetcode.com/problems/balance-a-binary-search-tree/');
+// const lc = new LeetCode('https://leetcode.com/problems/balance-a-binary-search-tree/');
 
-const res = await lc.fetch();
-console.log(res);
+// const res = await lc.fetch();
+// console.log(res);
 // const temp = setImage(res.description);
 // const leetcodeJSX = {...res, description: temp};
 // console.log(leetcodeJSX);
