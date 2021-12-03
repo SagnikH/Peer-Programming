@@ -45,8 +45,8 @@ const getSession = async (req, res, next) => {
 		res.json(sessionInfo).status(200);
 	} catch (e) {
 		//404 -> data not found
-		res.json(e).status(500);
 		console.log(e);
+		res.json(e).status(500);
 	}
 };
 

@@ -38,4 +38,77 @@ const createDocument = async (req, res, next) => {
 	}
 };
 
-module.exports = { createDocument };
+const getDocument = async (req, res, next) => {
+	const _id = req.params.id;
+	if (!ObjectId.isValid(_id))
+		return next(new NotFoundError("no document with id found"));
+
+	try {
+		const documentInfo = await Document.findById(_id);
+
+		if (!documentInfo)
+			return next(
+				new NotFoundError("no document found with given document id")
+			);
+
+		res.json(documentInfo).status(200);
+	} catch (e) {
+		console.log(e);
+		res.json(e).status(500);
+	}
+};
+
+const updateDocument = async (req, res, next) => {
+	const _id = req.params.id;
+	if (!ObjectId.isValid(_id))
+		return next(new NotFoundError("invalid document id"));
+
+	const { savedCode } = req.body;
+
+	try {
+		const document = await Document.findByIdAndUpdate(
+			_id,
+			{ savedCode },
+			{ new: true }
+		);
+
+		res.json(document).status(200);
+	} catch (e) {
+		console.log(e);
+		res.status(500).json(e);
+	}
+};
+
+const deleteDocument = async (req, res, next) => {
+	const _id = req.params.id;
+	if (!ObjectId.isValid(_id))
+		return next(new NotFoundError("invalid document id"));
+
+	try {
+		const deletedDocument = await Document.findByIdAndDelete(_id);
+		console.log(deletedDocument);
+		const { sessionId } = deletedDocument;
+		// TODO: delete from the session as well
+
+		const session = await Session.findByIdAndUpdate(
+			sessionId,
+			{
+				$pull: { documents: { documentId: deletedDocument._id } },
+			},
+			{ new: true, safe: true }
+		);
+
+		console.log(session);
+		res.status(202).json("document deleted");
+	} catch (e) {
+		console.log(e);
+		res.json(e).status(500);
+	}
+};
+
+module.exports = {
+	createDocument,
+	getDocument,
+	updateDocument,
+	deleteDocument,
+};
