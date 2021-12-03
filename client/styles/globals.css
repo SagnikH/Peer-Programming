@@ -27,6 +27,10 @@ a {
   border-left: 1px solid grey;
 }
 
+ul{
+  list-style-type: none;
+}
+
 ::-webkit-scrollbar-thumb {
   background: #715872;
   border-radius: 5px;

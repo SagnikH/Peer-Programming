@@ -4,10 +4,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {Provider} from 'react-redux'
 import store from '../store/store'
 import Layout from '../components/Layout'
+import {SSRProvider} from '@react-aria/ssr';
 
 function MyApp({ Component, pageProps }) {
   return(
-    <>
+    <SSRProvider>
       <Head>
         <title>Apes collab</title>
         <link rel="icon" type="image/png" sizes="100x100" href="favicon.png"/>
@@ -18,7 +19,7 @@ function MyApp({ Component, pageProps }) {
           <Component {...pageProps} />
         </Layout>
       </Provider>
-    </>
+    </SSRProvider>
   ) 
 }
 
