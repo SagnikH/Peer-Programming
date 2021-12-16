@@ -93,6 +93,7 @@ const deleteDocument = async (req, res, next) => {
 		const session = await Session.findByIdAndUpdate(
 			sessionId,
 			{
+				//can use the dot notation to access documentId -> { "documents.documentId" : deletedDocument._id }
 				$pull: { documents: { documentId: deletedDocument._id } },
 			},
 			{ new: true, safe: true }
