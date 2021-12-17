@@ -1,0 +1,42 @@
+.navlinks{
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+
+.navbar{
+    background-color: #4c3b4d;
+    color: white;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    z-index: 999;
+}
+
+
+.navbrand{
+    text-decoration: none;
+    color: white;
+    font-size: 30px;
+    font-family: 'Carattere', cursive;
+}
+
+
+.navbrand:hover{
+    cursor: pointer;
+}
+
+.navIcon{
+    background-color: #edc4ff;
+    border-radius: 50%;
+}
+
+.navlink{
+    color: white;
+    height: 26px;
+    font-size: 18px;
+    margin: 0 15px 0 15px;
+    cursor: pointer;
+}
+
+.navlink:hover{
+    color: #ff7d19;
+}
