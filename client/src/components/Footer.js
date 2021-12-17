@@ -1,7 +1,7 @@
-import styles from "../styles/footer.css";
+import "../styles/footer.css";
 
 const Footer = () => {
-	return <div className={styles.footercss}>Copyright: apes webdev</div>;
+	return <div className='footercss'>Copyright: apes webdev</div>;
 };
 
 export default Footer;

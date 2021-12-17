@@ -1,4 +1,4 @@
-// import Layout from '../components/Layout.js'
+import { Button, Form } from "react-bootstrap";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
@@ -6,7 +6,6 @@ import Cookies from "js-cookie";
 import { addUser, removeUser } from "../store/userSlice";
 import { addToken, removeToken } from "../store/authTokenSlice";
 import "../styles/home.css";
-import { Button, Form } from "react-bootstrap";
 import coWorking from '../assets/co-working.svg';
 
 const Home = () => {

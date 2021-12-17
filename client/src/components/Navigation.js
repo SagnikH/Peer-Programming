@@ -1,32 +1,33 @@
 import { Navbar, Nav, Container } from "react-bootstrap";
-import styles from "../styles/navigation.css";
 //import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import favicon from '../assets/favicon.png'
+import "../styles/navigation.css";
 
 const Navigation = () => {
 //	const isLoggedIn = useSelector((state) => state.auth.token);
     const isLoggedIn = false;
 
 	return (
-		<Navbar className={styles.navbar} expand="lg">
-			<Container>
+		<Navbar className='navbar' expand="lg">
+			<Container className='navbar-container'>
 				<Link to="/">
 						<img
-							className={styles.navbrand}
-							src="/favicon.png"
+							className='navbrand'
+							src={favicon}
 							width="60"
 							height="60"
 						/>
 				</Link>
 				<div className="navbar-light" id="basic-navbar-nav">
-					<div className={styles.navlinks}>
+					<div className='navlinks'>
 						{!isLoggedIn && (
-							<Link to="/">
+							<Link to="/" className='navlink'>
 								Sign in
 							</Link>
 						)}
 						{isLoggedIn && (
-							<Link to="/dashboard">
+							<Link to="/dashboard" className='navlink'>
 								Dashboard
 							</Link>
 						)}

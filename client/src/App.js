@@ -1,17 +1,19 @@
 import "./App.css";
 import { Provider } from "react-redux";
-// import Navigation from "./components/Navigation";
-// import Footer from "./components/Footer";
 import { BrowserRouter } from "react-router-dom";
 import { RouterConfig } from "./navigation/RouterConfig";
 import store from "./store/store";
+import Layout from './components/Layout.js'
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
 	return (
 		<>
 			<Provider store={store}>
 				<BrowserRouter>
-					<RouterConfig />
+					<Layout>
+						<RouterConfig />
+					</Layout>
 				</BrowserRouter>
 			</Provider>
 		</>
