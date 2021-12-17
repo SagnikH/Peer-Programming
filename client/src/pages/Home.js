@@ -1,4 +1,4 @@
-//import Layout from '../components/Layout.js'
+// import Layout from '../components/Layout.js'
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
@@ -13,41 +13,41 @@ const Home = () => {
 	const isLoggedIn = useSelector((state) => state.auth.token);
 
 	//both login and logout is handled here as both the times we are redirected to this page
-	useEffect(() => {
-		(async () => {
-			try {
-				const res = await axios.get("http://localhost:4000/profile", {
-					withCredentials: true,
-				});
+	// useEffect(() => {
+	// 	(async () => {
+	// 		try {
+	// 			const res = await axios.get("http://localhost:4000/profile", {
+	// 				withCredentials: true,
+	// 			});
 
-				// return userData;
-				const user = res.data.user;
-				const { _id, email, name, googleID, picture } = user;
-				const userPayload = { _id, email, name, googleID, picture };
-				const TOKEN = JSON.stringify(userPayload); //for local storage
-				console.log(userPayload);
+	// 			// return userData;
+	// 			const user = res.data.user;
+	// 			const { _id, email, name, googleID, picture } = user;
+	// 			const userPayload = { _id, email, name, googleID, picture };
+	// 			const TOKEN = JSON.stringify(userPayload); //for local storage
+	// 			console.log(userPayload);
 
-				//adding user to user state in redux store
-				dispatch(addUser(userPayload));
-				dispatch(addToken(TOKEN));
+	// 			//adding user to user state in redux store
+	// 			dispatch(addUser(userPayload));
+	// 			dispatch(addToken(TOKEN));
 
-				//add user to local storage
-				localStorage.setItem("authUserInfo", TOKEN);
+	// 			//add user to local storage
+	// 			localStorage.setItem("authUserInfo", TOKEN);
 
-				//add a cookie
-				Cookies.set("nextAuthCookie", TOKEN, { sameSite: "strict" });
-			} catch (e) {
-				// console.log(e.response.status);
-				dispatch(removeToken());
-				localStorage.removeItem("authUserInfo");
-				dispatch(removeUser());
-				console.log(e);
+	// 			//add a cookie
+	// 			Cookies.set("nextAuthCookie", TOKEN, { sameSite: "strict" });
+	// 		} catch (e) {
+	// 			// console.log(e.response.status);
+	// 			dispatch(removeToken());
+	// 			localStorage.removeItem("authUserInfo");
+	// 			dispatch(removeUser());
+	// 			console.log(e);
 
-				//remove cookie
-        Cookies.remove("nextAuthCookie");
-			}
-		})();
-	}, []);
+	// 			//remove cookie
+  //       Cookies.remove("nextAuthCookie");
+	// 		}
+	// 	})();
+	// }, []);
 
 	const createLinkHandler = (e) => {
 		e.preventDefault();

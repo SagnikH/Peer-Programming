@@ -1,19 +1,21 @@
-import './App.css';
-import Navigation from './components/Navigation';
-import Footer from './components/Footer';
-import {Routes, Route} from 'react-router-dom';
-import Home from './pages/Home';
-import Dashboard from './pages/Dashboard';
+import "./App.css";
+import { Provider } from "react-redux";
+// import Navigation from "./components/Navigation";
+// import Footer from "./components/Footer";
+import { BrowserRouter } from "react-router-dom";
+import { RouterConfig } from "./navigation/RouterConfig";
+import store from "./store/store";
 
 function App() {
-  return (
-    <Routes>
-      <Navigation/>
-        <Route path="/" element={<Home/>} />
-        <Route path="/dashboard" element={<Dashboard/>} />
-      <Footer/>
-    </Routes>
-  );
-} 
+	return (
+		<>
+			<Provider store={store}>
+				<BrowserRouter>
+					<RouterConfig />
+				</BrowserRouter>
+			</Provider>
+		</>
+	);
+}
 
 export default App;

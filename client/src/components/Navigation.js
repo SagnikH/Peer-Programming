@@ -11,14 +11,12 @@ const Navigation = () => {
 		<Navbar className={styles.navbar} expand="lg">
 			<Container>
 				<Link to="/">
-					<a>
 						<img
 							className={styles.navbrand}
 							src="/favicon.png"
 							width="60"
 							height="60"
 						/>
-					</a>
 				</Link>
 				<div className="navbar-light" id="basic-navbar-nav">
 					<div className={styles.navlinks}>
