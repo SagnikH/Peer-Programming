@@ -16,8 +16,16 @@ passport.serializeUser((user, done) => {
 //invoked when browser sends a request to the server -> the cookie is sent along with the req -> token returned in req obj
 passport.deserializeUser(async (id, done) => {
 	const user = await User.findById(id);
-	const { googleID, email, picture, name, _id } = user;
-	const cookieUser = { googleID, email, picture, name, _id };
+	const { googleID, email, picture, name, _id, sharedSessions, userSessions } = user;
+	const cookieUser = {
+		googleID,
+		email,
+		picture,
+		name,
+		_id,
+		sharedSessions,
+		userSessions,
+	};
 	// console.log("inside deserializeUser");
 	// console.log(cookieUser);
 	done(null, cookieUser);

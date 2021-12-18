@@ -1,52 +1,60 @@
 import { Button, Form } from "react-bootstrap";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
-import Cookies from "js-cookie";
-import { addUser, removeUser } from "../store/userSlice";
-import { addToken, removeToken } from "../store/authTokenSlice";
+// import axios from "axios";
+// import { addUser, removeUser } from "../redux/userSlice";
+// import { fetchSessionById } from "../redux/actions/sessionActions";
+import { addToken, removeToken } from "../redux/slices/authTokenSlice";
+import { checkAuth } from "../utils/checkAuth";
 import "../styles/home.css";
-import coWorking from '../assets/co-working.svg';
+import coWorking from "../assets/co-working.svg";
 
 const Home = () => {
 	const dispatch = useDispatch();
 	const isLoggedIn = useSelector((state) => state.auth.token);
 
-	//both login and logout is handled here as both the times we are redirected to this page
+	useEffect(() => {
+		(async () => {
+			try {
+				const userPayload = await checkAuth();
+
+				if (userPayload) {
+					const TOKEN = JSON.stringify(userPayload);
+
+					// dispatch(addUser(userPayload));
+					dispatch(addToken(TOKEN));
+				} else {
+					// dispatch(removeUser());
+					dispatch(removeToken());
+				}
+			} catch (e) {
+				console.log(e);
+
+				// dispatch(removeUser());
+				dispatch(removeToken());
+			}
+		})();
+	}, []);
+
+	//testing
 	// useEffect(() => {
-	// 	(async () => {
-	// 		try {
-	// 			const res = await axios.get("http://localhost:4000/profile", {
-	// 				withCredentials: true,
-	// 			});
+	// 	// (async () => {
+	// 	// 	try {
+	// 	// 		const response = await axios.get(
+	// 	// 			"http://localhost:4000/api/session/61a9aef6417576b9f074f427",
+	// 	// 			{
+	// 	// 				withCredentials: true,
+	// 	// 			}
+	// 	// 		);
 
-	// 			// return userData;
-	// 			const user = res.data.user;
-	// 			const { _id, email, name, googleID, picture } = user;
-	// 			const userPayload = { _id, email, name, googleID, picture };
-	// 			const TOKEN = JSON.stringify(userPayload); //for local storage
-	// 			console.log(userPayload);
+	// 	// 		console.log(response.data);
+	// 	// 	} catch (e) {
+	// 	// 		console.log(e.response);
+	// 	// 	}
+	// 	// })();
 
-	// 			//adding user to user state in redux store
-	// 			dispatch(addUser(userPayload));
-	// 			dispatch(addToken(TOKEN));
-
-	// 			//add user to local storage
-	// 			localStorage.setItem("authUserInfo", TOKEN);
-
-	// 			//add a cookie
-	// 			Cookies.set("nextAuthCookie", TOKEN, { sameSite: "strict" });
-	// 		} catch (e) {
-	// 			// console.log(e.response.status);
-	// 			dispatch(removeToken());
-	// 			localStorage.removeItem("authUserInfo");
-	// 			dispatch(removeUser());
-	// 			console.log(e);
-
-	// 			//remove cookie
-  //       Cookies.remove("nextAuthCookie");
-	// 		}
-	// 	})();
+	// 	// const _id = "61a9aef6417576b9f074f427";
+	// 	// dispatch(fetchSessionById(_id));
 	// }, []);
 
 	const createLinkHandler = (e) => {
@@ -64,30 +72,30 @@ const Home = () => {
 
 	return (
 		<>
-			<div className='homepage'>
+			<div className="homepage">
 				<img src={coWorking} alt="" height={500} width={500} />
-			
-				<div className='contents'>
-					<div className='subHeading'>Think and Code Together, in</div>
-					<div className='heading'>Apes Collab</div>
-					<div className='description'>
+
+				<div className="contents">
+					<div className="subHeading">Think and Code Together, in</div>
+					<div className="heading">Apes Collab</div>
+					<div className="description">
 						Turn your best ideas into reality, by coding and building together
 						with your peers and friends, in real-time. So what are you waiting
 						for? Let's dive in.
 					</div>
 					<div className="d-flex w-100 justify-content-around">
-						<Button className='formButton' onClick={createLinkHandler}>
+						<Button className="formButton" onClick={createLinkHandler}>
 							Create Link
 						</Button>
 
 						<Form className="d-flex">
 							<Form.Control
-								className='formInput'
-								type="text" 
+								className="formInput"
+								type="text"
 								placeholder="Enter link"
 							/>
 							<Button
-								className='formButton'
+								className="formButton"
 								type="submit"
 								onClick={joinLinkHandler}
 							>
