@@ -8,15 +8,18 @@ const PORT = process.env.PORT;
 //the callback inside the statergy calls this function to create a cookie and send it to the browser
 passport.serializeUser((user, done) => {
 	const id = user._id.toString();
-	console.log("inside serializeUser");
+	// console.log("inside serializeUser");
 	done(null, id);
 });
 
 //decrypt the cookie and attaches the token(cookieUser) to the req object
 //invoked when browser sends a request to the server -> the cookie is sent along with the req -> token returned in req obj
 passport.deserializeUser(async (id, done) => {
-	const cookieUser = await User.findById(id);
-	console.log("inside deserializeUser");
+	const user = await User.findById(id);
+	const { googleID, email, picture, name, _id } = user;
+	const cookieUser = { googleID, email, picture, name, _id };
+	// console.log("inside deserializeUser");
+	// console.log(cookieUser);
 	done(null, cookieUser);
 });
 
@@ -27,7 +30,6 @@ passport.use(
 			clientSecret: process.env.CLIENT_SECRET,
 			callbackURL: `http://localhost:${PORT}/auth/google/callback`,
 		},
-		
 		async function (accessToken, refreshToken, bearer, info, done) {
 			const { email, name, sub, picture } = info._json;
 
