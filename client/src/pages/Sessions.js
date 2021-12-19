@@ -3,6 +3,8 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { checkAuth } from "../utils/checkAuth";
 import { Dropdown, Form, Button } from "react-bootstrap";
+import { Navigate, useParams } from "react-router-dom";
+import { fetchSessionById } from '../redux/actions/sessionActions';
 
 const Sessions = () => {
 	const [sessionName, setSessionName] = useState("");
@@ -80,8 +82,17 @@ const Sessions = () => {
 		);
 	});
 
+	const { id } = useParams();
+
+	//TODO check id validity
+	if (!id) {
+		// <Navigate to={}
+	}
+
+
 	useEffect(() => {
 		setDocs(dummy);
+		dispatch(fetchSessionById(id));
 
 		//TODO: decide whether to redirect in case of token not present
 		//probably the token will the there as checkAuth mainly handles the loss of state values
@@ -95,6 +106,7 @@ const Sessions = () => {
 	return (
 		<>
 			<div className={styles.body}>
+				<p>{id}</p>
 				<div className={styles.sessionName}>Session name: {sessionName}</div>
 				<div className={styles.sessionContainer}>
 					<div className={styles.sessionHistory}>

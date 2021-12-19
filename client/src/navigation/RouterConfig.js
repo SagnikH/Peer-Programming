@@ -12,8 +12,9 @@ export const RouterConfig = () => {
 		<>
 			<Routes>
 				<Route path="/" element={<Home />} />
+
 				<Route
-					path="/dashboard"
+					path="/session"
 					element={
 						<PrivateRoute>
 							<Dashboard />
@@ -21,7 +22,7 @@ export const RouterConfig = () => {
 					}
 				/>
 				<Route
-					path="/session"
+					path="/session/:id"
 					element={
 						<PrivateRoute>
 							<Sessions />
