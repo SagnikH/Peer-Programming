@@ -1,0 +1,68 @@
+.dashboard{
+    display: flex;
+    flex-direction: row;
+    width: 75vw;
+    justify-content: space-around;
+    margin: auto;
+}
+
+.userImage{
+    border-radius: 50%;
+}
+
+
+.userInfoSection{
+    border: 1px solid #4c3b4d;
+    width: 350px;
+    height: 500px;
+}
+
+.heading{
+    background-color: #4c3b4d;
+    height: 36px;
+    font-size: 20px;
+    text-align: center;
+    color: white;
+}
+
+.contents{
+    padding: 20px 10px;
+}
+
+.userContents{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+}
+
+.userDetails{
+    width: 200px;
+    margin-top: 50px;
+}
+
+
+
+.sessionsSection{
+    border: 1px solid #4c3b4d;
+    width: 350px;
+    overflow: scroll;
+    overflow-x: hidden;
+    height: 500px;
+}
+
+.logoutButton{
+    margin: 10px auto 20px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    color: white;
+}
+
+
+@media only screen and (max-width: 1200px) {
+    .dashboard {
+      flex-direction: column;
+      width: 99vw;
+      align-items: center;
+      margin-top: 20px;
+    }
+  }
