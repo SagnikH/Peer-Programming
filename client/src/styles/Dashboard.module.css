@@ -11,11 +11,6 @@
 }
 
 
-.userInfoSection{
-    border: 1px solid #4c3b4d;
-    width: 350px;
-    height: 500px;
-}
 
 .heading{
     background-color: #4c3b4d;
@@ -26,14 +21,22 @@
 }
 
 .contents{
-    padding: 20px 10px;
+    padding: 10px 15px;
+    border: 1px solid #4c3b4d;
+    width: 350px;
+    height: 470px;
+    overflow: scroll;
+    overflow-x: hidden;
 }
 
 .userContents{
     display: flex;
     flex-direction: column;
+    justify-content: space-evenly;
     align-items: center;
-    margin-top: 50px;
+    border: 1px solid #4c3b4d;
+    width: 350px;
+    height: 470px;
 }
 
 .userDetails{
@@ -41,19 +44,30 @@
     margin-top: 50px;
 }
 
+.linkButtons{
+    display: flex;
+    width: 500px;
+    justify-content: space-between;
+}
 
+.buttons{
+    display: flex;
+    width: 70%;
+    margin: auto;
+}
 
-.sessionsSection{
-    border: 1px solid #4c3b4d;
-    width: 350px;
-    overflow: scroll;
-    overflow-x: hidden;
-    height: 500px;
+.session{
+    border-radius: 5px;
+    padding: 5px;
+}
+.session:hover{
+    background-color: #4c3b4d;
+    color: white;
+    cursor: pointer;
 }
 
 .logoutButton{
-    margin: 10px auto 20px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    margin-left: auto;
     color: white;
 }
 
@@ -64,5 +78,9 @@
       width: 99vw;
       align-items: center;
       margin-top: 20px;
+    }
+
+    .section{
+        margin: 30px 0;
     }
   }

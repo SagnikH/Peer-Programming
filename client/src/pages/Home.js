@@ -1,13 +1,17 @@
 import { Button, Form } from "react-bootstrap";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { fetchSessionById } from "../redux/actions/sessionActions";
+import InputModal from "../components/InputModal.js";
+//import { addUser, removeUser } from "../redux/slices/userSlice";
+//import { addToken, removeToken } from "../redux/slices/authTokenSlice";
+import styles from '../styles/home.module.css';
+//import { fetchSessionById } from "../redux/actions/sessionActions";
 import { fetchUser } from "../redux/actions/userActions";
-import styles from "../styles/home.module.css";
 import coWorking from "../assets/co-working.svg";
 
 const Home = () => {
+	const [name, setName] = useState("");
 	const dispatch = useDispatch();
 	const isLoggedIn = useSelector((state) => state.auth.token);
 	const userId = useSelector((state) => state.user._id);
@@ -73,6 +77,10 @@ const Home = () => {
 		//const link = http://localhost:3000/session/61a9aef6417576b9f074f427
 	};
 
+	const handleName = (res) => {
+		setName(res);
+	}
+
 	return (
 		<>
 			<div className={styles.homepage}>
@@ -87,9 +95,8 @@ const Home = () => {
 						for? Let's dive in.
 					</div>
 					<div className="d-flex w-100 justify-content-around">
-						<Button className={styles.formButton} onClick={createLinkHandler}>
-							Create Link
-						</Button>
+						<InputModal handleName={handleName}/>
+						<h4>{name}</h4>
 
 						<Form className="d-flex">
 							<Form.Control
