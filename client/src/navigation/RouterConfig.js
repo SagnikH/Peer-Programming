@@ -21,7 +21,7 @@ export const RouterConfig = () => {
 					}
 				/>
 				<Route
-					path="/sessions"
+					path="/session"
 					element={
 						<PrivateRoute>
 							<Sessions />

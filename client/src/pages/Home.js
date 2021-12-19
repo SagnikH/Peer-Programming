@@ -4,14 +4,17 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { fetchSessionById } from "../redux/actions/sessionActions";
 import { fetchUser } from "../redux/actions/userActions";
-import styles from '../styles/home.module.css';
+import styles from "../styles/home.module.css";
 import coWorking from "../assets/co-working.svg";
 
 const Home = () => {
 	const dispatch = useDispatch();
+	const isLoggedIn = useSelector((state) => state.auth.token);
+	const userId = useSelector((state) => state.user._id);
 
 	useEffect(() => {
 		//might need to fetch user data if modal is implemented
+		dispatch(fetchUser());
 	}, []);
 
 	//testing
@@ -24,27 +27,30 @@ const Home = () => {
 		// 				withCredentials: true,
 		// 			}
 		// 		);
-
 		// 		console.log(response.data);
 		// 	} catch (e) {
 		// 		console.log(e.response);
 		// 	}
 		// })();
-
 		// const _id = "61a9aef6417576b9f074f427";
 		// dispatch(fetchSessionById(_id));
-
-    // console.log("calling fetchuser thunk");
-    // dispatch(fetchUser());
+		// console.log("calling fetchuser thunk");
+		// dispatch(fetchUser());
 	}, []);
 
-	const createLinkHandler = (e) => {
+	const createLinkHandler = async (e) => {
 		e.preventDefault();
 		if (!isLoggedIn) {
 			window.location.href = "http://localhost:4000/auth/google";
+
+			return;
 		}
 
-    //if logged in take the name and userId and send to server->after getting redirect to that session
+		//if logged in take the name and userId and send to server->after getting redirect to that session
+		//const NAME = "test-session 19/12 ROUNAK"
+		console.log("join session userId", userId);
+		try {
+		} catch (e) {}
 	};
 	const joinLinkHandler = (e) => {
 		e.preventDefault();
@@ -52,7 +58,8 @@ const Home = () => {
 			window.location.href = "http://localhost:4000/auth/google";
 		}
 
-    //get the id from given url and use it to find the corresponding session data
+		//get the id from given url and use it to find the corresponding session data
+		//const link = http://localhost:3000/session/61a9aef6417576b9f074f427
 	};
 
 	return (
