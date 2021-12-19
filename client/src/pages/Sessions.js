@@ -1,7 +1,6 @@
 import styles from "../styles/sessions.module.css";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { checkAuth } from "../utils/checkAuth";
 import { Dropdown, Form, Button } from "react-bootstrap";
 
 const Sessions = () => {
