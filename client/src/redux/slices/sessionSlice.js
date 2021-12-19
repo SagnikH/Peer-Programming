@@ -4,7 +4,8 @@ import { fetchSessionById } from "../actions/sessionActions";
 const initialState = {
   name: "", 
   _id: "", 
-  documents: []
+  documents: [],
+  error: null,
 }
 
 export const sessionSlice = createSlice({
@@ -27,9 +28,15 @@ export const sessionSlice = createSlice({
 	extraReducers: (builder) => {
 		builder.addCase(fetchSessionById.fulfilled, (state, action) => {
 			Object.assign(state, action.payload);
+      state.error = false;
 		});
 
-		builder.addCase(fetchSessionById.rejected, () => initialState);
+		builder.addCase(fetchSessionById.rejected, (state) => {
+      state.name = "";
+      state._id = "";
+      state.documents = [];
+      state.error = true;
+    });
 	},
 });
 
