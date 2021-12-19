@@ -1,19 +1,26 @@
 import styles from '../styles/sessions.module.css';
-import {useSelector} from 'react-redux';
-import {useEffect, useState} from 'react';
-import { checkAuth } from "../utils/checkAuth";
-import {Dropdown, Form, Button} from 'react-bootstrap';
 import docsData from '../assets/docsData.json';
 
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { Dropdown, Form, Button } from "react-bootstrap";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { fetchSessionById } from '../redux/actions/sessionActions';
+import Loading from "../components/Loading";
+import Error404 from "./Error404";
 
 const Sessions = () => {
-    const [sessionName, setSessionName] = useState('');
-    const [docs, setDocs] = useState([]);
-    const [qtype, setQtype] = useState('');
-    const user = useSelector((state) => state.user);
+	const [sessionName, setSessionName] = useState("");
+	const [docs, setDocs] = useState([]);
+	const [qtype, setQtype] = useState("");
+	const user = useSelector((state) => state.user);
+	const error = useSelector((state) => state.session.error);
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
     
 
+	const { id } = useParams();
 
     const dummyDocs = docs.map((el) => {
         return (
@@ -27,87 +34,107 @@ const Sessions = () => {
         )
     })
 
-	useEffect(() => {
-		//always at the beginning check to see if token exists in LC mainly to handle page refresh and loosing the state
 
-		checkAuth(user);
-        setDocs(docsData);
+    setDocs(docsData);
+    
+	useEffect(() => {
+		dispatch(fetchSessionById(id));
 
 		//TODO: decide whether to redirect in case of token not present
 		//probably the token will the there as checkAuth mainly handles the loss of state values
 	}, []);
 
-    const handleClick = (e) => {
-        if (e.target.text === 'Leetcode Question')
-            setQtype('leetcode');
-        else if (e.target.text === 'Custom Question')
-            setQtype('custom');
-    }
+	const handleClick = (e) => {
+		if (e.target.text === "Leetcode Question") setQtype("leetcode");
+		else if (e.target.text === "Custom Question") setQtype("custom");
+	};
+	if (error === null) {
+		console.log("error null");
+		return (<Loading />);
+	}
+	else if (error) {
+		console.log("error true");
+		return (<Error404 />);
+	}
+	else {
 
-    return ( 
-        <>
-            <div className={styles.body}>
-                <div className={styles.sessionName}>Session name: {sessionName}</div>
-                <div className={styles.sessionContainer}>
-                    <div className={styles.sessionHistory}>
-                        <div>
-                            <div className={styles.historyHeading}>Documents History</div>
-                        </div>
-                        
-                        <div>
-                            {dummyDocs}
-                        </div>
-                    </div>
-                    <div className={styles.form}>
-                        <Dropdown className="mb-5">
-                            <Dropdown.Toggle className={styles.formButton} id="dropdown-basic">
-                                Create new doc
-                            </Dropdown.Toggle>
+		return (
+			<>
+				<div className={styles.body}>
+					<p>{id}</p>
+					<div className={styles.sessionName}>Session name: {sessionName}</div>
+					<div className={styles.sessionContainer}>
+						<div className={styles.sessionHistory}>
+							<div>
+								<div className={styles.historyHeading}>Documents History</div>
+							</div>
 
-                            <Dropdown.Menu >
-                                <Dropdown.Item onClick={handleClick}>Leetcode Question</Dropdown.Item>
-                                <Dropdown.Item onClick={handleClick}>Custom Question</Dropdown.Item>
-                            </Dropdown.Menu>
-                        </Dropdown>
-                        <div>
-                            {qtype==='custom' && (
-                                <Form className="d-flex flex-column align-items-center">
-                                    <Form.Group className="mb-3" controlId="formBasicEmail">
-                                        <Form.Label>Enter Title</Form.Label>
-                                        <Form.Control className={styles.input} type="text" placeholder="Enter title" />
-                                    </Form.Group>
-                                    <Form.Group className="mb-3" controlId="formBasicEmail">
-                                    <Form.Label>Enter Question</Form.Label>
-                                    <Form.Control as="textarea" rows={8} cols={50} />
-                                    </Form.Group>
+							<div>{dummyDocs}</div>
+						</div>
+						<div className={styles.form}>
+							<Dropdown className="mb-5">
+								<Dropdown.Toggle
+									className={styles.formButton}
+									id="dropdown-basic"
+								>
+									Create new doc
+								</Dropdown.Toggle>
 
-                                    <Button className={styles.formButton} type="submit">
-                                        Create Doc
-                                    </Button>
-                                </Form>
-                            )}
-                            
-                        </div>
-                        <div>
-                            {qtype==='leetcode' && 
-                                <Form className="d-flex flex-column align-items-center">
-                                    <Form.Group className="mb-3" controlId="formBasicEmail">
-                                        <Form.Label>Enter Leetcode Question Link</Form.Label>
-                                        <Form.Control className={styles.input} type="text" placeholder="Enter link" />
-                                    </Form.Group>
+								<Dropdown.Menu>
+									<Dropdown.Item onClick={handleClick}>
+										Leetcode Question
+									</Dropdown.Item>
+									<Dropdown.Item onClick={handleClick}>
+										Custom Question
+									</Dropdown.Item>
+								</Dropdown.Menu>
+							</Dropdown>
+							<div>
+								{qtype === "custom" && (
+									<Form className="d-flex flex-column align-items-center">
+										<Form.Group className="mb-3" controlId="formBasicEmail">
+											<Form.Label>Enter Title</Form.Label>
+											<Form.Control
+												className={styles.input}
+												type="text"
+												placeholder="Enter title"
+											/>
+										</Form.Group>
+										<Form.Group className="mb-3" controlId="formBasicEmail">
+											<Form.Label>Enter Question</Form.Label>
+											<Form.Control as="textarea" rows={8} cols={50} />
+										</Form.Group>
 
-                                    
-                                    <Button className={styles.formButton} type="submit">
-                                        Create Doc
-                                    </Button>
-                                </Form>
-                            }
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </>
-     );
-}
- 
+										<Button className={styles.formButton} type="submit">
+											Create Doc
+										</Button>
+									</Form>
+								)}
+							</div>
+							<div>
+								{qtype === "leetcode" && (
+									<Form className="d-flex flex-column align-items-center">
+										<Form.Group className="mb-3" controlId="formBasicEmail">
+											<Form.Label>Enter Leetcode Question Link</Form.Label>
+											<Form.Control
+												className={styles.input}
+												type="text"
+												placeholder="Enter link"
+											/>
+										</Form.Group>
+
+										<Button className={styles.formButton} type="submit">
+											Create Doc
+										</Button>
+									</Form>
+								)}
+							</div>
+						</div>
+					</div>
+				</div>
+			</>
+		);
+	}
+};
+
 export default Sessions;

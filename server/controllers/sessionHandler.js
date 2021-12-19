@@ -13,7 +13,12 @@ const createSession = async (req, res) => {
 		//TODO: check userid validity
 		const session = await Session.create({ name, userId });
 
-		const userSession = { name, sessionId: session._id };
+		const userSession = {
+			name,
+			sessionId: session._id,
+			createdAt: session.createdAt,
+		};
+		console.log("server userSession", userSession);
 
 		const user = await User.findByIdAndUpdate(
 			userId,
@@ -21,12 +26,12 @@ const createSession = async (req, res) => {
 			{ new: true }
 		);
 
-		// console.log(user);
+		console.log(user);
 
-		res.json(session).status(200);
+		res.status(200).json(session);
 	} catch (e) {
-		console.log(e.message);
-		res.json(e.message).status(403);
+		console.log("error in session", e.message);
+		res.status(403).json(e.message);
 	}
 };
 
@@ -42,11 +47,11 @@ const getSession = async (req, res, next) => {
 		if (!sessionInfo)
 			return next(new NotFoundError("no session with given session id"));
 
-		res.json(sessionInfo).status(200);
+		res.status(200).json(sessionInfo);
 	} catch (e) {
 		//404 -> data not found
 		console.log(e);
-		res.json(e).status(500);
+		res.status(500).json(e);
 	}
 };
 
@@ -70,7 +75,7 @@ const updateSession = async (req, res, next) => {
 			{ new: true }
 		);
 
-		res.json(session).status(200);
+		res.status(200).json(session);
 	} catch (e) {
 		console.log(e);
 		res.status(500).json(e);
@@ -79,16 +84,29 @@ const updateSession = async (req, res, next) => {
 
 const deleteSession = async (req, res, next) => {
 	const _id = req.params.id;
+
 	if (!ObjectId.isValid(_id))
 		return next(new NotFoundError("invalid document id"));
 
 	try {
 		const deletedSession = await Session.findByIdAndDelete(_id);
+		console.log("deleted session", deletedSession);
+		const { userId } = deletedSession;
 
-		res.status(202).json("deleted");
+		//find session in user model & update accordingly
+		const user = await User.findByIdAndUpdate(
+			userId,
+			{
+				$pull: { userSessions: { sessionId: deletedSession._id } },
+			},
+			{ new: true }
+		);
+
+		//use this user to update frontend state (maybe)
+		res.status(202).json(user);
 	} catch (e) {
 		console.log(e);
-		res.json(e).status(500);
+		res.status(500).json(e);
 	}
 };
 

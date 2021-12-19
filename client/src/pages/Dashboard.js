@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { checkAuth } from "../utils/checkAuth";
+import { useDispatch } from "react-redux";
+import { fetchUser } from "../redux/actions/userActions";
 import Alert from "../components/Alert.js";
 import InputModal from "../components/InputModal.js";
 import Loading from '../components/Loading.js';
@@ -10,6 +11,7 @@ import { Button, Form } from "react-bootstrap";
 import styles2 from '../styles/home.module.css';
 
 const Dashboard = () => {
+  const dispatch = useDispatch();
 	//passed as a prop to modal to be used as a callback to logout
     const [loading, setLoading] = useState(true);
 	const [name, setName] = useState("");
@@ -27,7 +29,7 @@ const Dashboard = () => {
 	useEffect(() => {
 		//always at the beginning check to see if token exists in LC mainly to handle page refresh and loosing the state
 
-		checkAuth(user);
+		dispatch(fetchUser());
 
         setTimeout(() => {
             setLoading(false);
@@ -54,6 +56,9 @@ const Dashboard = () => {
 		setName(res);
 	}
     
+    
+	
+
 	return (
 		<>
             {loading ? <Loading/> : 
@@ -63,7 +68,6 @@ const Dashboard = () => {
 				<div className={styles.section}>
 					<div className={styles.heading}>User Information</div>
 					<div className={styles.userContents}>
-						
 						<img
 							src={user.picture}
 							alt="Image"
