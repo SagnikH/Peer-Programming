@@ -1,12 +1,13 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { checkAuth } from "../utils/checkAuth";
 import Alert from "../components/Alert.js";
-import Layout from '../components/Layout.js';
+import Loading from '../components/Loading.js';
 import styles from "../styles/dashboard.module.css";
 
 const Dashboard = () => {
 	//passed as a prop to modal to be used as a callback to logout
+    const [loading, setLoading] = useState(true);
     
 	const logoutHandler = (e) => {
 		window.location.href = "http://localhost:4000/auth/logout";
@@ -19,12 +20,19 @@ const Dashboard = () => {
 
 		checkAuth(user);
 
+        setTimeout(() => {
+            setLoading(false);
+        }, 5000)
+
 		//TODO: decide whether to redirect in case of token not present
 		//probably the token will the there as checkAuth mainly handles the loss of state values
 	}, []);
     
 	return (
 		<>
+            {loading ? <Loading/> : 
+            
+            <>
 			<div className={styles.dashboard}>
 				<div className={styles.userInfoSection}>
 					<div className={styles.heading}>User Information</div>
@@ -148,6 +156,8 @@ const Dashboard = () => {
 			<div className={styles.logoutButton}>
 				<Alert alertFunction={logoutHandler} />
 			</div>
+            </>
+        }
 		</>
 	);
 };
