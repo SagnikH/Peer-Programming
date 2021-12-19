@@ -66,12 +66,16 @@ const Home = () => {
 		if (!isLoggedIn) {
 			window.location.href = "http://localhost:4000/auth/google";
 		}
+
+    //if logged in take the name and userId and send to server->after getting redirect to that session
 	};
 	const joinLinkHandler = (e) => {
 		e.preventDefault();
 		if (!isLoggedIn) {
 			window.location.href = "http://localhost:4000/auth/google";
 		}
+
+    //get the id from given url and use it to find the corresponding session data
 	};
 
 	return (

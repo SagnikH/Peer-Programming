@@ -12,18 +12,39 @@ export const RouterConfig = () => {
 		<>
 			<Routes>
 				<Route path="/" element={<Home />} />
-				<Route path="*" element={<NotFound404 />} />
-				<Route path="dashboard" element={<Dashboard/>} />
-				<Route path="sessions" element={<Sessions/>} />
-				<Route path="doc" element={<Doc/>} />
+				<Route
+					path="/dashboard"
+					element={
+						<PrivateRoute>
+							<Dashboard />
+						</PrivateRoute>
+					}
+				/>
+				<Route
+					path="/sessions"
+					element={
+						<PrivateRoute>
+							<Sessions />
+						</PrivateRoute>
+					}
+				/>
+				<Route
+					path="/doc"
+					element={
+						<PrivateRoute>
+							<Doc />
+						</PrivateRoute>
+					}
+				/>
 				<Route
 					path="/app"
 					element={
 						<PrivateRoute>
 							<h1> Private App </h1>
 						</PrivateRoute>
-					} 
+					}
 				/>
+				<Route path="*" element={<NotFound404 />} />
 			</Routes>
 		</>
 	);
