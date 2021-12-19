@@ -1,17 +1,22 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { fetchToken } from "../actions/authTokenActions";
+
+const initialState = { token: null };
 
 export const authSlice = createSlice({
 	name: "auth",
-	initialState: {
-		token: null,
-	},
+	initialState,
+
 	reducers: {
-		addToken: (state, action) => {
+		removeToken: () => initialState,
+	},
+
+	extraReducers: (builder) => {
+		builder.addCase(fetchToken.fulfilled, (state, action) => {
 			state.token = action.payload;
-		},
-		removeToken: (state) => {
-			Object.assign(state, {});
-		},
+		});
+
+		builder.addCase(fetchToken.rejected, () => initialState);
 	},
 });
 

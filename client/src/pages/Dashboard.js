@@ -1,10 +1,12 @@
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { checkAuth } from "../utils/checkAuth";
+import { useDispatch } from "react-redux";
+import { fetchUser } from "../redux/actions/userActions";
 import Alert from "../components/Alert.js";
 import styles from "../styles/dashboard.module.css";
 
 const Dashboard = () => {
+  const dispatch = useDispatch();
 	//passed as a prop to modal to be used as a callback to logout
 	const logoutHandler = (e) => {
 		window.location.href = "http://localhost:4000/auth/logout";
@@ -13,7 +15,7 @@ const Dashboard = () => {
 	const user = useSelector((state) => state.user);
 
 	useEffect(() => {
-    
+    dispatch(fetchUser());
 	}, []);
 
 	return (

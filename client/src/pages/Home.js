@@ -1,12 +1,9 @@
 import { Button, Form } from "react-bootstrap";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-// import axios from "axios";
-// import { addUser, removeUser } from "../redux/userSlice";
+import axios from "axios";
 import { fetchSessionById } from "../redux/actions/sessionActions";
 import { fetchUser } from "../redux/actions/userActions";
-import { addToken, removeToken } from "../redux/slices/authTokenSlice";
-import { checkAuth } from "../utils/checkAuth";
 import styles from '../styles/home.module.css';
 import coWorking from "../assets/co-working.svg";
 
@@ -15,26 +12,7 @@ const Home = () => {
 	const isLoggedIn = useSelector((state) => state.auth.token);
 
 	useEffect(() => {
-		(async () => {
-			try {
-				const userPayload = await checkAuth();
-
-				if (userPayload) {
-					const TOKEN = JSON.stringify(userPayload);
-
-					// dispatch(addUser(userPayload));
-					dispatch(addToken(TOKEN));
-				} else {
-					// dispatch(removeUser());
-					dispatch(removeToken());
-				}
-			} catch (e) {
-				console.log(e);
-
-				// dispatch(removeUser());
-				dispatch(removeToken());
-			}
-		})();
+		//might need to fetch user data if modal is implemented
 	}, []);
 
 	//testing

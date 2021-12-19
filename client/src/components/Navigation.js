@@ -1,11 +1,20 @@
-import { Navbar, Nav, Container } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { Navbar, Container } from "react-bootstrap";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchToken } from "../redux/actions/authTokenActions";
 import { Link } from "react-router-dom";
 import favicon from '../assets/favicon.png'
 import styles from "../styles/navigation.module.css";
 
 const Navigation = () => {
+  const dispatch = useDispatch();
 	const isLoggedIn = useSelector((state) => state.auth.token);
+
+  //handle the token for the nav bar here itself
+  useEffect(() => {
+    console.log("in navbar");
+    dispatch(fetchToken());
+  }, []);
 
 	return (
 		<Navbar className={styles.navbar} expand="lg">
