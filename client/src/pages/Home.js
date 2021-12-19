@@ -47,10 +47,21 @@ const Home = () => {
 		}
 
 		//if logged in take the name and userId and send to server->after getting redirect to that session
-		//const NAME = "test-session 19/12 ROUNAK"
+		const NAME = "test-session 20/12 night-2";
 		console.log("join session userId", userId);
 		try {
-		} catch (e) {}
+			console.log("sending request for session");
+
+			const res = await axios.post(
+				"http://localhost:4000/api/session",
+				{ name: NAME, userId },
+				{ withCredentials: true }
+			);
+
+			console.log("new session created", res.data);
+		} catch (e) {
+			console.log("error in session fetching", e);
+		}
 	};
 	const joinLinkHandler = (e) => {
 		e.preventDefault();

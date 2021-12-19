@@ -6,6 +6,7 @@ const ObjectId = mongoose.Types.ObjectId;
 
 const createSession = async (req, res) => {
 	const { name, userId } = req.body;
+	console.log("creating session", { name, userId });
 	// documents.documentId = mongoose.Types.ObjectId(documents.documentId);
 	// console.log(documents.documentId);
 
