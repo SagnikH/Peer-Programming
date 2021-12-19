@@ -7,7 +7,7 @@ import { fetchSessionById } from "../redux/actions/sessionActions";
 import { fetchUser } from "../redux/actions/userActions";
 import { addToken, removeToken } from "../redux/slices/authTokenSlice";
 import { checkAuth } from "../utils/checkAuth";
-import "../styles/home.css";
+import styles from '../styles/home.module.css';
 import coWorking from "../assets/co-working.svg";
 
 const Home = () => {
@@ -76,30 +76,30 @@ const Home = () => {
 
 	return (
 		<>
-			<div className="homepage">
+			<div className={styles.homepage}>
 				<img src={coWorking} alt="" height={500} width={500} />
 
-				<div className="contents">
-					<div className="subHeading">Think and Code Together, in</div>
-					<div className="heading">Apes Collab</div>
-					<div className="description">
+				<div className={styles.contents}>
+					<div className={styles.subHeading}>Think and Code Together, in</div>
+					<div className={styles.heading}>Apes Collab</div>
+					<div className={styles.description}>
 						Turn your best ideas into reality, by coding and building together
 						with your peers and friends, in real-time. So what are you waiting
 						for? Let's dive in.
 					</div>
 					<div className="d-flex w-100 justify-content-around">
-						<Button className="formButton" onClick={createLinkHandler}>
+						<Button className={styles.formButton} onClick={createLinkHandler}>
 							Create Link
 						</Button>
 
 						<Form className="d-flex">
 							<Form.Control
-								className="formInput"
+								className={styles.formInput}
 								type="text"
 								placeholder="Enter link"
 							/>
 							<Button
-								className="formButton"
+								className={styles.formButton}
 								type="submit"
 								onClick={joinLinkHandler}
 							>
