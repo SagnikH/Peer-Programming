@@ -9,7 +9,6 @@ import coWorking from "../assets/co-working.svg";
 
 const Home = () => {
 	const dispatch = useDispatch();
-	const isLoggedIn = useSelector((state) => state.auth.token);
 
 	useEffect(() => {
 		//might need to fetch user data if modal is implemented

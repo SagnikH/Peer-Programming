@@ -31,7 +31,7 @@ const createDocument = async (req, res, next) => {
 			{ new: true }
 		);
 
-		res.json(session).status(200);
+		res.status(200).json(session);
 	} catch (e) {
 		console.log(e.message);
 		res.status(403).json(e.message);
@@ -51,10 +51,10 @@ const getDocument = async (req, res, next) => {
 				new NotFoundError("no document found with given document id")
 			);
 
-		res.json(documentInfo).status(200);
+		res.status(200).json(documentInfo);
 	} catch (e) {
 		console.log(e);
-		res.json(e).status(500);
+		res.status(500).json(e);
 	}
 };
 
@@ -72,7 +72,7 @@ const updateDocument = async (req, res, next) => {
 			{ new: true }
 		);
 
-		res.json(document).status(200);
+		res.status(200).json(document);
 	} catch (e) {
 		console.log(e);
 		res.status(500).json(e);
@@ -93,7 +93,6 @@ const deleteDocument = async (req, res, next) => {
 		const session = await Session.findByIdAndUpdate(
 			sessionId,
 			{
-				//can use the dot notation to access documentId -> { "documents.documentId" : deletedDocument._id }
 				$pull: { documents: { documentId: deletedDocument._id } },
 			},
 			{ new: true, safe: true }
@@ -103,7 +102,7 @@ const deleteDocument = async (req, res, next) => {
 		res.status(202).json("document deleted");
 	} catch (e) {
 		console.log(e);
-		res.json(e).status(500);
+		res.status(500).json(e);
 	}
 };
 
