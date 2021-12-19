@@ -1,5 +1,5 @@
 import styles from "../styles/sessions.module.css";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { Dropdown, Form, Button } from "react-bootstrap";
 import { Navigate, useParams } from "react-router-dom";
@@ -10,6 +10,7 @@ const Sessions = () => {
 	const [docs, setDocs] = useState([]);
 	const [qtype, setQtype] = useState("");
 	const user = useSelector((state) => state.user);
+	const dispatch = useDispatch();
 
 	const dummy = [
 		{
