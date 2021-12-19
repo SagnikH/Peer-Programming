@@ -2,15 +2,19 @@ import styles from "../styles/sessions.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { Dropdown, Form, Button } from "react-bootstrap";
-import { Navigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { fetchSessionById } from '../redux/actions/sessionActions';
+import Loading from "../components/Loading";
+import Error404 from "./Error404";
 
 const Sessions = () => {
 	const [sessionName, setSessionName] = useState("");
 	const [docs, setDocs] = useState([]);
 	const [qtype, setQtype] = useState("");
 	const user = useSelector((state) => state.user);
+	const error = useSelector((state) => state.session.error);
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
 	const dummy = [
 		{
@@ -85,9 +89,6 @@ const Sessions = () => {
 	const { id } = useParams();
 
 	//TODO check id validity
-	if (!id) {
-		// <Navigate to={}
-	}
 
 
 	useEffect(() => {
@@ -102,83 +103,93 @@ const Sessions = () => {
 		if (e.target.text === "Leetcode Question") setQtype("leetcode");
 		else if (e.target.text === "Custom Question") setQtype("custom");
 	};
+	if (error === null) {
+		console.log("error null");
+		return (<Loading />);
+	}
+	else if (error) {
+		console.log("error true");
+		return (<Error404 />);
+	}
+	else {
 
-	return (
-		<>
-			<div className={styles.body}>
-				<p>{id}</p>
-				<div className={styles.sessionName}>Session name: {sessionName}</div>
-				<div className={styles.sessionContainer}>
-					<div className={styles.sessionHistory}>
-						<div>
-							<div className={styles.historyHeading}>Documents History</div>
+		return (
+			<>
+				<div className={styles.body}>
+					<p>{id}</p>
+					<div className={styles.sessionName}>Session name: {sessionName}</div>
+					<div className={styles.sessionContainer}>
+						<div className={styles.sessionHistory}>
+							<div>
+								<div className={styles.historyHeading}>Documents History</div>
+							</div>
+
+							<div>{dummyDocs}</div>
 						</div>
+						<div className={styles.form}>
+							<Dropdown className="mb-5">
+								<Dropdown.Toggle
+									className={styles.formButton}
+									id="dropdown-basic"
+								>
+									Create new doc
+								</Dropdown.Toggle>
 
-						<div>{dummyDocs}</div>
-					</div>
-					<div className={styles.form}>
-						<Dropdown className="mb-5">
-							<Dropdown.Toggle
-								className={styles.formButton}
-								id="dropdown-basic"
-							>
-								Create new doc
-							</Dropdown.Toggle>
+								<Dropdown.Menu>
+									<Dropdown.Item onClick={handleClick}>
+										Leetcode Question
+									</Dropdown.Item>
+									<Dropdown.Item onClick={handleClick}>
+										Custom Question
+									</Dropdown.Item>
+								</Dropdown.Menu>
+							</Dropdown>
+							<div>
+								{qtype === "custom" && (
+									<Form className="d-flex flex-column align-items-center">
+										<Form.Group className="mb-3" controlId="formBasicEmail">
+											<Form.Label>Enter Title</Form.Label>
+											<Form.Control
+												className={styles.input}
+												type="text"
+												placeholder="Enter title"
+											/>
+										</Form.Group>
+										<Form.Group className="mb-3" controlId="formBasicEmail">
+											<Form.Label>Enter Question</Form.Label>
+											<Form.Control as="textarea" rows={8} cols={50} />
+										</Form.Group>
 
-							<Dropdown.Menu>
-								<Dropdown.Item onClick={handleClick}>
-									Leetcode Question
-								</Dropdown.Item>
-								<Dropdown.Item onClick={handleClick}>
-									Custom Question
-								</Dropdown.Item>
-							</Dropdown.Menu>
-						</Dropdown>
-						<div>
-							{qtype === "custom" && (
-								<Form className="d-flex flex-column align-items-center">
-									<Form.Group className="mb-3" controlId="formBasicEmail">
-										<Form.Label>Enter Title</Form.Label>
-										<Form.Control
-											className={styles.input}
-											type="text"
-											placeholder="Enter title"
-										/>
-									</Form.Group>
-									<Form.Group className="mb-3" controlId="formBasicEmail">
-										<Form.Label>Enter Question</Form.Label>
-										<Form.Control as="textarea" rows={8} cols={50} />
-									</Form.Group>
+										<Button className={styles.formButton} type="submit">
+											Create Doc
+										</Button>
+									</Form>
+								)}
+							</div>
+							<div>
+								{qtype === "leetcode" && (
+									<Form className="d-flex flex-column align-items-center">
+										<Form.Group className="mb-3" controlId="formBasicEmail">
+											<Form.Label>Enter Leetcode Question Link</Form.Label>
+											<Form.Control
+												className={styles.input}
+												type="text"
+												placeholder="Enter link"
+											/>
+										</Form.Group>
 
-									<Button className={styles.formButton} type="submit">
-										Create Doc
-									</Button>
-								</Form>
-							)}
-						</div>
-						<div>
-							{qtype === "leetcode" && (
-								<Form className="d-flex flex-column align-items-center">
-									<Form.Group className="mb-3" controlId="formBasicEmail">
-										<Form.Label>Enter Leetcode Question Link</Form.Label>
-										<Form.Control
-											className={styles.input}
-											type="text"
-											placeholder="Enter link"
-										/>
-									</Form.Group>
-
-									<Button className={styles.formButton} type="submit">
-										Create Doc
-									</Button>
-								</Form>
-							)}
+										<Button className={styles.formButton} type="submit">
+											Create Doc
+										</Button>
+									</Form>
+								)}
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-		</>
-	);
+			</>
+		);
+	}
 };
 
 export default Sessions;
