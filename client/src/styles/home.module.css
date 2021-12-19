@@ -57,6 +57,17 @@
   background-color: #2c232c !important;
 }
 
+.form{
+  width: 400px;
+}
+
+.modalButtons{
+  display: flex;
+  justify-content: space-around;
+  width: 50%;
+  margin-left: auto;
+}
+
 @media only screen and (max-width: 750px) {
   .homepage {
     flex-direction: column;

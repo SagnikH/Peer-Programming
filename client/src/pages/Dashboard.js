@@ -2,18 +2,27 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { checkAuth } from "../utils/checkAuth";
 import Alert from "../components/Alert.js";
+import InputModal from "../components/InputModal.js";
 import Loading from '../components/Loading.js';
 import styles from "../styles/dashboard.module.css";
+import sessions from "../assets/sessions.json";
+import { Button, Form } from "react-bootstrap";
+import styles2 from '../styles/home.module.css';
 
 const Dashboard = () => {
 	//passed as a prop to modal to be used as a callback to logout
     const [loading, setLoading] = useState(true);
+	const [name, setName] = useState("");
     
 	const logoutHandler = (e) => {
 		window.location.href = "http://localhost:4000/auth/logout";
 	};
 
 	const user = useSelector((state) => state.user);
+
+	const getDate = (date) => {
+		return date.slice(5, 15);
+	}
 
 	useEffect(() => {
 		//always at the beginning check to see if token exists in LC mainly to handle page refresh and loosing the state
@@ -22,11 +31,28 @@ const Dashboard = () => {
 
         setTimeout(() => {
             setLoading(false);
-        }, 5000)
+        }, 1000)
 
 		//TODO: decide whether to redirect in case of token not present
 		//probably the token will the there as checkAuth mainly handles the loss of state values
 	}, []);
+
+	const createLinkHandler = (e) => {
+		e.preventDefault();
+		if (!user) {
+			window.location.href = "http://localhost:4000/auth/google";
+		}
+	};
+	const joinLinkHandler = (e) => {
+		e.preventDefault();
+		if (!user) {
+			window.location.href = "http://localhost:4000/auth/google";
+		}
+	};
+
+	const handleName = (res) => {
+		setName(res);
+	}
     
 	return (
 		<>
@@ -34,7 +60,7 @@ const Dashboard = () => {
             
             <>
 			<div className={styles.dashboard}>
-				<div className={styles.userInfoSection}>
+				<div className={styles.section}>
 					<div className={styles.heading}>User Information</div>
 					<div className={styles.userContents}>
 						
@@ -53,109 +79,67 @@ const Dashboard = () => {
 						</div>
 					</div>
 				</div>
-				<div className={styles.sessionsSection}>
+				<div className={styles.section}>
 					<div className={styles.heading}> Created Sessions </div>
 					<div className={styles.contents}>
-						<ul>
-							<li>
-								<div>Time: </div>
-								<div>Link:</div>
-								<a></a>
-							</li>
-							<li>
-								<div>Time: </div>
-								<div>Link:</div>
-								<a></a>
-							</li>
-							<li>
-								<div>Time: </div>
-								<div>Link:</div>
-								<a></a>
-							</li>
-							<li>
-								<div>Time: </div>
-								<div>Link:</div>
-								<a></a>
-							</li>
-							<li>
-								<div>Time: </div>
-								<div>Link:</div>
-								<a></a>
-							</li>
-							<li>
-								<div>Time: </div>
-								<div>Link:</div>
-								<a></a>
-							</li>
-							<li>
-								<div>Time: </div>
-								<div>Link:</div>
-								<a></a>
-							</li>
-							<li>
-								<div>Time: </div>
-								<div>Link:</div>
-								<a></a>
-							</li>
-							<li>
-								<div>Time: </div>
-								<div>Link:</div>
-								<a></a>
-							</li>
-							<li>
-								<div>Time: </div>
-								<div>Link:</div>
-								<a></a>
-							</li>
-							<li>
-								<div>Time: </div>
-								<div>Link:</div>
-								<a></a>
-							</li>
-							<li>
-								<div>Time: </div>
-								<div>Link:</div>
-								<a></a>
-							</li>
-							<li>
-								<div>Time: </div>
-								<div>Link:</div>
-								<a></a>
-							</li>
-							<li>
-								<div>Time: </div>
-								<div>Link:</div>
-								<a></a>
-							</li>
-						</ul>
+						<div>
+							{sessions.map((session)=>{
+								return (
+									<div className={styles.session}>
+										<div>Name: {session.Name}</div>
+										<div>Date: {getDate(session.Date)}</div>
+										<div>Link: {session.Link}</div>
+									</div>
+								)
+							})}
+						</div>
 					</div>
 				</div>
-				<div className={styles.sessionsSection}>
+				<div className={styles.section}>
 					<div className={styles.heading}> Shared Sessions </div>
 					<div className={styles.contents}>
-						<ul>
-							<li>
-								<div>Time: </div>
-								<div>Link:</div>
-								<a></a>
-							</li>
-							<li>
-								<div>Time: </div>
-								<div>Link:</div>
-								<a></a>
-							</li>
-							<li>
-								<div>Time: </div>
-								<div>Link:</div>
-								<a></a>
-							</li>
-						</ul>
+						<div>
+							{sessions.map((session)=>{
+								return (
+									<div className={styles.session}>
+										<div>Name: {session.Name}</div>
+										<div>Date: {getDate(session.Date)}</div>
+										<div>Link: {session.Link}</div>
+									</div>
+								)
+							})}
+						</div>
 					</div>
 				</div>
 			</div>
-			<div className={styles.logoutButton}>
-				<Alert alertFunction={logoutHandler} />
+			<div className={styles.buttons}>
+				
+				<div className={styles.linkButtons}>
+					<InputModal handleName={handleName}/>
+					<h4>{name}</h4>
+
+					<Form className="d-flex">
+						<Form.Control
+							className={styles2.formInput}
+							type="text"
+							placeholder="Enter link"
+						/>
+						<Button
+							className={styles2.formButton}
+							type="submit"
+							onClick={joinLinkHandler}
+						>
+							Join Link
+						</Button>
+					</Form>
+				</div>
+
+				<div className={styles.logoutButton}>
+					<Alert alertFunction={logoutHandler} />
+				</div>
+				
 			</div>
+			
             </>
         }
 		</>

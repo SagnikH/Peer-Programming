@@ -3,6 +3,7 @@ import {useSelector} from 'react-redux';
 import {useEffect, useState} from 'react';
 import { checkAuth } from "../utils/checkAuth";
 import {Dropdown, Form, Button} from 'react-bootstrap';
+import docsData from '../assets/docsData.json';
 
 
 const Sessions = () => {
@@ -11,74 +12,17 @@ const Sessions = () => {
     const [qtype, setQtype] = useState('');
     const user = useSelector((state) => state.user);
 
-
-    const dummy = [
-        {
-            "sessionId": "abcdefgh",
-            "cretedAt": new Date().toString(),
-            "questionTitle": "Two sum"
-        },
-        {
-            "sessionId": "abcdexzfgh",
-            "cretedAt": new Date().toString(),
-            "questionTitle": "Two sum"
-        },
-        {
-            "sessionId": "abcyudsdfefgh",
-            "cretedAt": new Date().toString(),
-            "questionTitle": "Two sum"
-        },
-        {
-            "sessionId": "abcdsrgsefgh",
-            "cretedAt": new Date().toString(),
-            "questionTitle": "Two sum"
-        },
-        {
-            "sessionId": "abcdsreerfgh",
-            "cretedAt": new Date().toString(),
-            "questionTitle": "Two sum"
-        },
-        {
-            "sessionId": "abcdsrewaefgh",
-            "cretedAt": new Date().toString(),
-            "questionTitle": "Two sum"
-        },
-        {
-            "sessionId": "abcdsdfrefgh",
-            "cretedAt": new Date().toString(),
-            "questionTitle": "Two sum"
-        },
-        {
-            "sessionId": "abcdsefrgrefgh",
-            "cretedAt": new Date().toString(),
-            "questionTitle": "Two sum"
-        },
-        {
-            "sessionId": "abcdstgrefgh",
-            "cretedAt": new Date().toString(),
-            "questionTitle": "Two sum"
-        },
-        {
-            "sessionId": "abcdsrefwerfgh",
-            "cretedAt": new Date().toString(),
-            "questionTitle": "Two sum"
-        },
-        {
-            "sessionId": "abcdsrefwegh",
-            "cretedAt": new Date().toString(),
-            "questionTitle": "Two sum"
-        },
-    ];
+    
 
 
     const dummyDocs = docs.map((el) => {
         return (
             <div href="/sessions" className={styles.historyItems}>
-                <div key={el.sessionId}>
+                <a key={el.sessionId}>
                     <div>Id: {el.sessionId}</div>
                     <div>Created at: {el.cretedAt}</div>
                     <div>Question title: {el.questionTitle}</div>
-                </div>
+                </a>
             </div>
         )
     })
@@ -87,7 +31,7 @@ const Sessions = () => {
 		//always at the beginning check to see if token exists in LC mainly to handle page refresh and loosing the state
 
 		checkAuth(user);
-        setDocs(dummy);
+        setDocs(docsData);
 
 		//TODO: decide whether to redirect in case of token not present
 		//probably the token will the there as checkAuth mainly handles the loss of state values
