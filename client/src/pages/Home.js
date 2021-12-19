@@ -3,7 +3,8 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 // import axios from "axios";
 // import { addUser, removeUser } from "../redux/userSlice";
-// import { fetchSessionById } from "../redux/actions/sessionActions";
+import { fetchSessionById } from "../redux/actions/sessionActions";
+import { fetchUser } from "../redux/actions/userActions";
 import { addToken, removeToken } from "../redux/slices/authTokenSlice";
 import { checkAuth } from "../utils/checkAuth";
 import "../styles/home.css";
@@ -37,25 +38,28 @@ const Home = () => {
 	}, []);
 
 	//testing
-	// useEffect(() => {
-	// 	// (async () => {
-	// 	// 	try {
-	// 	// 		const response = await axios.get(
-	// 	// 			"http://localhost:4000/api/session/61a9aef6417576b9f074f427",
-	// 	// 			{
-	// 	// 				withCredentials: true,
-	// 	// 			}
-	// 	// 		);
+	useEffect(() => {
+		// (async () => {
+		// 	try {
+		// 		const response = await axios.get(
+		// 			"http://localhost:4000/api/session/61a9aef6417576b9f074f427",
+		// 			{
+		// 				withCredentials: true,
+		// 			}
+		// 		);
 
-	// 	// 		console.log(response.data);
-	// 	// 	} catch (e) {
-	// 	// 		console.log(e.response);
-	// 	// 	}
-	// 	// })();
+		// 		console.log(response.data);
+		// 	} catch (e) {
+		// 		console.log(e.response);
+		// 	}
+		// })();
 
-	// 	// const _id = "61a9aef6417576b9f074f427";
-	// 	// dispatch(fetchSessionById(_id));
-	// }, []);
+		// const _id = "61a9aef6417576b9f074f427";
+		// dispatch(fetchSessionById(_id));
+
+    // console.log("calling fetchuser thunk");
+    // dispatch(fetchUser());
+	}, []);
 
 	const createLinkHandler = (e) => {
 		e.preventDefault();
