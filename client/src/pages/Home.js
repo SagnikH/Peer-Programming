@@ -1,12 +1,12 @@
 import { Button, Form } from "react-bootstrap";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-// import axios from "axios";
-// import { addUser, removeUser } from "../redux/userSlice";
+import axios from "axios";
+import { addUser, removeUser } from "../redux/slices/userSlice";
 // import { fetchSessionById } from "../redux/actions/sessionActions";
 import { addToken, removeToken } from "../redux/slices/authTokenSlice";
 import { checkAuth } from "../utils/checkAuth";
-import "../styles/home.css";
+import styles from '../styles/home.module.css';
 import coWorking from "../assets/co-working.svg";
 
 const Home = () => {
@@ -21,16 +21,16 @@ const Home = () => {
 				if (userPayload) {
 					const TOKEN = JSON.stringify(userPayload);
 
-					// dispatch(addUser(userPayload));
+					dispatch(addUser(userPayload));
 					dispatch(addToken(TOKEN));
 				} else {
-					// dispatch(removeUser());
+					dispatch(removeUser());
 					dispatch(removeToken());
 				}
 			} catch (e) {
 				console.log(e);
 
-				// dispatch(removeUser());
+				dispatch(removeUser());
 				dispatch(removeToken());
 			}
 		})();
@@ -72,30 +72,30 @@ const Home = () => {
 
 	return (
 		<>
-			<div className="homepage">
+			<div className={styles.homepage}>
 				<img src={coWorking} alt="" height={500} width={500} />
 
-				<div className="contents">
-					<div className="subHeading">Think and Code Together, in</div>
-					<div className="heading">Apes Collab</div>
-					<div className="description">
+				<div className={styles.contents}>
+					<div className={styles.subHeading}>Think and Code Together, in</div>
+					<div className={styles.heading}>Apes Collab</div>
+					<div className={styles.description}>
 						Turn your best ideas into reality, by coding and building together
 						with your peers and friends, in real-time. So what are you waiting
 						for? Let's dive in.
 					</div>
 					<div className="d-flex w-100 justify-content-around">
-						<Button className="formButton" onClick={createLinkHandler}>
+						<Button className={styles.formButton} onClick={createLinkHandler}>
 							Create Link
 						</Button>
 
 						<Form className="d-flex">
 							<Form.Control
-								className="formInput"
+								className={styles.formInput}
 								type="text"
 								placeholder="Enter link"
 							/>
 							<Button
-								className="formButton"
+								className={styles.formButton}
 								type="submit"
 								onClick={joinLinkHandler}
 							>
