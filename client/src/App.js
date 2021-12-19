@@ -4,7 +4,7 @@ import { io } from "socket.io-client"
 import Automerge from "automerge";
 import * as AMUtils from "./utils/automergeUtils.js"
 
-
+// TODO: move init to SyncedMonacoEditor component
 const AUTOMERGE_INIT = "AUTOMERGE_INIT"
 
 function App() {
@@ -21,9 +21,11 @@ function App() {
 
             socketRef.current.on('disconnect', (reason) => {
                 console.log("disconnected", reason);
+                // TODO: clean up event listeners
                 setReady(false);
             });
 
+            // TODO: move init to SyncedMonacoEditor component
             socketRef.current.on(AUTOMERGE_INIT, (seralizedArray) => {
                 docRef.current = Automerge.init();
                 const [newDoc] = Automerge.applyChanges(docRef.current, AMUtils.deserializeChanges(seralizedArray));
