@@ -35,7 +35,7 @@ const Navigation = () => {
 							</a>
 						)}
 						{isLoggedIn && (
-							<Link to="/session" className={styles.navlink}>
+							<Link to="/dashboard" className={styles.navlink}>
 								Dashboard
 							</Link>
 						)}
