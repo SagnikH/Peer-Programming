@@ -1,16 +1,97 @@
 import MonacoEditor from "./MonacoEditor.js"
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import Automerge from "automerge";
 import * as AMUtils from "../utils/automergeUtils.js"
 
 const AUTOMERGE_CHANGE = "AUTOMERGE_CHANGE";
+const AUTOMERGE_INIT = "AUTOMERGE_INIT"
+const AUTOMERGE_CLEANUP = "AUTOMERGE_CLEANUP";
 
 export default function SyncedMonacoEditor(props) {
+
+    const [isReady, setIsReady] = useState(null);
+
     const socketRef = useRef(props.socket);
-    const docRef = useRef(props.doc);
+    const docidRef = useRef(props.docid);
+    const docRef = useRef(null);
     const editorRef = useRef(null);
     const monacoRef = useRef(null);
     const toDisposeRef = useRef(null);  // to store Disposable reference for attached handler
+
+    useEffect(() => {
+        if (isReady === false) {
+            socketCleanUp();
+        }
+    }, [isReady]);
+
+    useEffect(() => {
+        socketInit();
+        return () => {
+            socketCleanUp();
+        }
+    }, []);
+
+
+    // ---------- SOCKET UTIL FUNCTIONC ----------
+
+    function socketInit() {
+        console.log("socket init");
+
+        socketRef.current.on(AUTOMERGE_CHANGE, (data) => {
+            if (data.docid === docidRef.current) {
+                console.log("change:Applying remote changes");
+                applyRemoteChanges((data.changes));
+            }
+            else {
+                console.log("change:wrong docid", data);
+                setIsReady(false);
+            }
+        });
+
+        const data = {
+            docid: docidRef.current
+        }
+
+
+        socketRef.current.emit(AUTOMERGE_INIT, data, (response) => {
+            if (response.ok) {
+                docRef.current = Automerge.init();
+                const [newDoc] = Automerge.applyChanges(docRef.current, AMUtils.deserializeChanges(response.changes));
+                docRef.current = newDoc;
+                setIsReady(true);
+                console.log("init: respose ok", response);
+            } else {
+                console.log("init:response not ok", response);
+                setIsReady(false);
+            }
+        });
+
+    }
+
+    function socketCleanUp() {
+        console.log("socket cleanup");
+        socketRef.current.off(AUTOMERGE_CHANGE);
+
+        socketRef.current.emit(AUTOMERGE_CLEANUP, { docid: docidRef.current });
+    }
+
+    function emitChanges(allChanges) {
+        for (let i = 0; i < allChanges.length; i++) {
+            const data = {
+                docid: docidRef.current, changes: allChanges[i]
+            };
+            socketRef.current.emit(AUTOMERGE_CHANGE, data, (response) => {
+                if (!response.ok) {
+                    console.log("emotchange: response not ok", data, response);
+                    setIsReady(false);
+                }
+            });
+        }
+    }
+
+    // ---------- ---------- ----------
+
+    // ---------- SOCKET/MONACO UTIL FUNCTIONC ----------
 
     // add changes to Automerge, emit using socket
     function handleAndEmitUserChanges(event) {
@@ -45,7 +126,7 @@ export default function SyncedMonacoEditor(props) {
         }
 
         emitChanges(allChanges);
-        
+
     }
 
     // apply remote changes to local Automerge doc and editor
@@ -56,7 +137,7 @@ export default function SyncedMonacoEditor(props) {
         docRef.current = newDoc;
 
         // no need to apply changes to editor if not mounted yet or if no difference
-        if (!editorRef.current || !patch.diffs.props.text) return;    
+        if (!editorRef.current || !patch.diffs.props.text) return;
 
         // get the edits of the patch
         const edits = Object.values(patch.diffs.props.text)[0].edits;
@@ -79,17 +160,8 @@ export default function SyncedMonacoEditor(props) {
         attachOnDidChangeContentHandler();
     }
 
-
-    // ---------- SOCKET UTIL FUNCTIONC ----------
-
-    function emitChanges(allChanges) {
-        // TODO: handle being offline [buffer?]
-        for (let i = 0; i < allChanges.length; i++) {
-            socketRef.current.emit(AUTOMERGE_CHANGE, allChanges[i]);
-        }
-    }
-
     // ---------- ---------- ----------
+
 
     // ---------- MONACO UTIL FUNCTIONS ----------
 
@@ -220,15 +292,16 @@ export default function SyncedMonacoEditor(props) {
 
     // ---------- ---------- ---------- ---------- 
 
+    if (isReady) {
+        return (
+            <div>
+                <MonacoEditor value={docRef.current.text.toString()} onMount={handleEditorDidMount} />
+            </div>
+        );
+    } else {
+        return (
+            <div>Editor not ready...</div>
+        );
+    }
 
-
-    useEffect(() => {
-        socketRef.current.on(AUTOMERGE_CHANGE, applyRemoteChanges);
-    });
-
-    return (
-        <div>
-            <MonacoEditor value={docRef.current.text.toString()} onMount={handleEditorDidMount} />
-        </div>
-    );
 }
