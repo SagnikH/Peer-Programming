@@ -55,8 +55,8 @@ export default function SyncedMonacoEditor(props) {
         const [newDoc, patch] = Automerge.applyChanges(docRef.current, AMUtils.deserializeChanges(serializedArray));
         docRef.current = newDoc;
 
-        // no need to apply changes to editor if not mounted yet
-        if (!editorRef.current) return;    
+        // no need to apply changes to editor if not mounted yet or if no difference
+        if (!editorRef.current || !patch.diffs.props.text) return;    
 
         // get the edits of the patch
         const edits = Object.values(patch.diffs.props.text)[0].edits;
