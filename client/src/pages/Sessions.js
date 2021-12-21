@@ -35,20 +35,29 @@ const Sessions = () => {
 
 	// setDocs(docsData);
 
-	useEffect(() => {
-		// console.log("useEffect -> [Session]");
+  //problem, must fetch everytime a page is loaded
+	// useEffect(() => {
+	// 	console.log("useEffect -> [Session]");
 
-		if (sessionStatus === "idle") {
-			// console.log("fetching session data....");
-			dispatch(fetchSessionById(id));
-		}
-	}, [sessionStatus, dispatch]);
+	// 	if (sessionStatus === "idle") {
+	// 		console.log("fetching session data....");
+	// 		dispatch(fetchSessionById(id));
+	// 	}
+	// }, [sessionStatus, dispatch]);
+
+	useEffect(() => {
+		console.log("useEffect -> [Session]");
+
+		// if (sessionStatus === "idle") {
+		console.log("fetching session data....");
+		dispatch(fetchSessionById(id));
+		// }
+	}, []);
 
 	const handleClick = (e) => {
 		if (e.target.text === "Leetcode Question") setQtype("leetcode");
 		else if (e.target.text === "Custom Question") setQtype("custom");
 	};
-
 
 	if (sessionStatus === "loading") {
 		console.log("loading");
