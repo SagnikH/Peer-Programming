@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { PrivateRoute } from "./PrivateRoute";
 
 import Home from "../pages/Home";
@@ -18,6 +18,14 @@ export const RouterConfig = () => {
 					element={
 						<PrivateRoute>
 							<Dashboard />
+						</PrivateRoute>
+					}
+				/>
+				<Route
+					path="/session"
+					element={
+						<PrivateRoute>
+							<Navigate to="/dashboard" />
 						</PrivateRoute>
 					}
 				/>
