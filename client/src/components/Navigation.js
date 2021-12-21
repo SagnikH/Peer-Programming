@@ -1,20 +1,25 @@
 import { useEffect } from "react";
 import { Navbar, Container } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchToken } from "../redux/actions/authTokenActions";
+import { fetchToken } from "../redux/slices/authTokenSlice";
 import { Link } from "react-router-dom";
-import favicon from '../assets/favicon.png'
+import favicon from "../assets/favicon.png";
 import styles from "../styles/navigation.module.css";
 
 const Navigation = () => {
 	const dispatch = useDispatch();
 	const isLoggedIn = useSelector((state) => state.auth.token);
+	const authStatus = useSelector((state) => state.auth.status);
 
 	//handle the token for the nav bar here itself
 	useEffect(() => {
-		console.log("in navbar");
-		dispatch(fetchToken());
-	}, []);
+		// console.log("in navbar");
+
+		if (authStatus === "idle") {
+			// console.log("dispatching..... fetchToken()");
+			dispatch(fetchToken());
+		}
+	}, [authStatus, dispatch]);
 
 	return (
 		<Navbar className={styles.navbar} expand="lg">
@@ -30,12 +35,15 @@ const Navigation = () => {
 				<div className="navbar-light" id="basic-navbar-nav">
 					<div className={styles.navlinks}>
 						{!isLoggedIn && (
-							<a href="http://localhost:4000/auth/google" className={styles.navlink}>
+							<a
+								href="http://localhost:4000/auth/google"
+								className={styles.navlink}
+							>
 								Sign in
 							</a>
 						)}
 						{isLoggedIn && (
-							<Link to="/session" className={styles.navlink}>
+							<Link to="/dashboard" className={styles.navlink}>
 								Dashboard
 							</Link>
 						)}

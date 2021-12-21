@@ -1,11 +1,11 @@
-import styles from '../styles/sessions.module.css';
-import docsData from '../assets/docsData.json';
+import styles from "../styles/sessions.module.css";
+import docsData from "../assets/docsData.json";
 
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { Dropdown, Form, Button } from "react-bootstrap";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { fetchSessionById } from '../redux/actions/sessionActions';
+import { fetchSessionById } from "../redux/slices/sessionSlice";
 import Loading from "../components/Loading";
 import Error404 from "./Error404";
 
@@ -13,51 +13,50 @@ const Sessions = () => {
 	const [sessionName, setSessionName] = useState("");
 	const [docs, setDocs] = useState([]);
 	const [qtype, setQtype] = useState("");
-	const user = useSelector((state) => state.user);
+	// const user = useSelector((state) => state.user);
 	const error = useSelector((state) => state.session.error);
+	const sessionStatus = useSelector((state) => state.session.status);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-    
-
 	const { id } = useParams();
 
-    const dummyDocs = docs.map((el) => {
-        return (
-            <div href="/sessions" className={styles.historyItems}>
-                <a key={el.sessionId}>
-                    <div>Id: {el.sessionId}</div>
-                    <div>Created at: {el.cretedAt}</div>
-                    <div>Question title: {el.questionTitle}</div>
-                </a>
-            </div>
-        )
-    })
+	const dummyDocs = docs.map((el) => {
+		return (
+			<div href="/sessions" className={styles.historyItems}>
+				<a key={el.sessionId}>
+					<div>Id: {el.sessionId}</div>
+					<div>Created at: {el.cretedAt}</div>
+					<div>Question title: {el.questionTitle}</div>
+				</a>
+			</div>
+		);
+	});
 
+	// setDocs(docsData);
 
-    setDocs(docsData);
-    
 	useEffect(() => {
-		dispatch(fetchSessionById(id));
+		// console.log("useEffect -> [Session]");
 
-		//TODO: decide whether to redirect in case of token not present
-		//probably the token will the there as checkAuth mainly handles the loss of state values
-	}, []);
+		if (sessionStatus === "idle") {
+			// console.log("fetching session data....");
+			dispatch(fetchSessionById(id));
+		}
+	}, [sessionStatus, dispatch]);
 
 	const handleClick = (e) => {
 		if (e.target.text === "Leetcode Question") setQtype("leetcode");
 		else if (e.target.text === "Custom Question") setQtype("custom");
 	};
-	if (error === null) {
-		console.log("error null");
-		return (<Loading />);
-	}
-	else if (error) {
-		console.log("error true");
-		return (<Error404 />);
-	}
-	else {
 
+
+	if (sessionStatus === "loading") {
+		console.log("loading");
+		return <Loading />;
+	} else if (sessionStatus === "failed") {
+		console.log("error failed");
+		return <Error404 />;
+	} else if (sessionStatus === "succeeded") {
 		return (
 			<>
 				<div className={styles.body}>
@@ -134,6 +133,8 @@ const Sessions = () => {
 				</div>
 			</>
 		);
+	} else {
+		return <h1>possible bug</h1>;
 	}
 };
 

@@ -4,10 +4,11 @@ const Session = require("../models/sessionModel");
 const { NotFoundError } = require("../utils/errors/databaseFacingErrors");
 const ObjectId = mongoose.Types.ObjectId;
 
-const createDocument = async (req, res, next) => {
+const createDocument = async (req, res) => {
 	const { title, type, question, link, userId, sessionId } = req.body;
 	//TODO: add validity checker
-	//TODO: check if link is valid -> ask fetcher team
+	//TODO: check if question link is valid -> ask fetcher team
+	//TODO: check to see if session id exists
 
 	try {
 		//TODO: check session id exists here if not throw error
@@ -20,9 +21,12 @@ const createDocument = async (req, res, next) => {
 			sessionId,
 		});
 
-		const documentObj = { documentId: document._id, title };
+		const documentObj = {
+			documentId: document._id,
+			title,
+			createdAt: document.createdAt,
+		};
 		//TODO: don't send document as response -> socket stuff ask SUBODH
-		//TODO: check to see if session id exists
 		const session = await Session.findByIdAndUpdate(
 			sessionId,
 			{
@@ -31,7 +35,7 @@ const createDocument = async (req, res, next) => {
 			{ new: true }
 		);
 
-		res.status(200).json(session);
+		res.status(200).json(document);
 	} catch (e) {
 		console.log(e.message);
 		res.status(403).json(e.message);

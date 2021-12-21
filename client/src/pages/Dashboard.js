@@ -1,153 +1,192 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { fetchUser } from "../redux/actions/userActions";
+import { fetchUser } from "../redux/slices/userSlice";
+import { createSession } from "../redux/slices/userSlice";
 import Alert from "../components/Alert.js";
 import InputModal from "../components/InputModal.js";
-import Loading from '../components/Loading.js';
+import Loading from "../components/Loading.js";
+import Error404 from "./Error404";
 import styles from "../styles/dashboard.module.css";
 import sessions from "../assets/sessions.json";
 import { Button, Form } from "react-bootstrap";
-import styles2 from '../styles/home.module.css';
+import styles2 from "../styles/home.module.css";
 
 const Dashboard = () => {
-  const dispatch = useDispatch();
+	const dispatch = useDispatch();
 	//passed as a prop to modal to be used as a callback to logout
-    const [loading, setLoading] = useState(true);
-	const [name, setName] = useState("");
-    
+	const [loading, setLoading] = useState(true);
+	const [modalResponse, setModalResponse] = useState("");
+  const [addRequestStatus, setAddRequestStatus] = useState("idle");
+
+	const user = useSelector((state) => state.user);
+  const userId = useSelector(state => state.user._id);
+	const userStatus = useSelector((state) => state.user.status);
+	const isLoggedIn = useSelector((state) => state.auth.token);
+
+
+	useEffect(() => {
+		//might need to fetch user data if modal is implemented
+		if (userStatus === "idle") {
+			dispatch(fetchUser());
+		}
+	}, [userStatus, dispatch]);
+
 	const logoutHandler = (e) => {
 		window.location.href = "http://localhost:4000/auth/logout";
 	};
 
-	const user = useSelector((state) => state.user);
-
 	const getDate = (date) => {
 		return date.slice(5, 15);
-	}
+	};
 
 	useEffect(() => {
-		//always at the beginning check to see if token exists in LC mainly to handle page refresh and loosing the state
-
-		dispatch(fetchUser());
-
-        setTimeout(() => {
-            setLoading(false);
-        }, 1000)
-
-		//TODO: decide whether to redirect in case of token not present
-		//probably the token will the there as checkAuth mainly handles the loss of state values
+		setTimeout(() => {
+			setLoading(false);
+		}, 1000);
 	}, []);
 
 	const createLinkHandler = (e) => {
 		e.preventDefault();
-		if (!user) {
+		if (!isLoggedIn) {
 			window.location.href = "http://localhost:4000/auth/google";
 		}
 	};
 	const joinLinkHandler = (e) => {
 		e.preventDefault();
-		if (!user) {
+		if (!isLoggedIn) {
 			window.location.href = "http://localhost:4000/auth/google";
 		}
 	};
 
-	const handleName = (res) => {
-		setName(res);
-	}
-    
-    
-	
+	//TODO: rename to a meaning full name
+	const handleName = (modalResponse) => {
+		setModalResponse(modalResponse);
+	};
 
-	return (
-		<>
-            {loading ? <Loading/> : 
-            
-            <>
-			<div className={styles.dashboard}>
-				<div className={styles.section}>
-					<div className={styles.heading}>User Information</div>
-					<div className={styles.userContents}>
-						<img
-							src={user.picture}
-							alt="Image"
-							width="200"
-							height="200"
-							className={styles.userImage}
-						></img>
-						<div className={styles.userDetails}>
-							<h6>Name:</h6>
-							<h6>{user.name}</h6>
-							<h6>Email Id:</h6>
-							<h6> {user.email}</h6>
-						</div>
-					</div>
-				</div>
-				<div className={styles.section}>
-					<div className={styles.heading}> Created Sessions </div>
-					<div className={styles.contents}>
-						<div>
-							{sessions.map((session)=>{
-								return (
-									<div className={styles.session}>
-										<div>Name: {session.Name}</div>
-										<div>Date: {getDate(session.Date)}</div>
-										<div>Link: {session.Link}</div>
-									</div>
-								)
-							})}
-						</div>
-					</div>
-				</div>
-				<div className={styles.section}>
-					<div className={styles.heading}> Shared Sessions </div>
-					<div className={styles.contents}>
-						<div>
-							{sessions.map((session)=>{
-								return (
-									<div className={styles.session}>
-										<div>Name: {session.Name}</div>
-										<div>Date: {getDate(session.Date)}</div>
-										<div>Link: {session.Link}</div>
-									</div>
-								)
-							})}
-						</div>
-					</div>
-				</div>
-			</div>
-			<div className={styles.buttons}>
-				
-				<div className={styles.linkButtons}>
-					<InputModal handleName={handleName}/>
-					<h4>{name}</h4>
+	useEffect(() => {
+		console.log("modalResponse :", modalResponse);
 
-					<Form className="d-flex">
-						<Form.Control
-							className={styles2.formInput}
-							type="text"
-							placeholder="Enter link"
-						/>
-						<Button
-							className={styles2.formButton}
-							type="submit"
-							onClick={joinLinkHandler}
-						>
-							Join Link
-						</Button>
-					</Form>
-				</div>
+    const canSave = addRequestStatus === "idle" && modalResponse;
 
-				<div className={styles.logoutButton}>
-					<Alert alertFunction={logoutHandler} />
-				</div>
-				
-			</div>
-			
-            </>
+		//send request to backend
+		if (canSave) {
+			(async () => {
+				try {
+          setAddRequestStatus("pending");
+
+					const sessRes = await dispatch(
+						createSession({ name: modalResponse, userId })
+					).unwrap();
+
+					//remove states
+
+					console.log(sessRes);   //newly created session data
+				} catch (e) {
+					console.log(e);
+
+					//catches error, show a generic alert
+					window.alert("enter session name / refresh");
+				} finally {
+          setAddRequestStatus("idle");
         }
-		</>
-	);
+			})();
+		}
+	}, [modalResponse]);
+
+	if (userStatus === "loading") {
+		return <Loading />;
+	}
+	//TODO: handle in case of error on fetching user for dashboard -> need logout button
+	//maybe implicitly open modal
+	// else if(userStatus === "rejected"){
+	//   return <Error404 />;
+	// }
+	else if (userStatus === "succeeded") {
+		return (
+			<>
+				<div className={styles.dashboard}>
+					<div className={styles.section}>
+						<div className={styles.heading}>User Information</div>
+						<div className={styles.userContents}>
+							<img
+								src={user.picture}
+								alt="Image"
+								width="200"
+								height="200"
+								className={styles.userImage}
+							></img>
+							<div className={styles.userDetails}>
+								<h6>Name:</h6>
+								<h6>{user.name}</h6>
+								<h6>Email Id:</h6>
+								<h6> {user.email}</h6>
+							</div>
+						</div>
+					</div>
+					<div className={styles.section}>
+						<div className={styles.heading}> Created Sessions </div>
+						<div className={styles.contents}>
+							<div>
+								{sessions.map((session) => {
+									return (
+										<div className={styles.session}>
+											<div>Name: {session.Name}</div>
+											<div>Date: {getDate(session.Date)}</div>
+											<div>Link: {session.Link}</div>
+										</div>
+									);
+								})}
+							</div>
+						</div>
+					</div>
+					<div className={styles.section}>
+						<div className={styles.heading}> Shared Sessions </div>
+						<div className={styles.contents}>
+							<div>
+								{sessions.map((session) => {
+									return (
+										<div className={styles.session}>
+											<div>Name: {session.Name}</div>
+											<div>Date: {getDate(session.Date)}</div>
+											<div>Link: {session.Link}</div>
+										</div>
+									);
+								})}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div className={styles.buttons}>
+					<div className={styles.linkButtons}>
+						<InputModal handleName={handleName} />
+						<h4>{modalResponse}</h4>
+
+						<Form className="d-flex">
+							<Form.Control
+								className={styles2.formInput}
+								type="text"
+								placeholder="Enter link"
+							/>
+							<Button
+								className={styles2.formButton}
+								type="submit"
+								onClick={joinLinkHandler}
+							>
+								Join Link
+							</Button>
+						</Form>
+					</div>
+
+					<div className={styles.logoutButton}>
+						<Alert alertFunction={logoutHandler} />
+					</div>
+				</div>
+			</>
+		);
+	} else {
+		return <h1>Potenial bug</h1>;
+	}
 };
 
 export default Dashboard;
