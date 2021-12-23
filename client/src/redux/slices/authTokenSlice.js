@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const initialState = {
-	token: null,
+	token: false,
 	status: "idle",
 	error: null,
 };
@@ -16,12 +16,12 @@ export const fetchToken = createAsyncThunk(
 				withCredentials: true,
 			});
 
-			const user = res.data.user;
+			// const user = res.data.user;
 
-			const actionPayload = JSON.stringify(user);
+			// const actionPayload = JSON.stringify(user);
 
-			console.log("data from authToken thunk", actionPayload);
-			return actionPayload;
+			// console.log("data from authToken thunk", actionPayload);
+			return res.status;
 		} catch (e) {
 			console.log("error in authToken thunk", e.response);
 
@@ -44,15 +44,15 @@ export const authSlice = createSlice({
 		});
 
 		builder.addCase(fetchToken.fulfilled, (state, action) => {
-			state.token = action.payload;
+			state.token = true;
 			state.status = "succeeded";
 		});
 
 		builder.addCase(fetchToken.rejected, (state, action) => {
 			// state = initialState;
-			for (const [key, value] of Object.entries(initialState)) {
-				state[key] = value;
-			}
+			// for (const [key, value] of Object.entries(initialState)) {
+			// 	state[key] = value;
+			// }
 
 			state.status = "failed";
 
