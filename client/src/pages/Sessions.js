@@ -98,6 +98,7 @@ const Sessions = () => {
 				console.log("IN session -> new document created", docRes);
 				//use this id to navigate to desired page
 				const URL = `/doc/${docRes.documentId}`;
+        // setAddRequestStatus("idle");
 				navigate(URL);
 			} catch (e) {
 				console.log(e);

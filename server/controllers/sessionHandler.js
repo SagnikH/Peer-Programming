@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Session = require("../models/sessionModel");
 const User = require("../models/userModel");
+const Document = require("../models/documentModel");
 const { NotFoundError } = require("../utils/errors/databaseFacingErrors");
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -102,6 +103,16 @@ const deleteSession = async (req, res, next) => {
 			},
 			{ new: true }
 		);
+
+		//remove the documents once a session is removed
+		const deleteDocs = deletedSession.documents;
+
+		deleteDocs.forEach(async (doc) => {
+			const _id = doc.documentId;
+
+			const deletedDoc = await Document.findByIdAndDelete(_id);
+			console.log("Session handler -> deleted doc", deletedDoc);
+		});
 
 		//use this user to update frontend state (maybe)
 		res.status(202).json(user);

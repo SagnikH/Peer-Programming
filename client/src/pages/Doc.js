@@ -6,19 +6,10 @@ import ReactHtmlParser, {
 import styles from "../styles/doc.module.css";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
-import { checkAuth } from "../utils/checkAuth";
 
 const Doc = () => {
 	const user = useSelector((state) => state.user);
 
-	useEffect(() => {
-		//always at the beginning check to see if token exists in LC mainly to handle page refresh and loosing the state
-
-		checkAuth(user);
-
-		//TODO: decide whether to redirect in case of token not present
-		//probably the token will the there as checkAuth mainly handles the loss of state values
-	}, []);
 
 	const lc =
 		'<div class="content__u3I1 question-content__JfgR"><div><p>Given the <code>root</code> of a binary search tree, return <em>a <strong>balanced</strong> binary search tree with the same node values</em>. If there is more than one answer, return <strong>any of them</strong>.</p>\n' +
