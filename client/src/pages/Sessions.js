@@ -5,14 +5,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { Dropdown, Form, Button } from "react-bootstrap";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { fetchSessionById } from "../redux/slices/sessionSlice";
+import { fetchSessionById, addNewDocument } from "../redux/slices/sessionSlice";
 import Loading from "../components/Loading";
 import Error404 from "./Error404";
 
 const Sessions = () => {
 	const [sessionName, setSessionName] = useState("");
 	const [docs, setDocs] = useState([]);
+	const [docTitle, setDocTitle] = useState("");
+	const [docQuestionText, setDocQuestionText] = useState("");
 	const [qtype, setQtype] = useState("");
+	const [qlink, setQLink] = useState("");
+	const [addRequestStatus, setAddRequestStatus] = useState("idle");
 	// const user = useSelector((state) => state.user);
 	const error = useSelector((state) => state.session.error);
 	const sessionStatus = useSelector((state) => state.session.status);
@@ -35,7 +39,7 @@ const Sessions = () => {
 
 	// setDocs(docsData);
 
-  //problem, must fetch everytime a page is loaded
+	//problem, must fetch everytime a page is loaded
 	// useEffect(() => {
 	// 	console.log("useEffect -> [Session]");
 
@@ -57,6 +61,58 @@ const Sessions = () => {
 	const handleClick = (e) => {
 		if (e.target.text === "Leetcode Question") setQtype("leetcode");
 		else if (e.target.text === "Custom Question") setQtype("custom");
+	};
+
+	const handleTitleChange = (e) => {
+		setDocTitle(e.target.value);
+	};
+
+	const handleTextAreaChange = (e) => {
+		setDocQuestionText(e.target.value);
+	};
+
+	const handleCreateDoc = async (e) => {
+		console.log("creating doc......");
+		e.preventDefault();
+
+		let canSave = addRequestStatus === "idle" && qtype;
+
+		if (qtype === "custom") {
+			canSave = canSave && docTitle && docQuestionText;
+		} else if (qtype === "leetcode") {
+			canSave = canSave && qlink;
+		}
+
+		if (canSave) {
+			try {
+				setAddRequestStatus("pending");
+
+				const docRes = await dispatch(
+					addNewDocument({
+						title: docTitle,
+						type: qtype,
+						question: docQuestionText,
+					})
+				).unwrap();
+
+				console.log("IN session -> new document created", docRes);
+				//use this id to navigate to desired page
+				const URL = `/doc/${docRes.documentId}`;
+				navigate(URL);
+			} catch (e) {
+				console.log(e);
+
+				window.alert("document not created try again");
+        setAddRequestStatus("idle");
+			} 
+      //as the component unmounts the state is lost
+      // finally {
+			// 	setAddRequestStatus("idle");
+			// 	setDocQuestionText("");
+			// 	setDocTitle("");
+			// 	setQtype("");
+			// }
+		}
 	};
 
 	if (sessionStatus === "loading") {
@@ -106,14 +162,24 @@ const Sessions = () => {
 												className={styles.input}
 												type="text"
 												placeholder="Enter title"
+												onChange={handleTitleChange}
 											/>
 										</Form.Group>
 										<Form.Group className="mb-3" controlId="formBasicEmail">
 											<Form.Label>Enter Question</Form.Label>
-											<Form.Control as="textarea" rows={8} cols={50} />
+											<Form.Control
+												as="textarea"
+												rows={8}
+												cols={50}
+												onChange={handleTextAreaChange}
+											/>
 										</Form.Group>
 
-										<Button className={styles.formButton} type="submit">
+										<Button
+											className={styles.formButton}
+											type="submit"
+											onClick={handleCreateDoc}
+										>
 											Create Doc
 										</Button>
 									</Form>

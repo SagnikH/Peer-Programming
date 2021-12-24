@@ -45,6 +45,14 @@ export const RouterConfig = () => {
 						</PrivateRoute>
 					}
 				/>
+        <Route
+					path="/doc/:id"
+					element={
+						<PrivateRoute>
+							<Doc />
+						</PrivateRoute>
+					}
+				/>
 				<Route
 					path="/app"
 					element={
