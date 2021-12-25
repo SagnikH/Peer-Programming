@@ -5,11 +5,56 @@ import ReactHtmlParser, {
 } from "react-html-parser";
 import styles from "../styles/doc.module.css";
 import { useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+
+import { Form, Button } from "react-bootstrap";
 
 const Doc = () => {
-	const user = useSelector((state) => state.user);
+	// const user = useSelector((state) => state.user);
+	const { id } = useParams();
 
+	const [documentData, setDocumentData] = useState("");
+
+	useEffect(() => {
+		//fetch curr doc data
+		(async () => {
+			try {
+				const doc = await axios.get(
+					`http://localhost:4000/api/document/${id}`,
+					{
+						withCredentials: true,
+					}
+				);
+
+				console.log("saved code in doc", doc.data);
+				setDocumentData(doc.data.savedCode);
+			} catch (e) {
+				console.log(e);
+			}
+		})();
+	}, []);
+
+	const handleTextAreaChange = (e) => {
+		setDocumentData(e.target.value);
+	};
+
+	const handleDocSave = async (e) => {
+		e.preventDefault();
+
+		try {
+			const savedDoc = await axios.patch(
+				`http://localhost:4000/api/document/${id}`,
+				{ savedCode: documentData },
+				{ withCredentials: true }
+			);
+
+			console.log("after saving doc ", savedDoc);
+		} catch (e) {
+			console.log("error in doc", e);
+		}
+	};
 
 	const lc =
 		'<div class="content__u3I1 question-content__JfgR"><div><p>Given the <code>root</code> of a binary search tree, return <em>a <strong>balanced</strong> binary search tree with the same node values</em>. If there is more than one answer, return <strong>any of them</strong>.</p>\n' +
@@ -39,13 +84,34 @@ const Doc = () => {
 		"</ul>\n" +
 		"</div></div>";
 	const reactLc = ReactHtmlParser(lc);
-	console.log(reactLc[0].props.children);
+	// console.log(reactLc[0].props.children);
 	return (
 		<div className={styles.docContainer}>
 			<div className={styles.question}>
 				<div dangerouslySetInnerHTML={{ __html: lc }}></div>
 			</div>
-			<div className={styles.block}></div>
+			{/* <div className={styles.block}></div> */}
+
+			<Form>
+				<Form.Group className="mb-3" controlId="formBasicEmail">
+					<Form.Label>Enter Question</Form.Label>
+					<Form.Control
+						as="textarea"
+						rows={8}
+						cols={50}
+						onChange={handleTextAreaChange}
+						value={documentData}
+					/>
+				</Form.Group>
+
+				<Button
+					className={styles.formButton}
+					type="submit"
+					onClick={handleDocSave}
+				>
+					Save Doc
+				</Button>
+			</Form>
 		</div>
 	);
 };

@@ -72,6 +72,7 @@ const Home = () => {
 		}
 
 		//get the id from given url and use it to find the corresponding session data
+    //TODO: handle if user only enters the sessionId
 		// var URL = "http://localhost:3000/session/61c0e8f7fd1dbb86d17cb52b";
 		var URL = joinLinkValue;
 		console.log("URL :", URL);
