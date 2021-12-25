@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { fetchUser } from "../redux/slices/userSlice";
 import { createSession, deleteSession } from "../redux/slices/userSlice";
 import Alert from "../components/Alert.js";
@@ -14,10 +14,13 @@ import styles2 from "../styles/home.module.css";
 
 const Dashboard = () => {
 	const dispatch = useDispatch();
+  const navigate = useNavigate();
 	//passed as a prop to modal to be used as a callback to logout
 	const [loading, setLoading] = useState(true);
 	const [modalResponse, setModalResponse] = useState("");
 	const [requestStatus, setRequestStatus] = useState("idle");
+  const [joinLinkValue, setJoinLinkValue] = useState("");
+
 
 	const user = useSelector((state) => state.user);
 	const userId = useSelector((state) => state.user._id);
@@ -47,17 +50,32 @@ const Dashboard = () => {
 
 	const createLinkHandler = (e) => {
 		e.preventDefault();
+
 		if (!isLoggedIn) {
 			window.location.href = "http://localhost:4000/auth/google";
 		}
 	};
+
+  const handleJoinLinkChange = (e) => {
+		setJoinLinkValue(e.target.value);
+	};
+
 	const joinLinkHandler = (e) => {
 		e.preventDefault();
+
 		if (!isLoggedIn) {
 			window.location.href = "http://localhost:4000/auth/google";
 		}
 
-		//TODO: add navigate to desired sesssion here
+		//TODO: handle if only id is given
+		var URL = joinLinkValue;
+		console.log("URL :", URL);
+		var newURL = URL.replace(
+			/^[a-z]{4,5}\:\/{2}[a-z]{1,}\:[0-9]{1,4}.(.*)/,
+			"$1"
+		); // http or https
+
+		navigate(newURL);
 	};
 
 	//TODO: rename to a meaning full name
@@ -85,12 +103,13 @@ const Dashboard = () => {
 					console.log(sessRes); //newly created session data
 
 					//TODO: navigate to the new session
+          const URL = `/session/${sessRes.sessionId}`;
+          navigate(URL);
 				} catch (e) {
 					console.log(e);
 
 					//catches error, show a generic alert
 					window.alert("enter session name / refresh");
-				} finally {
 					setRequestStatus("idle");
 				}
 			})();
@@ -101,7 +120,7 @@ const Dashboard = () => {
 		console.log("deleting session....");
 		//get this session id from the respective clicked item
 		// const sessionId = "61a9aef6417576b9f074f427";  //deleted session id
-    const sessionId = "61c0e931fd1dbb86d17cb546";
+		const sessionId = "61c0e931fd1dbb86d17cb546";
 		e.preventDefault();
 
 		const canDelete = requestStatus === "idle";
@@ -198,6 +217,8 @@ const Dashboard = () => {
 								className={styles2.formInput}
 								type="text"
 								placeholder="Enter link"
+                onChange={handleJoinLinkChange}
+                value={joinLinkValue}
 							/>
 							<Button
 								className={styles2.formButton}

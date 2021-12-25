@@ -72,7 +72,7 @@ const Home = () => {
 		}
 
 		//get the id from given url and use it to find the corresponding session data
-    //TODO: handle if user only enters the sessionId
+		//TODO: handle if user only enters the sessionId
 		// var URL = "http://localhost:3000/session/61c0e8f7fd1dbb86d17cb52b";
 		var URL = joinLinkValue;
 		console.log("URL :", URL);
@@ -103,15 +103,15 @@ const Home = () => {
 						createSession({ name: modalResponse, userId })
 					).unwrap();
 
-					//remove states
-
 					console.log(sessRes); //newly created session data
+
+					const URL = `/session/${sessRes.sessionId}`;
+					navigate(URL);
 				} catch (e) {
 					console.log(e);
 
 					//catches error, show a generic alert
 					window.alert("enter session name / refresh");
-				} finally {
 					setAddRequestStatus("idle");
 				}
 			})();
@@ -141,6 +141,7 @@ const Home = () => {
 								type="text"
 								placeholder="Enter link"
 								onChange={handleJoinLinkChange}
+								value={joinLinkValue}
 							/>
 							<Button
 								className={styles.formButton}
