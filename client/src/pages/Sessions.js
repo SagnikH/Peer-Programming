@@ -16,7 +16,7 @@ const Sessions = () => {
 	const [docQuestionText, setDocQuestionText] = useState("");
 	const [qtype, setQtype] = useState("");
 	const [qlink, setQLink] = useState("");
-	const [addRequestStatus, setAddRequestStatus] = useState("idle");
+	const [requestStatus, setRequestStatus] = useState("idle");
 	// const user = useSelector((state) => state.user);
 	const error = useSelector((state) => state.session.error);
 	const sessionStatus = useSelector((state) => state.session.status);
@@ -75,7 +75,7 @@ const Sessions = () => {
 		console.log("creating doc......");
 		e.preventDefault();
 
-		let canSave = addRequestStatus === "idle" && qtype;
+		let canSave = requestStatus === "idle" && qtype;
 
 		if (qtype === "custom") {
 			canSave = canSave && docTitle && docQuestionText;
@@ -85,7 +85,7 @@ const Sessions = () => {
 
 		if (canSave) {
 			try {
-				setAddRequestStatus("pending");
+				setRequestStatus("pending");
 
 				const docRes = await dispatch(
 					addNewDocument({
@@ -98,23 +98,25 @@ const Sessions = () => {
 				console.log("IN session -> new document created", docRes);
 				//use this id to navigate to desired page
 				const URL = `/doc/${docRes.documentId}`;
-        // setAddRequestStatus("idle");
+				setRequestStatus("idle");
 				navigate(URL);
 			} catch (e) {
 				console.log(e);
 
 				window.alert("document not created try again");
-        setAddRequestStatus("idle");
-			} 
-      //as the component unmounts the state is lost
-      // finally {
-			// 	setAddRequestStatus("idle");
+				setRequestStatus("idle");
+			}
+			//as the component unmounts the state is lost
+			// finally {
+			// 	setRequestStatus("idle");
 			// 	setDocQuestionText("");
 			// 	setDocTitle("");
 			// 	setQtype("");
 			// }
 		}
 	};
+
+	
 
 	if (sessionStatus === "loading") {
 		console.log("loading");

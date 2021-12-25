@@ -93,6 +93,11 @@ const deleteSession = async (req, res, next) => {
 	try {
 		const deletedSession = await Session.findByIdAndDelete(_id);
 		console.log("deleted session", deletedSession);
+
+		//if session doesnot exist it returns null -> so throw a custom error
+		if (deletedSession === null)
+			return next(new NotFoundError("session not found"));
+
 		const { userId } = deletedSession;
 
 		//find session in user model & update accordingly
@@ -115,7 +120,7 @@ const deleteSession = async (req, res, next) => {
 		});
 
 		//use this user to update frontend state (maybe)
-		res.status(202).json(user);
+		res.status(202).json(deletedSession);
 	} catch (e) {
 		console.log(e);
 		res.status(500).json(e);
