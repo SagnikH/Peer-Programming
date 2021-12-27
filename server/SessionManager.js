@@ -128,12 +128,13 @@ export default function SessionManager(io, dbManager) {
 
         socket.userId = userId;
         socket.sessionId = sessionId;
-        logClient(socket);
         next();
     });
 
 
     io.on('connection', async (socket) => {
+        console.log("client connected:", socket.userId, socket.sessionId);
+
         socket.on('disconnect', async (reason) => {
             console.log("client disconnected:", socket.userId, socket.sessionId);
             if (socket.docId) await docClosed(socket, socket.docId);

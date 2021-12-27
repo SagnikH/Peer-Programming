@@ -22,10 +22,6 @@ export default function Session({ sessionId, userId }) {
     }, [peers])
 
     useEffect(() => {
-        console.log(doc);
-    }, [doc]);
-
-    useEffect(() => {
         console.log("Session", sessionId, userId);
         const socket = io(URL, { auth: { userId, sessionId } });
 
@@ -38,6 +34,7 @@ export default function Session({ sessionId, userId }) {
         socket.on("disconnect", (reason) => {
             setDoc(null);
             setDocList(null);
+            setPeers([]);
             console.log("disconnected:", reason);
         });
 
@@ -65,6 +62,10 @@ export default function Session({ sessionId, userId }) {
                 if (socket.connected) socket.disconnect();
                 socket.offAny();    // remove all event listeners
             }
+            setDocList(null);
+            setDoc(null);
+            setPeers([]);
+            setSocket(null);
         }
     }, [sessionId, userId]);
 
@@ -84,6 +85,7 @@ export default function Session({ sessionId, userId }) {
             <div>
                 <button onClick={() => setDoc(null)}>Home</button>
                 <Peers peers={peers} />
+                <SessionHome docList={docList} setDoc={setDoc}/>
                 <Document docId={doc} socket={socket} />
             </div>
         );

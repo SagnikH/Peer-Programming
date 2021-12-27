@@ -7,9 +7,7 @@ const DOC_INIT = "doc init"
 const DOC_CLOSED = "doc closed"
 const CRDT_CHANGES = "crdt changes"
 
-export default function SyncedMonacoEditor(props) {
-    const [socket] = useState(props.socket);
-    const [docId] = useState(props.docId);
+export default function SyncedMonacoEditor({socket, docId}) {
     const [isReady, setIsReady] = useState(null);
     const docRef = useRef(null);
     const editorRef = useRef(null);
@@ -46,13 +44,13 @@ export default function SyncedMonacoEditor(props) {
 
 
         return () => {
-            console.log("SyncedMonacoEditor:~useEffect");
-            console.log("SyncedMonacoEditor:socketCleanUp", docId);
+            console.log("SyncedMonacoEditor:~useEffect", docId);
             if (socket) {
                 socket.off(CRDT_CHANGES);
                 if (socket.connected && docId)
                     socket.emit(DOC_CLOSED, { docId: docId });
             }
+            setIsReady(null);
         }
     }, [socket, docId]);
 
@@ -64,7 +62,7 @@ export default function SyncedMonacoEditor(props) {
             if (socket.connected)
                 socket.emit(DOC_CLOSED, { docId: docId });
         }
-    }, [isReady, socket, docId]);
+    }, [isReady]);
 
 
 
