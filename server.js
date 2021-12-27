@@ -1,51 +1,43 @@
 const express = require('express')
-const port = process.env.PORT || 3030
 const app = express()
-const cors = require('cors')
-app.use(
-    cors({
-        origin: "*", // allow to server to accept request from different origin
-        methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-        credentials: true, // allow session cookie from browser to pass through
-    })
-);
-const server = require('http').Server(app)
-const io = require('socket.io')(server)
-const { ExpressPeerServer } = require('peer');
-const peerServer = ExpressPeerServer(server, {
-    debug: true
-});
+// const {server} = require('http').Server(app)
+// const io = require('socket.io')(server)
 const { v4: uuidV4 } = require('uuid')
+const cors = require('cors')
+const { Server } = require('socket.io')
+// app.use(
+//     cors({
+//         origin: "http://localhost:3000", // allow to server to accept request from different origin
+//         methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+//         credentials: true, // allow session cookie from browser to pass through
+//     })
+// );
 
-app.use('/peerjs', peerServer);
+const io = new Server(3001, {
+    cors: {
+        origin: ['http://localhost:3000'],
+        methods: ['GET', 'POST']
+    }
+});
 
-app.set('view engine', 'ejs')
-app.use(express.static('public'))
-
-app.get('/', (req, res) => {
-    res.redirect(`/${uuidV4()}`)
-})
-
-app.get('/:room', (req, res) => {
-    res.render('room', { roomId: req.params.room })
-})
-
+let i = 0
 io.on('connection', socket => {
+    console.log('connection', i++);
+    // console.log(socket);
 
     socket.on('join-room', (roomId, userId) => {
+        console.log('join', roomId, userId);
+
+
         socket.join(roomId)
-        socket.to(roomId).broadcast.emit('user-connected', userId);
-        // messages
-        socket.on('message', (message) => {
-            //send message to the same room
-            io.to(roomId).emit('createMessage', message)
-        });
+        socket.to(roomId).emit('user-connected', userId)
 
         socket.on('disconnect', () => {
-            socket.to(roomId).broadcast.emit('user-disconnected', userId)
+            socket.to(roomId).emit('user-disconnected', userId)
         })
     })
+
 })
 
-server.listen(port)
-console.log(`Server online! on port ${port}`);
+
+// server.listen(3001)
