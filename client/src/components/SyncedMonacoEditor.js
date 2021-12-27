@@ -3,86 +3,81 @@ import { useRef, useEffect, useState } from 'react';
 import Automerge from "automerge";
 import * as AMUtils from "../utils/automergeUtils.js"
 
-const AUTOMERGE_CHANGE = "AUTOMERGE_CHANGE";
-const AUTOMERGE_INIT = "AUTOMERGE_INIT"
-const AUTOMERGE_CLEANUP = "AUTOMERGE_CLEANUP";
+const DOC_INIT = "doc init"
+const DOC_CLOSED = "doc closed"
+const CRDT_CHANGES = "crdt changes"
 
 export default function SyncedMonacoEditor(props) {
-
+    const [socket] = useState(props.socket);
+    const [docId] = useState(props.docId);
     const [isReady, setIsReady] = useState(null);
-
-    const socketRef = useRef(props.socket);
-    const docidRef = useRef(props.docid);
     const docRef = useRef(null);
     const editorRef = useRef(null);
     const monacoRef = useRef(null);
     const toDisposeRef = useRef(null);  // to store Disposable reference for attached handler
 
     useEffect(() => {
-        if (isReady === false) {
-            socketCleanUp();
-        }
-    }, [isReady]);
-
-    useEffect(() => {
-        socketInit();
-        return () => {
-            socketCleanUp();
-        }
-    }, []);
+        console.log("SyncedMonacoEditor:useEffect");
 
 
-    // ---------- SOCKET UTIL FUNCTIONC ----------
-
-    function socketInit() {
-        console.log("socket init");
-
-        socketRef.current.on(AUTOMERGE_CHANGE, (data) => {
-            if (data.docid === docidRef.current) {
+        socket.on(CRDT_CHANGES, (data) => {
+            if (data.docId === docId) {
                 console.log("change:Applying remote changes");
                 applyRemoteChanges((data.changes));
             }
             else {
-                console.log("change:wrong docid", data);
+                console.log("change:wrong docId", data);
                 setIsReady(false);
             }
         });
 
-        const data = {
-            docid: docidRef.current
-        }
-
-
-        socketRef.current.emit(AUTOMERGE_INIT, data, (response) => {
+        socket.emit(DOC_INIT, { docId }, (response) => {
             if (response.ok) {
                 docRef.current = Automerge.init();
                 const [newDoc] = Automerge.applyChanges(docRef.current, AMUtils.deserializeChanges(response.changes));
                 docRef.current = newDoc;
                 setIsReady(true);
-                console.log("init: respose ok", response);
             } else {
-                console.log("init:response not ok", response);
                 setIsReady(false);
             }
+            console.log(DOC_INIT, docId, response);
         });
 
-    }
 
-    function socketCleanUp() {
-        console.log("socket cleanup");
-        socketRef.current.off(AUTOMERGE_CHANGE);
 
-        socketRef.current.emit(AUTOMERGE_CLEANUP, { docid: docidRef.current });
-    }
+        return () => {
+            console.log("SyncedMonacoEditor:~useEffect");
+            console.log("SyncedMonacoEditor:socketCleanUp", docId);
+            if (socket) {
+                socket.off(CRDT_CHANGES);
+                if (socket.connected && docId)
+                    socket.emit(DOC_CLOSED, { docId: docId });
+            }
+        }
+    }, [socket, docId]);
+
+
+    useEffect(() => {
+        if (socket && docId && isReady === false) {
+            console.log("SyncedMonacoEditor:socketCleanUp", docId);
+            socket.off(CRDT_CHANGES);
+            if (socket.connected)
+                socket.emit(DOC_CLOSED, { docId: docId });
+        }
+    }, [isReady, socket, docId]);
+
+
+
+    // ---------- SOCKET UTIL FUNCTIONC ----------
 
     function emitChanges(allChanges) {
         for (let i = 0; i < allChanges.length; i++) {
             const data = {
-                docid: docidRef.current, changes: allChanges[i]
+                docId: docId, changes: allChanges[i]
             };
-            socketRef.current.emit(AUTOMERGE_CHANGE, data, (response) => {
+            socket.emit(CRDT_CHANGES, data, (response) => {
                 if (!response.ok) {
-                    console.log("emotchange: response not ok", data, response);
+                    console.log("emitchange: response not ok", data, response);
                     setIsReady(false);
                 }
             });
@@ -192,17 +187,17 @@ export default function SyncedMonacoEditor(props) {
     // sets value of the editor
     // side effect: reloads almost entire editor state
     //              specifically cursors and selections reset!
-    function setEditorValue(value) {
-        // do not do anythng if editor not mounted
-        if (!editorRef.current) return;
+    // function setEditorValue(value) {
+    //     // do not do anythng if editor not mounted
+    //     if (!editorRef.current) return;
 
-        // detach handler to prevent reccursive calling of
-        // onDidChangeContent Handler 
-        detachOnDidChangeContentHandler();
-        editorRef.current.getModel().setValue(value);
-        // reattach the onDidChangeContent handler
-        attachOnDidChangeContentHandler();
-    }
+    //     // detach handler to prevent reccursive calling of
+    //     // onDidChangeContent Handler 
+    //     detachOnDidChangeContentHandler();
+    //     editorRef.current.getModel().setValue(value);
+    //     // reattach the onDidChangeContent handler
+    //     attachOnDidChangeContentHandler();
+    // }
 
     // ---------- ---------- ---------- ---------- 
 
@@ -217,8 +212,7 @@ export default function SyncedMonacoEditor(props) {
         if (text === null || text === undefined) return null;
 
         if (edits.length > 1) {
-            console.log(edits);
-            throw "edits.length > 1";
+            console.log("LENGTH > 1", edits);
         }
 
         let range, toInsert = "";
@@ -233,8 +227,7 @@ export default function SyncedMonacoEditor(props) {
             range = getRangeForInsert(edit.index, text);
             toInsert = edit.values.join('');
         } else {
-            console.log(edits, edit, edit.action);
-            throw "this edit.action is not handled";
+            console.log("ACTION NOT HANDLED", edits, edit, edit.action);
         }
         return { range, text: toInsert };
     }
