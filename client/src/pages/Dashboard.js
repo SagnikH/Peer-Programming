@@ -4,25 +4,24 @@ import { useNavigate } from "react-router-dom";
 import { fetchUser } from "../redux/slices/userSlice";
 import { createSession, deleteSession } from "../redux/slices/userSlice";
 import Alert from "../components/Alert.js";
-import UserInfo from '../components/UserInfo.js';
-import JoinForm from '../components/JoinForm.js';
+import UserInfo from "../components/UserInfo.js";
+import JoinForm from "../components/JoinForm.js";
 import Loading from "../components/Loading.js";
 import styles from "../styles/dashboard.module.css";
 import sessions from "../assets/sessions.json";
-import SessionList from '../components/SessionList.js';
+import SessionList from "../components/SessionList.js";
 
-const Dashboard = () => { 
+const Dashboard = () => {
 	const dispatch = useDispatch();
-  	const navigate = useNavigate();
+	const navigate = useNavigate();
 	//passed as a prop to modal to be used as a callback to logout
-	const [loading, setLoading] = useState(true);
-	const [modalResponse, setModalResponse] = useState("");
+	// const [loading, setLoading] = useState(true);
+	// const [modalResponse, setModalResponse] = useState("");
 	const [requestStatus, setRequestStatus] = useState("idle");
- 	const [joinLinkValue, setJoinLinkValue] = useState("");
-
+	const [joinLinkValue, setJoinLinkValue] = useState("");
 
 	const user = useSelector((state) => state.user);
-	const userId = useSelector((state) => state.user._id);
+	// const userId = useSelector((state) => state.user._id);
 	const userStatus = useSelector((state) => state.user.status);
 	const isLoggedIn = useSelector((state) => state.auth.token);
 
@@ -41,11 +40,11 @@ const Dashboard = () => {
 		return date.slice(5, 15);
 	};
 
-	useEffect(() => {
-		setTimeout(() => {
-			setLoading(false);
-		}, 1000);
-	}, []);
+	// useEffect(() => {
+	// 	setTimeout(() => {
+	// 		setLoading(false);
+	// 	}, 1000);
+	// }, []);
 
 	const createLinkHandler = (e) => {
 		e.preventDefault();
@@ -55,7 +54,7 @@ const Dashboard = () => {
 		}
 	};
 
-  const handleJoinLinkChange = (e) => {
+	const handleJoinLinkChange = (e) => {
 		setJoinLinkValue(e.target.value);
 	};
 
@@ -78,42 +77,42 @@ const Dashboard = () => {
 	};
 
 	//TODO: rename to a meaning full name
-	const handleName = (modalResponse) => {
-		setModalResponse(modalResponse);
-	};
+	// const handleName = (modalResponse) => {
+	// 	setModalResponse(modalResponse);
+	// };
 
-	useEffect(() => {
-		console.log("modalResponse :", modalResponse);
+	// useEffect(() => {
+	// 	console.log("modalResponse :", modalResponse);
 
-		const canSave = requestStatus === "idle" && modalResponse;
+	// 	const canSave = requestStatus === "idle" && modalResponse;
 
-		//send request to backend
-		if (canSave) {
-			(async () => {
-				try {
-					setRequestStatus("pending");
+	// 	//send request to backend
+	// 	if (canSave) {
+	// 		(async () => {
+	// 			try {
+	// 				setRequestStatus("pending");
 
-					const sessRes = await dispatch(
-						createSession({ name: modalResponse, userId })
-					).unwrap();
+	// 				const sessRes = await dispatch(
+	// 					createSession({ name: modalResponse, userId })
+	// 				).unwrap();
 
-					//remove states
+	// 				//remove states
 
-					console.log(sessRes); //newly created session data
+	// 				console.log(sessRes); //newly created session data
 
-					//TODO: navigate to the new session
-          const URL = `/session/${sessRes.sessionId}`;
-          navigate(URL);
-				} catch (e) {
-					console.log(e);
+	// 				//TODO: navigate to the new session
+	// 				const URL = `/session/${sessRes.sessionId}`;
+	// 				navigate(URL);
+	// 			} catch (e) {
+	// 				console.log(e);
 
-					//catches error, show a generic alert
-					window.alert("enter session name / refresh");
-					setRequestStatus("idle");
-				}
-			})();
-		}
-	}, [modalResponse]);
+	// 				//catches error, show a generic alert
+	// 				window.alert("enter session name / refresh");
+	// 				setRequestStatus("idle");
+	// 			}
+	// 		})();
+	// 	}
+	// }, [modalResponse]);
 
 	const handleDeleteSession = async (e) => {
 		console.log("deleting session....");
@@ -155,17 +154,24 @@ const Dashboard = () => {
 		return (
 			<>
 				<div className={styles.dashboard}>
-					<UserInfo/>
-					<SessionList sessions={sessions} title={"Created Sessions"}/>
-					<SessionList sessions={sessions} title={"Shared Sessions"}/>
+					<UserInfo />
+					<SessionList
+						sessions={user.userSessions}
+						type={"session"}
+						title={"Created Sessions"}
+					/>
+					<SessionList
+						sessions={user.sharedSessions}
+						type={"session"}
+						title={"Shared Sessions"}
+					/>
 				</div>
 				<div className={styles.buttons}>
-					<JoinForm/>						
+					<JoinForm />
 
 					<div className={styles.logoutButton}>
 						<Alert alertFunction={logoutHandler} />
 					</div>
-
 				</div>
 			</>
 		);

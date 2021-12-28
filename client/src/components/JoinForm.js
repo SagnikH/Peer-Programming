@@ -1,28 +1,26 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { createSession, deleteSession } from "../redux/slices/userSlice";
-import InputModal from './InputModal.js';
+import { createSession } from "../redux/slices/userSlice";
+import InputModal from "./InputModal.js";
 import { Button, Form } from "react-bootstrap";
 import styles2 from "../styles/home.module.css";
 import styles from "../styles/dashboard.module.css";
 
-
 export default function JoinForm() {
-	const userId = useSelector((state) => state.user._id);    
+	const userId = useSelector((state) => state.user._id);
 	const dispatch = useDispatch();
-  	const navigate = useNavigate();    
-	const [name, setName] = useState("");
+	const navigate = useNavigate();
 	const isLoggedIn = useSelector((state) => state.auth.token);
 	const [modalResponse, setModalResponse] = useState("");
 	const [requestStatus, setRequestStatus] = useState("idle");
- 	const [joinLinkValue, setJoinLinkValue] = useState("");
-    
-    const handleName = (modalResponse) => {
+	const [joinLinkValue, setJoinLinkValue] = useState("");
+
+	const handleName = (modalResponse) => {
 		setModalResponse(modalResponse);
 	};
 
-    const handleJoinLinkChange = (e) => {
+	const handleJoinLinkChange = (e) => {
 		setJoinLinkValue(e.target.value);
 	};
 
@@ -43,7 +41,7 @@ export default function JoinForm() {
 
 		navigate(newURL);
 	};
-    
+
 	useEffect(() => {
 		console.log("modalResponse :", modalResponse);
 
@@ -64,8 +62,8 @@ export default function JoinForm() {
 					console.log(sessRes); //newly created session data
 
 					//TODO: navigate to the new session
-          const URL = `/session/${sessRes.sessionId}`;
-          navigate(URL);
+					const URL = `/session/${sessRes.sessionId}`;
+					navigate(URL);
 				} catch (e) {
 					console.log(e);
 
@@ -77,30 +75,28 @@ export default function JoinForm() {
 		}
 	}, [modalResponse]);
 
-    return (
+	return (
+		<div>
+			<div className={styles.linkButtons}>
+				<InputModal handleName={handleName} />
 
-        <div>
-            <div className={styles.linkButtons}>
-                <InputModal handleName={handleName} />
-
-                <Form className="d-flex">
-                    <Form.Control
-                        className={styles2.formInput}
-                        type="text"
-                        placeholder="Enter link"
-                        onChange={handleJoinLinkChange}
-                        value={joinLinkValue}
-                    />
-                    <Button
-                        className={styles2.formButton}
-                        type="submit"
-                        onClick={joinLinkHandler}
-
-                    >
-                        Join Link
-                    </Button>
-                </Form>
-            </div>
-        </div>
-    )
+				<Form className="d-flex">
+					<Form.Control
+						className={styles2.formInput}
+						type="text"
+						placeholder="Enter link"
+						onChange={handleJoinLinkChange}
+						value={joinLinkValue}
+					/>
+					<Button
+						className={styles2.formButton}
+						type="submit"
+						onClick={joinLinkHandler}
+					>
+						Join Link
+					</Button>
+				</Form>
+			</div>
+		</div>
+	);
 }

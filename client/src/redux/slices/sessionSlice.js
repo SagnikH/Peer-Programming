@@ -55,7 +55,8 @@ export const addNewDocument = createAsyncThunk(
 
 			const actionPayload = {
 				documentId: res.data._id,
-				title: res.data.title,
+        //changed from title -> name (28/12)
+				name: res.data.title,
 				createdAt: res.data.createdAt,
 			};
 

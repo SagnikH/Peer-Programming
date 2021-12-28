@@ -91,9 +91,6 @@ const Doc = () => {
 				<div dangerouslySetInnerHTML={{ __html: lc }}></div>
 			</div>
 			{/* <div className={styles.block}></div> */}
-
-			
-			
 		</div>
 	);
 };

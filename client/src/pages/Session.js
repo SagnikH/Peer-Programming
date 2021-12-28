@@ -9,7 +9,7 @@ import { fetchSessionById, addNewDocument } from "../redux/slices/sessionSlice";
 import Loading from "../components/Loading";
 import Error404 from "./Error404";
 import sessions from "../assets/sessions.json";
-import SessionList from '../components/SessionList.js';
+import SessionList from "../components/SessionList.js";
 
 const Session = () => {
 	const [sessionName, setSessionName] = useState("");
@@ -22,11 +22,11 @@ const Session = () => {
 	// const user = useSelector((state) => state.user);
 	const error = useSelector((state) => state.session.error);
 	const sessionStatus = useSelector((state) => state.session.status);
+  const session = useSelector((state) => state.session);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
 	const { id } = useParams();
-
 
 	// setDocs(docsData);
 
@@ -107,8 +107,6 @@ const Session = () => {
 		}
 	};
 
-	
-
 	if (sessionStatus === "loading") {
 		console.log("loading");
 		return <Loading />;
@@ -122,7 +120,11 @@ const Session = () => {
 					<p>{id}</p>
 					<div className={styles.sessionName}>Session name: {sessionName}</div>
 					<div className={styles.sessionContainer}>
-						<SessionList sessions={sessions} title={"Documents History"}/>
+						<SessionList
+							sessions={session.documents}
+							type={"doc"}
+							title={"Documents History"}
+						/>
 						<div className={styles.form}>
 							<Dropdown className="mb-5">
 								<Dropdown.Toggle
