@@ -13,7 +13,7 @@ import { Form, Button } from "react-bootstrap";
 
 const Doc = () => {
 	// const user = useSelector((state) => state.user);
-	const { id } = useParams();
+	const { id, did } = useParams();
 
 	const [documentData, setDocumentData] = useState("");
 
@@ -22,7 +22,7 @@ const Doc = () => {
 		(async () => {
 			try {
 				const doc = await axios.get(
-					`http://localhost:4000/api/document/${id}`,
+					`http://localhost:4000/api/document/${did}`,
 					{
 						withCredentials: true,
 					}
@@ -45,7 +45,7 @@ const Doc = () => {
 
 		try {
 			const savedDoc = await axios.patch(
-				`http://localhost:4000/api/document/${id}`,
+				`http://localhost:4000/api/document/${did}`,
 				{ savedCode: documentData },
 				{ withCredentials: true }
 			);

@@ -15,8 +15,13 @@ const ObjectId = mongoose.Types.ObjectId;
 const Document = require("../models/documentModel");
 const Session = require("../models/sessionModel");
 const User = require("../models/userModel");
+const { DBSavedCodeManager } = require("./DBSavedCodeManager");
 
-export class DBManager {
+class DBManager {
+	constructor() {
+		this.dbSavedCodeManager = new DBSavedCodeManager();
+	}
+
 	checkValidId(_id) {
 		if (!ObjectId.isValid(_id)) return false;
 
@@ -107,3 +112,6 @@ export class DBManager {
 		}
 	}
 }
+
+
+module.exports = { DBManager };

@@ -17,6 +17,7 @@ export default function SessionList(props) {
 								type={props.type}
 								key={Math.random()}
 								handleDelete={props.handleDelete}
+								linkBase={props.linkBase}
 							/>
 						);
 					})}

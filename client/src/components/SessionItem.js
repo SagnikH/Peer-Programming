@@ -7,8 +7,9 @@ import { BsXCircleFill } from "react-icons/bs";
 export default function SessionItem(props) {
 	const session = props.session;
 	const type = props.type;
+	
 	const id = type === "session" ? session.sessionId : session.documentId;
-	const link = `/${type}/${id}`;
+	const link = `${props.linkBase}/${type}/${id}`;
 
 	const getDate = (date) => {
 		// console.log(new Date(date));

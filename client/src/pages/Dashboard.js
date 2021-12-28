@@ -159,11 +159,13 @@ const Dashboard = () => {
 						type={"session"}
 						title={"Created Sessions"}
 						handleDelete={handleDeleteSession}
+						linkBase={""}
 					/>
 					<SessionList
 						sessions={user.sharedSessions}
 						type={"session"}
 						title={"Shared Sessions"}
+						
 					/>
 				</div>
 				<div className={styles.buttons}>

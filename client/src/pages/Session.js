@@ -88,7 +88,7 @@ const Session = () => {
 
 				console.log("IN session -> new document created", docRes);
 				//use this id to navigate to desired page
-				const URL = `/doc/${docRes.documentId}`;
+				const URL = `/session/${id}/doc/${docRes.documentId}`;
 				setRequestStatus("idle");
 				navigate(URL);
 			} catch (e) {
@@ -123,6 +123,7 @@ const Session = () => {
 							sessions={session.documents}
 							type={"doc"}
 							title={"Documents History"}
+							linkBase={`/session/${id}`}
 						/>
 						<div className={styles.form}>
 							<Dropdown className="mb-5">
