@@ -11,16 +11,17 @@ import styles from "../styles/dashboard.module.css";
 import sessions from "../assets/sessions.json";
 import { Button, Form } from "react-bootstrap";
 import styles2 from "../styles/home.module.css";
+import { BsXCircleFill } from "react-icons/bs";
 
 const Dashboard = () => {
 	const dispatch = useDispatch();
 	//passed as a prop to modal to be used as a callback to logout
 	const [loading, setLoading] = useState(true);
 	const [modalResponse, setModalResponse] = useState("");
-  const [addRequestStatus, setAddRequestStatus] = useState("idle");
+  	const [addRequestStatus, setAddRequestStatus] = useState("idle");
 
 	const user = useSelector((state) => state.user);
-  const userId = useSelector(state => state.user._id);
+  	const userId = useSelector(state => state.user._id);
 	const userStatus = useSelector((state) => state.user.status);
 	const isLoggedIn = useSelector((state) => state.auth.token);
 
@@ -73,7 +74,7 @@ const Dashboard = () => {
 		if (canSave) {
 			(async () => {
 				try {
-          setAddRequestStatus("pending");
+         			setAddRequestStatus("pending");
 
 					const sessRes = await dispatch(
 						createSession({ name: modalResponse, userId })
@@ -130,10 +131,14 @@ const Dashboard = () => {
 							<div>
 								{sessions.map((session) => {
 									return (
-										<div className={styles.session}>
-											<div>Name: {session.Name}</div>
-											<div>Date: {getDate(session.Date)}</div>
-											<div>Link: {session.Link}</div>
+										<div className={styles.sessionWrap} key={Math.random()}>
+											<div className={styles.session}>
+												<div>Name: {session.Name}</div>
+												<div>Date: {getDate(session.Date)}</div>
+												<div>Link: {session.Link}</div>
+											</div>
+											<BsXCircleFill size="1.5em" color="#4c3b4d"/>
+											
 										</div>
 									);
 								})}
@@ -146,10 +151,14 @@ const Dashboard = () => {
 							<div>
 								{sessions.map((session) => {
 									return (
-										<div className={styles.session}>
-											<div>Name: {session.Name}</div>
-											<div>Date: {getDate(session.Date)}</div>
-											<div>Link: {session.Link}</div>
+										<div className={styles.sessionWrap} key={Math.random()}>
+										
+											<div className={styles.session}>
+												<div>Name: {session.Name}</div>
+												<div>Date: {getDate(session.Date)}</div>
+												<div>Link: {session.Link}</div>
+											</div>
+											<BsXCircleFill size="1.5em" color="#4c3b4d"/>
 										</div>
 									);
 								})}

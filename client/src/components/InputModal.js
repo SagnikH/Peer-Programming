@@ -8,7 +8,10 @@ const Inputmodal = (props) => {
 	const [name, setName] = useState("");
 	const isLoggedIn = useSelector((state) => state.auth.token);
 
-	const handleClose = (e) => setShow(false);
+	const handleClose = (e) => {
+		setName("");
+		setShow(false);
+	}
 	const handleShow = () => {
 		if (isLoggedIn) setShow(true);
 
