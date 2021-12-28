@@ -63,7 +63,7 @@ export default function JoinForm() {
 
 					//TODO: navigate to the new session
 					const URL = `/session/${sessRes.sessionId}`;
-					navigate(URL);
+					//navigate(URL);
 				} catch (e) {
 					console.log(e);
 

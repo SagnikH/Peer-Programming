@@ -3,4 +3,5 @@
     color: white;
     text-align: center;
     height: 30px;
+    z-index: 9999;
 }
