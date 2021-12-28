@@ -30,14 +30,30 @@ export const createSession = createAsyncThunk(
 
 			// console.log("new session created", res.data);
 
-      const userSession = {
-        name,
-        sessionId: session.data._id,
-        createdAt: session.data.createdAt,
-      };
-      console.log("server userSession", userSession);
+			const userSession = {
+				name,
+				sessionId: session.data._id,
+				createdAt: session.data.createdAt,
+			};
+			console.log("server userSession", userSession);
 
 			return userSession;
+		} catch (e) {
+			console.log("creation error in session thunk", e.response);
+			return rejectWithValue(e.response.status);
+		}
+	}
+);
+
+export const deleteSession = createAsyncThunk(
+	"user/deleteSession",
+
+	async (sessionId, { rejectWithValue }) => {
+		try {
+			const delSession = await axios.delete(`http://localhost:4000/api/session/${sessionId}`);
+
+			console.log("deleting session", delSession.data);
+			return delSession.data._id;
 		} catch (e) {
 			console.log("creation error in session thunk", e.response);
 			return rejectWithValue(e.response.status);
@@ -134,6 +150,14 @@ export const useSlice = createSlice({
 
 		builder.addCase(createSession.fulfilled, (state, action) => {
 			state.userSessions.push(action.payload);
+		});
+
+		builder.addCase(deleteSession.fulfilled, (state, action) => {
+			const newUserSessions = state.userSessions.filter(
+				(session) => session.sessionId !== action.payload
+			);
+
+			state.userSessions = newUserSessions; 
 		});
 	},
 });

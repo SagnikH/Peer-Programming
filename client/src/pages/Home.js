@@ -1,9 +1,7 @@
-import { Button, Form } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import InputModal from "../components/InputModal.js";
+import JoinForm from '../components/JoinForm.js';
 import styles from "../styles/home.module.css";
 import { fetchSessionById } from "../redux/slices/sessionSlice";
 import { createSession } from "../redux/slices/userSlice";
@@ -72,6 +70,7 @@ const Home = () => {
 		}
 
 		//get the id from given url and use it to find the corresponding session data
+		//TODO: handle if user only enters the sessionId
 		// var URL = "http://localhost:3000/session/61c0e8f7fd1dbb86d17cb52b";
 		var URL = joinLinkValue;
 		console.log("URL :", URL);
@@ -102,15 +101,15 @@ const Home = () => {
 						createSession({ name: modalResponse, userId })
 					).unwrap();
 
-					//remove states
-
 					console.log(sessRes); //newly created session data
+
+					const URL = `/session/${sessRes.sessionId}`;
+					navigate(URL);
 				} catch (e) {
 					console.log(e);
 
 					//catches error, show a generic alert
 					window.alert("enter session name / refresh");
-				} finally {
 					setAddRequestStatus("idle");
 				}
 			})();
@@ -131,24 +130,7 @@ const Home = () => {
 						for? Let's dive in.
 					</div>
 					<div className="d-flex w-100 justify-content-around">
-						<InputModal handleName={handleName} />
-						<h4>{modalResponse}</h4>
-
-						<Form className="d-flex">
-							<Form.Control
-								className={styles.formInput}
-								type="text"
-								placeholder="Enter link"
-								onChange={handleJoinLinkChange}
-							/>
-							<Button
-								className={styles.formButton}
-								type="submit"
-								onClick={joinLinkHandler}
-							>
-								Join Link
-							</Button>
-						</Form>
+						<JoinForm/>
 					</div>
 				</div>
 			</div>

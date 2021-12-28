@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Session = require("../models/sessionModel");
 const User = require("../models/userModel");
+const Document = require("../models/documentModel");
 const { NotFoundError } = require("../utils/errors/databaseFacingErrors");
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -92,6 +93,11 @@ const deleteSession = async (req, res, next) => {
 	try {
 		const deletedSession = await Session.findByIdAndDelete(_id);
 		console.log("deleted session", deletedSession);
+
+		//if session doesnot exist it returns null -> so throw a custom error
+		if (deletedSession === null)
+			return next(new NotFoundError("session not found"));
+
 		const { userId } = deletedSession;
 
 		//find session in user model & update accordingly
@@ -103,8 +109,18 @@ const deleteSession = async (req, res, next) => {
 			{ new: true }
 		);
 
+		//remove the documents once a session is removed
+		const deleteDocs = deletedSession.documents;
+
+		deleteDocs.forEach(async (doc) => {
+			const _id = doc.documentId;
+
+			const deletedDoc = await Document.findByIdAndDelete(_id);
+			console.log("Session handler -> deleted doc", deletedDoc);
+		});
+
 		//use this user to update frontend state (maybe)
-		res.status(202).json(user);
+		res.status(202).json(deletedSession);
 	} catch (e) {
 		console.log(e);
 		res.status(500).json(e);

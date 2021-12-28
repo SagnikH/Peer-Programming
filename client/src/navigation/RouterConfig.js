@@ -4,7 +4,7 @@ import { PrivateRoute } from "./PrivateRoute";
 import Home from "../pages/Home";
 import Error404 from "../pages/Error404";
 import Dashboard from "../pages/Dashboard";
-import Sessions from "../pages/Sessions";
+import Session from "../pages/Session";
 import Doc from "../pages/Doc";
 
 export const RouterConfig = () => {
@@ -33,12 +33,20 @@ export const RouterConfig = () => {
 					path="/session/:id"
 					element={
 						<PrivateRoute>
-							<Sessions />
+							<Session />
 						</PrivateRoute>
 					}
 				/>
 				<Route
 					path="/doc"
+					element={
+						<PrivateRoute>
+							<Doc />
+						</PrivateRoute>
+					}
+				/>
+        <Route
+					path="/doc/:id"
 					element={
 						<PrivateRoute>
 							<Doc />

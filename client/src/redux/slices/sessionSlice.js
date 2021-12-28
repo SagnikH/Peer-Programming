@@ -4,7 +4,7 @@ import axios from "axios";
 const initialState = {
 	name: "",
 	_id: "",
-  userId: "",
+	userId: "",
 	documents: [],
 	status: "idle",
 	error: null,
@@ -21,13 +21,47 @@ export const fetchSessionById = createAsyncThunk(
 					withCredentials: true,
 				}
 			);
-      // console.log(res.data);
+			// console.log(res.data);
 			const { documents, _id, name, userId } = res.data;
 			const actionPayload = { documents, _id, name, userId };
 			console.log("data in session thunk", actionPayload);
 			return actionPayload;
 		} catch (e) {
 			console.log("error in session thunk", e.response);
+			return rejectWithValue(e.response.status);
+		}
+	}
+);
+
+export const addNewDocument = createAsyncThunk(
+	"session/createDoc",
+
+	async ({ title, type, question }, { rejectWithValue, getState }) => {
+		const state = getState();
+
+		try {
+			const res = await axios.post(
+				"http://localhost:4000/api/document",
+				{
+					title,
+					type,
+					// link, ->handle with leetcode
+					question,
+					userId: state.session.userId,
+					sessionId: state.session._id,
+				},
+				{ withCredentials: true }
+			);
+
+			const actionPayload = {
+				documentId: res.data._id,
+				title: res.data.title,
+				createdAt: res.data.createdAt,
+			};
+
+			console.log("creating document async thunk", actionPayload);
+			return actionPayload;
+		} catch (e) {
 			return rejectWithValue(e.response.status);
 		}
 	}
@@ -76,6 +110,10 @@ export const sessionSlice = createSlice({
 			} else {
 				state.error = action.error.message;
 			}
+		});
+
+		builder.addCase(addNewDocument.fulfilled, (state, action) => {
+			state.documents.push(action.payload);
 		});
 	},
 });
