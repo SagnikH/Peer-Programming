@@ -5,7 +5,6 @@ import styles from "../styles/dashboard.module.css";
 export default function SessionList(props) {
 	const sessionList = props.sessions;
 	const title = props.title;
-
 	return (
 		<div className={styles.section}>
 			<div className={styles.heading}> {title} </div>

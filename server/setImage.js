@@ -40,7 +40,7 @@ const setImage = (lc) => {
     widths.forEach((width)=>{
         mx = Math.max(mx, width);
     })
-    let viewport = 500;
+    let viewport = 450;
     if (mx > viewport){
         let ratio = mx/viewport;
         let newWidths = widths.map((width)=> {

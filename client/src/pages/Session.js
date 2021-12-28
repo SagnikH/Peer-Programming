@@ -117,7 +117,6 @@ const Session = () => {
 		return (
 			<>
 				<div className={styles.body}>
-					<p>{id}</p>
 					<div className={styles.sessionName}>Session name: {sessionName}</div>
 					<div className={styles.sessionContainer}>
 						<SessionList

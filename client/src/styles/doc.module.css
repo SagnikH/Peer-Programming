@@ -1,18 +1,13 @@
 .question{
-    width: 600px;
-    height: 76vh;
+    width: 500px;
+    height: 95%;
+    margin: 0 30px 0 30px;
     overflow: scroll;
-    margin: 30px;
     display: inline-block;
 }
 
 .docContainer{
     display: flex;
     flex-direction: row;
-}
-
-.block{
-    width: 700px;
-    height: 500px;
-    background-color: rgb(233, 177, 177);
+    height: 80vh;
 }

@@ -1,0 +1,10 @@
+.main{
+    width: 85%;
+    height: 500px;
+}
+
+.videocall{
+    width: 15%;
+    background-color: blue;
+    height: 500px;
+}
