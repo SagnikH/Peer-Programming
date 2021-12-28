@@ -55,14 +55,31 @@ export const addNewDocument = createAsyncThunk(
 
 			const actionPayload = {
 				documentId: res.data._id,
-        //changed from title -> name (28/12)
-				name: res.data.title,
+				title: res.data.title,
 				createdAt: res.data.createdAt,
 			};
 
 			console.log("creating document async thunk", actionPayload);
 			return actionPayload;
 		} catch (e) {
+			return rejectWithValue(e.response.status);
+		}
+	}
+);
+
+export const deleteDocument = createAsyncThunk(
+	"session/deleteDoc",
+
+	async (documentId, { rejectWithValue }) => {
+		try {
+			const delDocument = await axios.delete(
+				`http://localhost:4000/api/document/${documentId}`
+			);
+
+			console.log("deleting session", delDocument.data);
+			return delDocument.data._id;
+		} catch (e) {
+			console.log("creation error in session thunk", e.response);
 			return rejectWithValue(e.response.status);
 		}
 	}
@@ -115,6 +132,14 @@ export const sessionSlice = createSlice({
 
 		builder.addCase(addNewDocument.fulfilled, (state, action) => {
 			state.documents.push(action.payload);
+		});
+
+		builder.addCase(deleteDocument.fulfilled, (state, action) => {
+			const newSessionDocs = state.documents.filter(
+				(document) => document.documentId !== action.payload
+			);
+
+			state.documents = newSessionDocs;
 		});
 	},
 });
