@@ -40,14 +40,14 @@ const Session = () => {
 	// 	}
 	// }, [sessionStatus, dispatch]);
 
-	useEffect(() => {
-		console.log("useEffect -> [Session]");
+	// useEffect(() => {
+	// 	console.log("useEffect -> [Session]");
 
-		// if (sessionStatus === "idle") {
-		console.log("fetching session data....");
-		dispatch(fetchSessionById(id));
-		// }
-	}, []);
+	// 	// if (sessionStatus === "idle") {
+	// 	console.log("fetching session data....");
+	// 	dispatch(fetchSessionById(id));
+	// 	// }
+	// }, []);
 
 	const handleClick = (e) => {
 		if (e.target.text === "Leetcode Question") setQtype("leetcode");
