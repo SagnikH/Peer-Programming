@@ -4,6 +4,7 @@ const User = require("../models/userModel");
 require("dotenv").config();
 
 const PORT = process.env.PORT;
+// console.log("callback", process.env.CALLBACK_URL);
 
 //the callback inside the statergy calls this function to create a cookie and send it to the browser
 passport.serializeUser((user, done) => {
@@ -16,7 +17,8 @@ passport.serializeUser((user, done) => {
 //invoked when browser sends a request to the server -> the cookie is sent along with the req -> token returned in req obj
 passport.deserializeUser(async (id, done) => {
 	const user = await User.findById(id);
-	const { googleID, email, picture, name, _id, sharedSessions, userSessions } = user;
+	const { googleID, email, picture, name, _id, sharedSessions, userSessions } =
+		user;
 	const cookieUser = {
 		googleID,
 		email,
@@ -36,7 +38,7 @@ passport.use(
 		{
 			clientID: process.env.CLIENT_ID,
 			clientSecret: process.env.CLIENT_SECRET,
-			callbackURL: `http://localhost:${PORT}/auth/google/callback`,
+			callbackURL: process.env.CALLBACK_URL,
 		},
 		async function (accessToken, refreshToken, bearer, info, done) {
 			const { email, name, sub, picture } = info._json;
