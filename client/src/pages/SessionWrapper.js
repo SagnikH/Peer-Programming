@@ -76,7 +76,7 @@ export default function SessionWrapper() {
 			return (
 				<div className="d-flex">
 					<div className={styles.main}>
-						<Outlet />
+						<Outlet context={socket}/>
 					</div>
 					<div className={styles.videocall}></div>
 				</div>

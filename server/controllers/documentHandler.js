@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Document = require("../models/documentModel");
 const Session = require("../models/sessionModel");
+const { getNewDoc, serializeDoc } = require("../utils/automergeUtils");
 const { NotFoundError } = require("../utils/errors/databaseFacingErrors");
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -9,6 +10,9 @@ const createDocument = async (req, res) => {
 	//TODO: add validity checker
 	//TODO: check if question link is valid -> ask fetcher team
 	//TODO: check to see if session id exists
+
+	// adding initial savedCode for Automerge
+	const savedCode = serializeDoc(getNewDoc());
 
 	try {
 		//TODO: check session id exists here if not throw error
@@ -19,6 +23,7 @@ const createDocument = async (req, res) => {
 			link,
 			userId,
 			sessionId,
+			savedCode,
 		});
 
 		const documentObj = {

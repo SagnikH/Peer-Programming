@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useOutletContext } from "react-router-dom";
+import SyncedMonacoEditor from "../components/SyncedMonacoEditor";
 
 import Error404 from "./Error404";
 import Loading from "../components/Loading";
@@ -20,6 +21,8 @@ const Doc = () => {
 	const [documentData, setDocumentData] = useState("");
 	const [error, setError] = useState(null);
 	const [loading, setLoading] = useState(true);
+
+	const socket = useOutletContext();
 
 	useEffect(() => {
 		//fetch curr doc data
@@ -103,6 +106,9 @@ const Doc = () => {
 			<div className={styles.docContainer}>
 				<div className={styles.question}>
 					<div dangerouslySetInnerHTML={{ __html: lc }}></div>
+				</div>
+				<div className={styles.question}>
+					<SyncedMonacoEditor socket={socket} docId={did} />
 				</div>
 				{/* <div className={styles.block}></div> */}
 			</div>

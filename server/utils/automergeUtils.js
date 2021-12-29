@@ -33,4 +33,14 @@ const Automerge = require("automerge");
     return deserializedChanges
 }
 
-module.exports = { arrayToBase64String, base64StringToArray, serializeDoc, deserializeDoc, serializeChanges, deserializeChanges}
+function getNewDoc(initialText = "") {
+    let doc = Automerge.init();
+    doc = Automerge.change(doc, (doc) => {
+        doc.text = new Automerge.Text();
+        for (let i = 0; i < initialText.length; i++)
+            doc.text.insertAt(i, initialText[i]);
+    });
+    return doc;
+}
+
+module.exports = { arrayToBase64String, base64StringToArray, serializeDoc, deserializeDoc, serializeChanges, deserializeChanges, getNewDoc}

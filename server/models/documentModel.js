@@ -28,7 +28,7 @@ const documentSchema = new Schema(
 
 		savedCode: {
 			type: String,
-			default: "",
+			required: true,
 		},
 
 		//handle by using .toString()
