@@ -10,7 +10,7 @@ export default function SessionList(props) {
 			<div className={styles.heading}> {title} </div>
 			<div className={styles.contents}>
 				<div>
-					{sessionList.map((session) => {
+					{sessionList.map((session) => { 
 						return (
 							<SessionItem
 								session={session}
