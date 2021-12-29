@@ -8,8 +8,8 @@ import { addNewDocument, deleteDocument } from "../redux/slices/sessionSlice";
 import Loading from "../components/Loading";
 import Error404 from "./Error404";
 import SessionList from "../components/SessionList.js";
-import LeetcodeQuestionForm from '../components/LeetcodeQuestionForm.js';
-import CustomQuestionForm from '../components/CustomQuestionForm.js';
+import LeetcodeQuestionForm from "../components/LeetcodeQuestionForm.js";
+import CustomQuestionForm from "../components/CustomQuestionForm.js";
 
 const Session = () => {
 	const [sessionName, setSessionName] = useState("");
@@ -18,14 +18,14 @@ const Session = () => {
 	// const user = useSelector((state) => state.user);
 	const error = useSelector((state) => state.session.error);
 	const sessionStatus = useSelector((state) => state.session.status);
-  	const session = useSelector((state) => state.session);
+	const session = useSelector((state) => state.session);
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
 	const handleClick = (e) => {
 		if (e.target.text === "Leetcode Question") setQtype("leetcode");
 		else if (e.target.text === "Custom Question") setQtype("custom");
 	};
-
 
 	const handleDeleteDocument = async (documentId) => {
 		console.log("deleting doc....", documentId);
@@ -40,7 +40,11 @@ const Session = () => {
 					deleteDocument(documentId)
 				).unwrap();
 
-				console.log("IN session -> document deleted", deletedSession);
+				console.log("IN session -> new document created", docRes);
+				//use this id to navigate to desired page
+				const URL = `/session/${id}/doc/${docRes.documentId}`;
+				setRequestStatus("idle");
+				navigate(URL);
 			} catch (e) {
 				console.log(e);
 
@@ -49,6 +53,17 @@ const Session = () => {
 				setRequestStatus("idle");
 			}
 		}
+	};
+
+	function getDocumentList(documents) {
+		return documents.map((doc) => {
+			return {
+				id: doc.documentId,
+				name: doc.title,
+				link: `/session/${id}/doc/${doc.documentId}`,
+				date: doc.createdAt,
+			};
+		});
 	}
 
 	return (
@@ -57,9 +72,8 @@ const Session = () => {
 				<div className={styles.sessionName}>Session name: {sessionName}</div>
 				<div className={styles.sessionContainer}>
 					<SessionList
-						sessions={session.documents}
-						type={"doc"}
 						title={"Documents History"}
+						list={getDocumentList(session.documents)}
 						handleDelete={handleDeleteDocument}
 					/>
 					<div className={styles.form}>
@@ -80,16 +94,8 @@ const Session = () => {
 								</Dropdown.Item>
 							</Dropdown.Menu>
 						</Dropdown>
-						<div>
-							{qtype === "custom" && (
-								<CustomQuestionForm/>
-							)}
-						</div>
-						<div>
-							{qtype === "leetcode" && (
-								<LeetcodeQuestionForm/>
-							)}
-						</div>
+						<div>{qtype === "custom" && <CustomQuestionForm />}</div>
+						<div>{qtype === "leetcode" && <LeetcodeQuestionForm />}</div>
 					</div>
 				</div>
 			</div>

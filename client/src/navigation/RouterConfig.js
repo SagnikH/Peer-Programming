@@ -39,23 +39,9 @@ export const RouterConfig = () => {
 						</PrivateRoute>
 					}
 				/>
-				<Route
-					element={
-						<PrivateRoute>
-							<SessionWrapper />
-						</PrivateRoute>
-					}
-				>
+				<Route path="session/:id" element={<SessionWrapper />}>
 					<Route
-						path="/app"
-						element={
-							<PrivateRoute>
-								<h1> Private App </h1>
-							</PrivateRoute>
-						}
-					/>
-					<Route
-						path="session/:id"
+						path=""
 						element={
 							<PrivateRoute>
 								<Session />
@@ -63,15 +49,7 @@ export const RouterConfig = () => {
 						}
 					/>
 					<Route
-						path="doc"
-						element={
-							<PrivateRoute>
-								<Doc />
-							</PrivateRoute>
-						}
-					/>
-					<Route
-						path="doc/:id"
+						path="doc/:did"
 						element={
 							<PrivateRoute>
 								<Doc />

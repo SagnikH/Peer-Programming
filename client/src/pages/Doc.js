@@ -14,7 +14,7 @@ import Error404 from "./Error404";
 
 const Doc = () => {
 	// const user = useSelector((state) => state.user);
-	const { id } = useParams();
+	const { id, did } = useParams();
 
 	const [documentData, setDocumentData] = useState("");
 	const [error, setError] = useState(null);
@@ -24,7 +24,7 @@ const Doc = () => {
 		(async () => {
 			try {
 				const doc = await axios.get(
-					`http://localhost:4000/api/document/${id}`,
+					`http://localhost:4000/api/document/${did}`,
 					{
 						withCredentials: true,
 					}
@@ -48,7 +48,7 @@ const Doc = () => {
 
 		try {
 			const savedDoc = await axios.patch(
-				`http://localhost:4000/api/document/${id}`,
+				`http://localhost:4000/api/document/${did}`,
 				{ savedCode: documentData },
 				{ withCredentials: true }
 			);

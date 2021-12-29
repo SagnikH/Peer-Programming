@@ -10,6 +10,9 @@ const apiRoutes = require("./routes/apiRoutes");
 const checkUser = require("./middlewares/authMiddleware");
 const { DatabaseError } = require("./utils/errors/baseErrors");
 require("dotenv").config();
+const { Server } = require("socket.io");
+const { DBManager } = require("./utils/DBManager");
+const SessionManager = require("./utils/SessionManager");
 
 const URI = process.env.MONGODB_URI;
 const COOKIE_KEYS = process.env.COOKIE_KEYS;
@@ -79,3 +82,12 @@ app.use((err, req, res, next) => {
 		res.status(500);
 	}
 });
+
+const io = new Server(3001, {
+    cors: {
+        origin: ['http://localhost:3000'],
+        methods: ['GET', 'POST']
+    }
+});
+
+SessionManager(io, new DBManager());

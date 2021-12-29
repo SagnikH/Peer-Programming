@@ -10,7 +10,7 @@ const ObjectId = mongoose.Types.ObjectId;
 
 const Document = require("../models/documentModel");
 
-export class DBSavedCodemanager {
+class DBSavedCodeManager {
 	constructor() {
 		console.log("Document collection object");
 	}
@@ -89,3 +89,6 @@ export class DBSavedCodemanager {
 		}
 	}
 }
+
+
+module.exports = { DBSavedCodeManager };

@@ -48,6 +48,17 @@ const Dashboard = () => {
 		}
 	};
 
+	function getUserSessionsList(sessions) {
+		return sessions.map((session) => {
+			return {
+				id: session.sessionId,
+				name: session.name,
+				link: `/session/${session.sessionId}`,
+				date: session.createdAt,
+			}
+		})
+	}
+
 	if (userStatus === "loading") {
 		return <Loading />;
 	}
@@ -62,15 +73,14 @@ const Dashboard = () => {
 				<div className={styles.dashboard}>
 					<UserInfo />
 					<SessionList
-						sessions={user.userSessions}
-						type={"session"}
 						title={"Created Sessions"}
+						list={getUserSessionsList(user.userSessions)}
 						handleDelete={handleDeleteSession}
 					/>
 					<SessionList
-						sessions={user.sharedSessions}
-						type={"session"}
 						title={"Shared Sessions"}
+						list={[]}
+						
 					/>
 				</div>
 				<div className={styles.buttons}>
