@@ -8,7 +8,6 @@ import UserInfo from "../components/UserInfo.js";
 import JoinForm from "../components/JoinForm.js";
 import Loading from "../components/Loading.js";
 import styles from "../styles/dashboard.module.css";
-import sessions from "../assets/sessions.json";
 import SessionList from "../components/SessionList.js";
 
 const Dashboard = () => {
@@ -46,35 +45,35 @@ const Dashboard = () => {
 	// 	}, 1000);
 	// }, []);
 
-	const createLinkHandler = (e) => {
-		e.preventDefault();
+	// const createLinkHandler = (e) => {
+	// 	e.preventDefault();
 
-		if (!isLoggedIn) {
-			window.location.href = "http://localhost:4000/auth/google";
-		}
-	};
+	// 	if (!isLoggedIn) {
+	// 		window.location.href = "http://localhost:4000/auth/google";
+	// 	}
+	// };
 
-	const handleJoinLinkChange = (e) => {
-		setJoinLinkValue(e.target.value);
-	};
+	// const handleJoinLinkChange = (e) => {
+	// 	setJoinLinkValue(e.target.value);
+	// };
 
-	const joinLinkHandler = (e) => {
-		e.preventDefault();
+	// const joinLinkHandler = (e) => {
+	// 	e.preventDefault();
 
-		if (!isLoggedIn) {
-			window.location.href = "http://localhost:4000/auth/google";
-		}
+	// 	if (!isLoggedIn) {
+	// 		window.location.href = "http://localhost:4000/auth/google";
+	// 	}
 
-		//TODO: handle if only id is given
-		var URL = joinLinkValue;
-		console.log("URL :", URL);
-		var newURL = URL.replace(
-			/^[a-z]{4,5}\:\/{2}[a-z]{1,}\:[0-9]{1,4}.(.*)/,
-			"$1"
-		); // http or https
+	// 	//TODO: handle if only id is given
+	// 	var URL = joinLinkValue;
+	// 	console.log("URL :", URL);
+	// 	var newURL = URL.replace(
+	// 		/^[a-z]{4,5}\:\/{2}[a-z]{1,}\:[0-9]{1,4}.(.*)/,
+	// 		"$1"
+	// 	); // http or https
 
-		navigate(newURL);
-	};
+	// 	navigate(newURL);
+	// };
 
 	//TODO: rename to a meaning full name
 	// const handleName = (modalResponse) => {
@@ -114,12 +113,12 @@ const Dashboard = () => {
 	// 	}
 	// }, [modalResponse]);
 
-	const handleDeleteSession = async (e) => {
-		console.log("deleting session....");
+	const handleDeleteSession = async (sessionId) => {
+		console.log("deleting session....", sessionId);
 		//get this session id from the respective clicked item
 		// const sessionId = "61a9aef6417576b9f074f427";  //deleted session id
-		const sessionId = "61c0e931fd1dbb86d17cb546";
-		e.preventDefault();
+		// const sessionId = "61c0e931fd1dbb86d17cb546";
+		// e.preventDefault();
 
 		const canDelete = requestStatus === "idle";
 
@@ -159,6 +158,7 @@ const Dashboard = () => {
 						sessions={user.userSessions}
 						type={"session"}
 						title={"Created Sessions"}
+						handleDelete={handleDeleteSession}
 					/>
 					<SessionList
 						sessions={user.sharedSessions}
