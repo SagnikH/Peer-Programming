@@ -6,6 +6,8 @@ import InputModal from "./InputModal.js";
 import { Button, Form } from "react-bootstrap";
 import styles2 from "../styles/home.module.css";
 import styles from "../styles/dashboard.module.css";
+import { config } from "dotenv";
+config();
 
 export default function JoinForm() {
 	const userId = useSelector((state) => state.user._id);
@@ -28,7 +30,7 @@ export default function JoinForm() {
 		e.preventDefault();
 
 		if (!isLoggedIn) {
-			window.location.href = "http://localhost:4000/auth/google";
+			window.location.href = `${process.env.REACT_APP_SERVER_URL}/auth/google`;
 		}
 
 		//TODO: handle if only id is given

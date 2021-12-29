@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { config } from "dotenv";
+config();
 
 const initialState = {
 	name: "",
@@ -16,7 +18,7 @@ export const fetchSessionById = createAsyncThunk(
 	async (sessionId, { rejectWithValue }) => {
 		try {
 			const res = await axios.get(
-				`http://localhost:4000/api/session/${sessionId}`,
+				`${process.env.REACT_APP_SERVER_URL}/api/session/${sessionId}`,
 				{
 					withCredentials: true,
 				}
@@ -41,7 +43,7 @@ export const addNewDocument = createAsyncThunk(
 
 		try {
 			const res = await axios.post(
-				"http://localhost:4000/api/document",
+				`${process.env.REACT_APP_SERVER_URL}/api/document`,
 				{
 					title,
 					type,
@@ -73,7 +75,7 @@ export const deleteDocument = createAsyncThunk(
 	async (documentId, { rejectWithValue }) => {
 		try {
 			const delDocument = await axios.delete(
-				`http://localhost:4000/api/document/${documentId}`
+				`${process.env.REACT_APP_SERVER_URL}/api/document/${documentId}`
 			);
 
 			console.log("deleting session", delDocument.data);

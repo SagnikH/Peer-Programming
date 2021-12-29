@@ -1,10 +1,15 @@
 import axios from "axios";
+import { config } from "dotenv";
+config();
 
 export const checkAuth = async () => {
 	try {
-		const res = await axios.get("http://localhost:4000/api/user", {
-			withCredentials: true,
-		});
+		const res = await axios.get(
+			`${process.env.REACT_APP_SERVER_URL}/api/user`,
+			{
+				withCredentials: true,
+			}
+		);
 
 		const user = res.data.user;
 		const {

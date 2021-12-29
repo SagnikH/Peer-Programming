@@ -7,6 +7,8 @@ import JoinForm from "../components/JoinForm.js";
 import Loading from "../components/Loading.js";
 import styles from "../styles/dashboard.module.css";
 import SessionList from "../components/SessionList.js";
+import { config } from "dotenv";
+config();
 
 const Dashboard = () => {
 	const dispatch = useDispatch();
@@ -16,10 +18,10 @@ const Dashboard = () => {
 	const userStatus = useSelector((state) => state.user.status);
 
 	const logoutHandler = (e) => {
-		window.location.href = "http://localhost:4000/auth/logout";
+		window.location.href = `${process.env.REACT_APP_SERVER_URL}/auth/logout`;
 	};
 
-  //push inside a utility funciton
+	//push inside a utility funciton
 	const handleDeleteSession = async (sessionId) => {
 		console.log("deleting session....", sessionId);
 		//get this session id from the respective clicked item
@@ -55,8 +57,8 @@ const Dashboard = () => {
 				name: session.name,
 				link: `/session/${session.sessionId}`,
 				date: session.createdAt,
-			}
-		})
+			};
+		});
 	}
 
 	if (userStatus === "loading") {
@@ -77,11 +79,7 @@ const Dashboard = () => {
 						list={getUserSessionsList(user.userSessions)}
 						handleDelete={handleDeleteSession}
 					/>
-					<SessionList
-						title={"Shared Sessions"}
-						list={[]}
-						
-					/>
+					<SessionList title={"Shared Sessions"} list={[]} />
 				</div>
 				<div className={styles.buttons}>
 					<JoinForm />

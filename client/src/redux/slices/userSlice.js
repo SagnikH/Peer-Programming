@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { config } from "dotenv";
+config();
 
 const initialState = {
 	name: "",
@@ -23,7 +25,7 @@ export const createSession = createAsyncThunk(
 			console.log("sending request for session");
 
 			const session = await axios.post(
-				"http://localhost:4000/api/session",
+				`${process.env.REACT_APP_SERVER_URL}/api/session`,
 				{ name, userId },
 				{ withCredentials: true }
 			);
@@ -50,7 +52,9 @@ export const deleteSession = createAsyncThunk(
 
 	async (sessionId, { rejectWithValue }) => {
 		try {
-			const delSession = await axios.delete(`http://localhost:4000/api/session/${sessionId}`);
+			const delSession = await axios.delete(
+				`${process.env.REACT_APP_SERVER_URL}/api/session/${sessionId}`
+			);
 
 			console.log("deleting session", delSession.data);
 			return delSession.data._id;
@@ -66,9 +70,12 @@ export const fetchUser = createAsyncThunk(
 
 	async (slug, { rejectWithValue }) => {
 		try {
-			const res = await axios.get("http://localhost:4000/api/user", {
-				withCredentials: true,
-			});
+			const res = await axios.get(
+				`${process.env.REACT_APP_SERVER_URL}/api/user`,
+				{
+					withCredentials: true,
+				}
+			);
 
 			const user = res.data.user;
 			const {
@@ -157,7 +164,7 @@ export const useSlice = createSlice({
 				(session) => session.sessionId !== action.payload
 			);
 
-			state.userSessions = newUserSessions; 
+			state.userSessions = newUserSessions;
 		});
 	},
 });

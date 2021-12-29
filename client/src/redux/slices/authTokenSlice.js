@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { config } from "dotenv";
+config();
 
 const initialState = {
 	token: false,
@@ -12,9 +14,12 @@ export const fetchToken = createAsyncThunk(
 
 	async (slug, { rejectWithValue }) => {
 		try {
-			const res = await axios.get("http://localhost:4000/api/user", {
-				withCredentials: true,
-			});
+			const res = await axios.get(
+				`${process.env.REACT_APP_SERVER_URL}/api/user`,
+				{
+					withCredentials: true,
+				}
+			);
 
 			// const user = res.data.user;
 

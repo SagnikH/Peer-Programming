@@ -6,8 +6,10 @@ import { Outlet, useParams } from "react-router-dom";
 import Loading from "../components/Loading";
 import Error404 from "./Error404";
 import { io } from "socket.io-client";
+import { config } from "dotenv";
+config();
 
-const URL = "http://localhost:4000";
+const URL = process.env.REACT_APP_SERVER_URL;
 const SESSION_INIT = "session init";
 const CLIENT_DISCONNECTED = "client disconnected";
 const CLIENT_CONNECTED = "client connected";
@@ -76,7 +78,7 @@ export default function SessionWrapper() {
 			return (
 				<div className="d-flex">
 					<div className={styles.main}>
-						<Outlet context={socket}/>
+						<Outlet context={socket} />
 					</div>
 					<div className={styles.videocall}></div>
 				</div>

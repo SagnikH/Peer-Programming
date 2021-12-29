@@ -13,6 +13,8 @@ import SyncedMonacoEditor from "../components/SyncedMonacoEditor";
 
 import Error404 from "./Error404";
 import Loading from "../components/Loading";
+import { config } from "dotenv";
+config();
 
 const Doc = () => {
 	// const user = useSelector((state) => state.user);
@@ -29,7 +31,7 @@ const Doc = () => {
 		(async () => {
 			try {
 				const doc = await axios.get(
-					`http://localhost:4000/api/document/${did}`,
+					`${process.env.REACT_APP_SERVER_URL}/api/document/${did}`,
 					{
 						withCredentials: true,
 					}
@@ -55,7 +57,7 @@ const Doc = () => {
 
 		try {
 			const savedDoc = await axios.patch(
-				`http://localhost:4000/api/document/${did}`,
+				`${process.env.REACT_APP_SERVER_URL}/api/document/${did}`,
 				{ savedCode: documentData },
 				{ withCredentials: true }
 			);
