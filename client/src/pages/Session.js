@@ -1,30 +1,22 @@
 import styles from "../styles/sessions.module.css";
-import docsData from "../assets/docsData.json";
 
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
-import { Dropdown, Form, Button } from "react-bootstrap";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { fetchSessionById, addNewDocument } from "../redux/slices/sessionSlice";
+import { useSelector } from "react-redux";
+import { useState } from "react";
+import { Dropdown } from "react-bootstrap";
+import { useParams } from "react-router-dom";
 import Loading from "../components/Loading";
 import Error404 from "./Error404";
-import sessions from "../assets/sessions.json";
 import SessionList from "../components/SessionList.js";
+import LeetcodeQuestionForm from '../components/LeetcodeQuestionForm.js';
+import CustomQuestionForm from '../components/CustomQuestionForm.js';
 
 const Session = () => {
 	const [sessionName, setSessionName] = useState("");
-	const [docs, setDocs] = useState([]);
-	const [docTitle, setDocTitle] = useState("");
-	const [docQuestionText, setDocQuestionText] = useState("");
 	const [qtype, setQtype] = useState("");
-	const [qlink, setQLink] = useState("");
-	const [requestStatus, setRequestStatus] = useState("idle");
 	// const user = useSelector((state) => state.user);
 	const error = useSelector((state) => state.session.error);
 	const sessionStatus = useSelector((state) => state.session.status);
-  const session = useSelector((state) => state.session);
-	const dispatch = useDispatch();
-	const navigate = useNavigate();
+  	const session = useSelector((state) => state.session);
 
 	const { id } = useParams();
 
@@ -52,59 +44,6 @@ const Session = () => {
 	const handleClick = (e) => {
 		if (e.target.text === "Leetcode Question") setQtype("leetcode");
 		else if (e.target.text === "Custom Question") setQtype("custom");
-	};
-
-	const handleTitleChange = (e) => {
-		setDocTitle(e.target.value);
-	};
-
-	const handleTextAreaChange = (e) => {
-		setDocQuestionText(e.target.value);
-	};
-
-	const handleCreateDoc = async (e) => {
-		console.log("creating doc......");
-		e.preventDefault();
-
-		let canSave = requestStatus === "idle" && qtype;
-
-		if (qtype === "custom") {
-			canSave = canSave && docTitle && docQuestionText;
-		} else if (qtype === "leetcode") {
-			canSave = canSave && qlink;
-		}
-
-		if (canSave) {
-			try {
-				setRequestStatus("pending");
-
-				const docRes = await dispatch(
-					addNewDocument({
-						title: docTitle,
-						type: qtype,
-						question: docQuestionText,
-					})
-				).unwrap();
-
-				console.log("IN session -> new document created", docRes);
-				//use this id to navigate to desired page
-				const URL = `/doc/${docRes.documentId}`;
-				setRequestStatus("idle");
-				navigate(URL);
-			} catch (e) {
-				console.log(e);
-
-				window.alert("document not created try again");
-				setRequestStatus("idle");
-			}
-			//as the component unmounts the state is lost
-			// finally {
-			// 	setRequestStatus("idle");
-			// 	setDocQuestionText("");
-			// 	setDocTitle("");
-			// 	setQtype("");
-			// }
-		}
 	};
 
 	if (sessionStatus === "loading") {
@@ -144,52 +83,12 @@ const Session = () => {
 							</Dropdown>
 							<div>
 								{qtype === "custom" && (
-									<Form className="d-flex flex-column align-items-center">
-										<Form.Group className="mb-3" controlId="formBasicEmail">
-											<Form.Label>Enter Title</Form.Label>
-											<Form.Control
-												className={styles.input}
-												type="text"
-												placeholder="Enter title"
-												onChange={handleTitleChange}
-											/>
-										</Form.Group>
-										<Form.Group className="mb-3" controlId="formBasicEmail">
-											<Form.Label>Enter Question</Form.Label>
-											<Form.Control
-												as="textarea"
-												rows={8}
-												cols={50}
-												onChange={handleTextAreaChange}
-											/>
-										</Form.Group>
-
-										<Button
-											className={styles.formButton}
-											type="submit"
-											onClick={handleCreateDoc}
-										>
-											Create Doc
-										</Button>
-									</Form>
+									<CustomQuestionForm/>
 								)}
 							</div>
 							<div>
 								{qtype === "leetcode" && (
-									<Form className="d-flex flex-column align-items-center">
-										<Form.Group className="mb-3" controlId="formBasicEmail">
-											<Form.Label>Enter Leetcode Question Link</Form.Label>
-											<Form.Control
-												className={styles.input}
-												type="text"
-												placeholder="Enter link"
-											/>
-										</Form.Group>
-
-										<Button className={styles.formButton} type="submit">
-											Create Doc
-										</Button>
-									</Form>
+									<LeetcodeQuestionForm/>
 								)}
 							</div>
 						</div>
@@ -197,7 +96,7 @@ const Session = () => {
 				</div>
 			</>
 		);
-	} else {
+	} else { 
 		return <h1>possible bug</h1>;
 	}
 };

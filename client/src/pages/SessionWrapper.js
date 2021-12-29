@@ -6,6 +6,7 @@ import { Outlet, useParams } from "react-router-dom";
 
 export default function SessionWrapper() {
 	const dispatch = useDispatch();
+	const dummy = "Dummy data sent from parent wrapper";
 
 	const { id } = useParams();
 
@@ -28,7 +29,7 @@ export default function SessionWrapper() {
 	return (
 		<div className="d-flex">
 			<div className={styles.main}>
-				<Outlet />
+				<Outlet/>
 			</div>
 			<div className={styles.videocall}></div>
 		</div>

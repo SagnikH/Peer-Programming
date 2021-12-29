@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { Button } from "react-bootstrap";
 import styles from "../styles/dashboard.module.css";
 
 import { BsXCircleFill } from "react-icons/bs";
@@ -22,7 +21,7 @@ export default function SessionItem(props) {
 
 	return (
 		<div className={styles.sessionWrap}>
-			<Link to={link}>
+			<Link to={link} style={{textDecoration: 'none'}}>
 				<div className={styles.session}>
 					<div>Name: {session.name}</div>
 					<div>Date: {getDate(session.createdAt)}</div>
@@ -32,7 +31,7 @@ export default function SessionItem(props) {
 
 			<BsXCircleFill
 				size="1.5em"
-				color="#4c3b4d"
+				className={styles.deleteIcon}
 				onClick={() => props.handleDelete(id)}
 			/>
 		</div>

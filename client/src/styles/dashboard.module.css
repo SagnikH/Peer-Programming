@@ -56,14 +56,29 @@
     margin: auto;
 }
 
+.sessionWrap{
+    display: flex;
+    justify-content: space-between;
+}
 .session{
     border-radius: 5px;
     padding: 5px;
+    color: #4c3b4d;
+    font-weight: 700;
+    width: 290px;
 }
 .session:hover{
     background-color: #4c3b4d;
     color: white;
     cursor: pointer;
+}
+.deleteIcon{
+    margin-top: 10px;
+    cursor: pointer;
+    color: #d9534f;
+}
+.deleteIcon:hover{
+    color: red;
 }
 
 .logoutButton{

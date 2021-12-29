@@ -1,10 +1,11 @@
 .body{
-    margin: auto;
-    width: 80vw;
+    margin-top: -50px;
 }
 
 .sessionName{
     font-size: 30px;
+    color: #4c3b4d;
+    font-weight: 900;
     text-align: center;
     margin: 15px;
 }
