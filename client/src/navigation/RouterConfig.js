@@ -39,7 +39,15 @@ export const RouterConfig = () => {
 						</PrivateRoute>
 					}
 				/>
-				<Route path="session/:id" element={<SessionWrapper />}>
+
+				<Route
+					path="session/:id"
+					element={
+						<PrivateRoute>
+							<SessionWrapper />
+						</PrivateRoute>
+					}
+				>
 					<Route
 						path=""
 						element={

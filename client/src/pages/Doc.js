@@ -8,9 +8,10 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import {useOutletContext} from 'react-router-dom';
+import { useOutletContext } from "react-router-dom";
 
 import Error404 from "./Error404";
+import Loading from "../components/Loading";
 
 const Doc = () => {
 	// const user = useSelector((state) => state.user);
@@ -18,6 +19,7 @@ const Doc = () => {
 
 	const [documentData, setDocumentData] = useState("");
 	const [error, setError] = useState(null);
+	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
 		//fetch curr doc data
@@ -35,6 +37,8 @@ const Doc = () => {
 			} catch (e) {
 				console.log(e);
 				setError(e.response.status);
+			} finally {
+				setLoading(false);
 			}
 		})();
 	}, []);
@@ -88,7 +92,10 @@ const Doc = () => {
 		"</div></div>";
 	const reactLc = ReactHtmlParser(lc);
 	// console.log(reactLc[0].props.children);
-	if (error) {
+
+	if (loading) {
+		return <Loading />;
+	} else if (error) {
 		console.log("error in doc");
 		return <Error404 />;
 	} else {
