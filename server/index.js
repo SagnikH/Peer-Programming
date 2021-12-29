@@ -10,9 +10,20 @@ const apiRoutes = require("./routes/apiRoutes");
 const checkUser = require("./middlewares/authMiddleware");
 const { DatabaseError } = require("./utils/errors/baseErrors");
 require("dotenv").config();
-const { Server } = require("socket.io");
+// const { Server } = require("socket.io");
 const { DBManager } = require("./utils/DBManager");
 const SessionManager = require("./utils/SessionManager");
+
+const server = require('http').createServer(app);
+const io = require('socket.io')(server, {
+    cors: {
+        origin: ['http://localhost:3000'],
+        methods: ['GET', 'POST']
+    }
+});
+
+
+SessionManager(io, new DBManager());
 
 const URI = process.env.MONGODB_URI;
 const COOKIE_KEYS = process.env.COOKIE_KEYS;
@@ -56,9 +67,9 @@ app.use(passport.session());
 	}
 })();
 
-app.listen(PORT, () => {
-	console.log("connected to port 4000");
-});
+// app.listen(PORT, () => {
+// 	console.log("connected to port 4000");
+// });
 
 app.use("/auth", authRoutes);
 //TODO: checkUser middleware implement later
@@ -83,11 +94,7 @@ app.use((err, req, res, next) => {
 	}
 });
 
-const io = new Server(3001, {
-    cors: {
-        origin: ['http://localhost:3000'],
-        methods: ['GET', 'POST']
-    }
-});
 
-SessionManager(io, new DBManager());
+server.listen(4000);
+
+

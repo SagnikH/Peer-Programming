@@ -7,7 +7,7 @@ import Loading from "../components/Loading";
 import Error404 from "./Error404";
 import { io } from "socket.io-client";
 
-const URL = "http://localhost:3001";
+const URL = "http://localhost:4000";
 const SESSION_INIT = "session init";
 const CLIENT_DISCONNECTED = "client disconnected";
 const CLIENT_CONNECTED = "client connected";
