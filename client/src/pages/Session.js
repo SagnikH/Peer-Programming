@@ -22,7 +22,7 @@ const Session = () => {
 	// const user = useSelector((state) => state.user);
 	const error = useSelector((state) => state.session.error);
 	const sessionStatus = useSelector((state) => state.session.status);
-  const session = useSelector((state) => state.session);
+	const session = useSelector((state) => state.session);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
@@ -107,6 +107,17 @@ const Session = () => {
 		}
 	};
 
+	function getDocumentList(documents) {
+		return documents.map((doc) => {
+			return {
+				id: doc.documentId,
+				name: doc.title,
+				link: `/session/${id}/doc/${doc.documentId}`,
+				date: doc.createdAt,
+			};
+		});
+	}
+
 	if (sessionStatus === "loading") {
 		console.log("loading");
 		return <Loading />;
@@ -120,10 +131,8 @@ const Session = () => {
 					<div className={styles.sessionName}>Session name: {sessionName}</div>
 					<div className={styles.sessionContainer}>
 						<SessionList
-							sessions={session.documents}
-							type={"doc"}
 							title={"Documents History"}
-							linkBase={`/session/${id}`}
+							list={getDocumentList(session.documents)}
 						/>
 						<div className={styles.form}>
 							<Dropdown className="mb-5">

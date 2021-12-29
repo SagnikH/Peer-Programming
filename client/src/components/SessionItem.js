@@ -5,28 +5,21 @@ import styles from "../styles/dashboard.module.css";
 import { BsXCircleFill } from "react-icons/bs";
 
 export default function SessionItem(props) {
-	const session = props.session;
-	const type = props.type;
-	
-	const id = type === "session" ? session.sessionId : session.documentId;
-	const link = `${props.linkBase}/${type}/${id}`;
+	const name = props.item.name;
+	const link = props.item.link;
+	const id = props.item.id;
+	const handleDelete = props.handleDelete;
+	let date = "";
+	if (props.item.date)
+		date = new Date(props.item.date).toLocaleString("en-IN");
 
-	const getDate = (date) => {
-		// console.log(new Date(date));
-		if (date) {
-			date = new Date(date).toLocaleString("en-IN");
-			return date;
-		}
-
-		return "";
-	};
 
 	return (
 		<div className={styles.sessionWrap}>
 			<Link to={link}>
 				<div className={styles.session}>
-					<div>Name: {session.name}</div>
-					<div>Date: {getDate(session.createdAt)}</div>
+					<div>Name: {name}</div>
+					<div>Date: {date}</div>
 					<div>Link: {link}</div>
 				</div>
 			</Link>
@@ -34,7 +27,7 @@ export default function SessionItem(props) {
 			<BsXCircleFill
 				size="1.5em"
 				color="#4c3b4d"
-				onClick={() => props.handleDelete(id)}
+				onClick={() => handleDelete(id)}
 			/>
 		</div>
 	);
