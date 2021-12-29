@@ -43,7 +43,8 @@ app.use(
 // set up cors to allow us to accept requests from our client
 app.use(
 	cors({
-		origin: "http://localhost:3000", // allow to server to accept request from different origin
+		// origin: "http://localhost:3000", // allow to server to accept request from different origin
+    origin: process.env.CLIENT_URL, //for the time being
 		methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
 		credentials: true, // allow session cookie from browser to pass through
 	})

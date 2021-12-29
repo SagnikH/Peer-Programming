@@ -1,8 +1,10 @@
 const passport = require("passport");
+require("dotenv").config();
 
 const router = require("express").Router();
 
-const CLIENT_URI = "http://localhost:3000";
+const CLIENT_URI = process.env.CLIENT_URL;
+// console.log("client URI from env", process.env.CLIENT_URL);
 
 router.get(
 	"/google",
