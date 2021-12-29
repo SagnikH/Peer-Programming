@@ -10,18 +10,18 @@ const apiRoutes = require("./routes/apiRoutes");
 const checkUser = require("./middlewares/authMiddleware");
 const { DatabaseError } = require("./utils/errors/baseErrors");
 require("dotenv").config();
-// const { Server } = require("socket.io");
+
 const { DBManager } = require("./utils/DBManager");
 const SessionManager = require("./utils/SessionManager");
 
 const server = require('http').createServer(app);
+
 const io = require('socket.io')(server, {
     cors: {
-        origin: ['http://localhost:3000'],
+        origin: [process.env.CLIENT_URL],
         methods: ['GET', 'POST']
     }
 });
-
 
 SessionManager(io, new DBManager());
 
@@ -40,11 +40,9 @@ app.use(
 	})
 );
 
-// set up cors to allow us to accept requests from our client
 app.use(
 	cors({
-		// origin: "http://localhost:3000", // allow to server to accept request from different origin
-    origin: process.env.CLIENT_URL, //for the time being
+    	origin: process.env.CLIENT_URL, 	// "http://localhost:3000"
 		methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
 		credentials: true, // allow session cookie from browser to pass through
 	})
@@ -68,16 +66,11 @@ app.use(passport.session());
 	}
 })();
 
-// app.listen(PORT, () => {
-// 	console.log("connected to port 4000");
-// });
-
 app.use("/auth", authRoutes);
 //TODO: checkUser middleware implement later
 app.use("/api", apiRoutes);
 
 app.get("/", (req, res) => {
-	// console.log(req.user);
 	res.send("homepage");
 });
 
@@ -87,7 +80,6 @@ app.use((err, req, res, next) => {
 	if (res.headersSent) {
 		return next(err);
 	}
-
 	if (err instanceof DatabaseError) {
 		res.status(err.statusCode).json(err.message);
 	} else {
@@ -95,7 +87,12 @@ app.use((err, req, res, next) => {
 	}
 });
 
+// replacing
+// app.listen(PORT, () => {
+// 	console.log("connected to port 4000");
+// });
+// by server.listen to allow socket.io to listen on same port
+server.listen(PORT);
 
-server.listen(4000);
 
 

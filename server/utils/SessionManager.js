@@ -86,6 +86,7 @@ function SessionManager(io, dbManager) {
 
     async function docClosed(socket, docId) {
         await socket.leave(docId);
+        socket.docId = null;
         const sockets = await io.in(docId).allSockets();
         if (sockets.size === 0) {
             console.log("Archived:", docId);
