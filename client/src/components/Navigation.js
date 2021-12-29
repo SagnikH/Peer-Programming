@@ -10,8 +10,8 @@ const Navigation = () => {
 	const dispatch = useDispatch();
 	const isLoggedIn = useSelector((state) => state.auth.token);
 	const authStatus = useSelector((state) => state.auth.status);
+	const userStatus = useSelector((state) => state.user.status);
 
-	//handle the token for the nav bar here itself
 	useEffect(() => {
 		// console.log("in navbar");
 
@@ -20,6 +20,13 @@ const Navigation = () => {
 			dispatch(fetchToken());
 		}
 	}, [authStatus, dispatch]);
+
+	useEffect(() => {
+		//might need to fetch user data if modal is implemented
+		if (userStatus === "idle") {
+			dispatch(fetchUser());
+		}
+	}, [userStatus, dispatch]);
 
 	return (
 		<Navbar className={styles.navbar} expand="lg">
