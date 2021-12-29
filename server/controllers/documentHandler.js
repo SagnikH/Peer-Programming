@@ -103,7 +103,7 @@ const deleteDocument = async (req, res, next) => {
 		);
 
 		console.log(session);
-		res.status(202).json("document deleted");
+		res.status(202).json(deletedDocument);
 	} catch (e) {
 		console.log(e);
 		res.status(500).json(e);
