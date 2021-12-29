@@ -9,6 +9,7 @@
 .docContainer{
     display: flex;
     flex-direction: row;
+    margin-top: -50px;
 }
 
 .block{

@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Navbar, Container } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchToken } from "../redux/slices/authTokenSlice";
+import { fetchUser } from "../redux/slices/userSlice";
 import { Link } from "react-router-dom";
 import favicon from "../assets/favicon.png";
 import styles from "../styles/navigation.module.css";

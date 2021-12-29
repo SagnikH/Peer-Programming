@@ -1,11 +1,14 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "../styles/sessionWrapper.module.css";
-import { fetchSessionById, addNewDocument } from "../redux/slices/sessionSlice";
+import { fetchSessionById } from "../redux/slices/sessionSlice";
 import { Outlet, useParams } from "react-router-dom";
+import Loading from "../components/Loading";
+import Error404 from "./Error404";
 
 export default function SessionWrapper() {
 	const dispatch = useDispatch();
+	const sessionStatus = useSelector((state) => state.session.status);
 
 	const { id } = useParams();
 
@@ -19,18 +22,26 @@ export default function SessionWrapper() {
 	useEffect(() => {
 		console.log("useEffect -> [Session]");
 
-		// if (sessionStatus === "idle") {
 		console.log("fetching session data....");
 		dispatch(fetchSessionById(id));
-		// }
 	}, []);
 
-	return (
-		<div className="d-flex">
-			<div className={styles.main}>
-				<Outlet />
+	if (sessionStatus === "loading") {
+		console.log("loading");
+		return <Loading />;
+	} else if (sessionStatus === "failed") {
+		console.log("error failed");
+		return <Error404 />;
+	} else if (sessionStatus === "succeeded") {
+		return (
+			<div className="d-flex">
+				<div className={styles.main}>
+					<Outlet />
+				</div>
+				<div className={styles.videocall}></div>
 			</div>
-			<div className={styles.videocall}></div>
-		</div>
-	);
+		);
+	} else {
+		return <h1> Potential bug in Session</h1>;
+	}
 }

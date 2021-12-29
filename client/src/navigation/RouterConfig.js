@@ -6,7 +6,7 @@ import Error404 from "../pages/Error404";
 import Dashboard from "../pages/Dashboard";
 import Session from "../pages/Session";
 import Doc from "../pages/Doc";
-import SessionWrapper from '../pages/SessionWrapper';
+import SessionWrapper from "../pages/SessionWrapper";
 
 export const RouterConfig = () => {
 	return (
@@ -30,8 +30,7 @@ export const RouterConfig = () => {
 						</PrivateRoute>
 					}
 				/>
-				
-				
+
 				<Route
 					path="/app"
 					element={
@@ -40,7 +39,13 @@ export const RouterConfig = () => {
 						</PrivateRoute>
 					}
 				/>
-				<Route element={<SessionWrapper/>}>
+				<Route
+					element={
+						<PrivateRoute>
+							<SessionWrapper />
+						</PrivateRoute>
+					}
+				>
 					<Route
 						path="/app"
 						element={
@@ -50,20 +55,20 @@ export const RouterConfig = () => {
 						}
 					/>
 					<Route
-					path="session/:id"
-					element={
-						<PrivateRoute>
-							<Session />
-						</PrivateRoute>
-					}
+						path="session/:id"
+						element={
+							<PrivateRoute>
+								<Session />
+							</PrivateRoute>
+						}
 					/>
 					<Route
-					path="doc"
-					element={
-						<PrivateRoute>
-							<Doc />
-						</PrivateRoute>
-					}
+						path="doc"
+						element={
+							<PrivateRoute>
+								<Doc />
+							</PrivateRoute>
+						}
 					/>
 					<Route
 						path="doc/:id"

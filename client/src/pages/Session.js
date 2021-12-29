@@ -1,19 +1,16 @@
 import styles from "../styles/sessions.module.css";
-import docsData from "../assets/docsData.json";
 
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { Dropdown, Form, Button } from "react-bootstrap";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { fetchSessionById, addNewDocument } from "../redux/slices/sessionSlice";
+import { addNewDocument, deleteDocument } from "../redux/slices/sessionSlice";
 import Loading from "../components/Loading";
 import Error404 from "./Error404";
-import sessions from "../assets/sessions.json";
 import SessionList from "../components/SessionList.js";
 
 const Session = () => {
 	const [sessionName, setSessionName] = useState("");
-	const [docs, setDocs] = useState([]);
 	const [docTitle, setDocTitle] = useState("");
 	const [docQuestionText, setDocQuestionText] = useState("");
 	const [qtype, setQtype] = useState("");
@@ -22,32 +19,9 @@ const Session = () => {
 	// const user = useSelector((state) => state.user);
 	const error = useSelector((state) => state.session.error);
 	const sessionStatus = useSelector((state) => state.session.status);
-  const session = useSelector((state) => state.session);
+	const session = useSelector((state) => state.session);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-
-	const { id } = useParams();
-
-	// setDocs(docsData);
-
-	//problem, must fetch everytime a page is loaded
-	// useEffect(() => {
-	// 	console.log("useEffect -> [Session]");
-
-	// 	if (sessionStatus === "idle") {
-	// 		console.log("fetching session data....");
-	// 		dispatch(fetchSessionById(id));
-	// 	}
-	// }, [sessionStatus, dispatch]);
-
-	// useEffect(() => {
-	// 	console.log("useEffect -> [Session]");
-
-	// 	// if (sessionStatus === "idle") {
-	// 	console.log("fetching session data....");
-	// 	dispatch(fetchSessionById(id));
-	// 	// }
-	// }, []);
 
 	const handleClick = (e) => {
 		if (e.target.text === "Leetcode Question") setQtype("leetcode");
@@ -107,13 +81,37 @@ const Session = () => {
 		}
 	};
 
-	if (sessionStatus === "loading") {
-		console.log("loading");
-		return <Loading />;
-	} else if (sessionStatus === "failed") {
-		console.log("error failed");
-		return <Error404 />;
-	} else if (sessionStatus === "succeeded") {
+	const handleDeleteDocument = async (documentId) => {
+		console.log("deleting doc....", documentId);
+
+		const canDelete = requestStatus === "idle";
+
+		if (canDelete) {
+			try {
+				setRequestStatus("pending");
+
+				const deletedSession = await dispatch(
+					deleteDocument(documentId)
+				).unwrap();
+
+				console.log("IN session -> document deleted", deletedSession);
+			} catch (e) {
+				console.log(e);
+
+				window.alert("document not deleted try again");
+			} finally {
+				setRequestStatus("idle");
+			}
+		}
+	};
+
+	// if (sessionStatus === "loading") {
+	// 	console.log("loading");
+	// 	return <Loading />;
+	// } else if (sessionStatus === "failed") {
+	// 	console.log("error failed");
+	// 	return <Error404 />;
+	// } else if (sessionStatus === "succeeded") {
 		return (
 			<>
 				<div className={styles.body}>
@@ -123,6 +121,7 @@ const Session = () => {
 							sessions={session.documents}
 							type={"doc"}
 							title={"Documents History"}
+							handleDelete={handleDeleteDocument}
 						/>
 						<div className={styles.form}>
 							<Dropdown className="mb-5">
@@ -197,9 +196,9 @@ const Session = () => {
 				</div>
 			</>
 		);
-	} else {
-		return <h1>possible bug</h1>;
-	}
+	// } else {
+	// 	return <h1>possible bug</h1>;
+	// }
 };
 
 export default Session;

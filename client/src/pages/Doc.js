@@ -9,13 +9,14 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
-import { Form, Button } from "react-bootstrap";
+import Error404 from "./Error404";
 
 const Doc = () => {
 	// const user = useSelector((state) => state.user);
 	const { id } = useParams();
 
 	const [documentData, setDocumentData] = useState("");
+	const [error, setError] = useState(null);
 
 	useEffect(() => {
 		//fetch curr doc data
@@ -32,6 +33,7 @@ const Doc = () => {
 				setDocumentData(doc.data.savedCode);
 			} catch (e) {
 				console.log(e);
+				setError(e.response.status);
 			}
 		})();
 	}, []);
@@ -85,14 +87,19 @@ const Doc = () => {
 		"</div></div>";
 	const reactLc = ReactHtmlParser(lc);
 	// console.log(reactLc[0].props.children);
-	return (
-		<div className={styles.docContainer}>
-			<div className={styles.question}>
-				<div dangerouslySetInnerHTML={{ __html: lc }}></div>
+	if (error) {
+		console.log("error in doc");
+		return <Error404 />;
+	} else {
+		return (
+			<div className={styles.docContainer}>
+				<div className={styles.question}>
+					<div dangerouslySetInnerHTML={{ __html: lc }}></div>
+				</div>
+				{/* <div className={styles.block}></div> */}
 			</div>
-			{/* <div className={styles.block}></div> */}
-		</div>
-	);
+		);
+	}
 };
 
 export default Doc;
