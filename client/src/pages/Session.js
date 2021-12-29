@@ -14,10 +14,12 @@ import CustomQuestionForm from '../components/CustomQuestionForm.js';
 const Session = () => {
 	const [sessionName, setSessionName] = useState("");
 	const [qtype, setQtype] = useState("");
+	const [requestStatus, setRequestStatus] = useState("idle");
 	// const user = useSelector((state) => state.user);
 	const error = useSelector((state) => state.session.error);
 	const sessionStatus = useSelector((state) => state.session.status);
   	const session = useSelector((state) => state.session);
+	const dispatch = useDispatch();
 
 	const handleClick = (e) => {
 		if (e.target.text === "Leetcode Question") setQtype("leetcode");
@@ -47,52 +49,52 @@ const Session = () => {
 				setRequestStatus("idle");
 			}
 		}
+	}
 
-		return (
-			<>
-				<div className={styles.body}>
-					<div className={styles.sessionName}>Session name: {sessionName}</div>
-					<div className={styles.sessionContainer}>
-						<SessionList
-							sessions={session.documents}
-							type={"doc"}
-							title={"Documents History"}
-							handleDelete={handleDeleteDocument}
-						/>
-						<div className={styles.form}>
-							<Dropdown className="mb-5">
-								<Dropdown.Toggle
-									className={styles.formButton}
-									id="dropdown-basic"
-								>
-									Create new doc
-								</Dropdown.Toggle>
+	return (
+		<>
+			<div className={styles.body}>
+				<div className={styles.sessionName}>Session name: {sessionName}</div>
+				<div className={styles.sessionContainer}>
+					<SessionList
+						sessions={session.documents}
+						type={"doc"}
+						title={"Documents History"}
+						handleDelete={handleDeleteDocument}
+					/>
+					<div className={styles.form}>
+						<Dropdown className="mb-5">
+							<Dropdown.Toggle
+								className={styles.formButton}
+								id="dropdown-basic"
+							>
+								Create new doc
+							</Dropdown.Toggle>
 
-								<Dropdown.Menu>
-									<Dropdown.Item onClick={handleClick}>
-										Leetcode Question
-									</Dropdown.Item>
-									<Dropdown.Item onClick={handleClick}>
-										Custom Question
-									</Dropdown.Item>
-								</Dropdown.Menu>
-							</Dropdown>
-							<div>
-								{qtype === "custom" && (
-									<CustomQuestionForm/>
-								)}
-							</div>
-							<div>
-								{qtype === "leetcode" && (
-									<LeetcodeQuestionForm/>
-								)}
-							</div>
+							<Dropdown.Menu>
+								<Dropdown.Item onClick={handleClick}>
+									Leetcode Question
+								</Dropdown.Item>
+								<Dropdown.Item onClick={handleClick}>
+									Custom Question
+								</Dropdown.Item>
+							</Dropdown.Menu>
+						</Dropdown>
+						<div>
+							{qtype === "custom" && (
+								<CustomQuestionForm/>
+							)}
+						</div>
+						<div>
+							{qtype === "leetcode" && (
+								<LeetcodeQuestionForm/>
+							)}
 						</div>
 					</div>
 				</div>
-			</>
-		);
-	}
+			</div>
+		</>
+	);
 };
 
 export default Session;

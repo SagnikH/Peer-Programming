@@ -26,6 +26,7 @@ export default function SessionWrapper() {
 		dispatch(fetchSessionById(id));
 	}, []);
 
+
 	if (sessionStatus === "loading") {
 		console.log("loading");
 		return <Loading />;
@@ -44,4 +45,5 @@ export default function SessionWrapper() {
 	} else {
 		return <h1> Potential bug in Session</h1>;
 	}
+	
 }
