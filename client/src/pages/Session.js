@@ -1,12 +1,10 @@
 import styles from "../styles/sessions.module.css";
 
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
-import { Dropdown, Form, Button } from "react-bootstrap";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { addNewDocument, deleteDocument } from "../redux/slices/sessionSlice";
-import Loading from "../components/Loading";
-import Error404 from "./Error404";
+import { useState } from "react";
+import { Dropdown } from "react-bootstrap";
+import { useNavigate, useParams } from "react-router-dom";
+import { deleteDocument } from "../redux/slices/sessionSlice";
 import SessionList from "../components/SessionList.js";
 import LeetcodeQuestionForm from "../components/LeetcodeQuestionForm.js";
 import CustomQuestionForm from "../components/CustomQuestionForm.js";
@@ -16,11 +14,11 @@ const Session = () => {
 	const [qtype, setQtype] = useState("");
 	const [requestStatus, setRequestStatus] = useState("idle");
 	// const user = useSelector((state) => state.user);
-	const error = useSelector((state) => state.session.error);
-	const sessionStatus = useSelector((state) => state.session.status);
 	const session = useSelector((state) => state.session);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+
+	const { id } = useParams();
 
 	const handleClick = (e) => {
 		if (e.target.text === "Leetcode Question") setQtype("leetcode");
@@ -36,15 +34,9 @@ const Session = () => {
 			try {
 				setRequestStatus("pending");
 
-				const deletedSession = await dispatch(
-					deleteDocument(documentId)
-				).unwrap();
+				const docRes = await dispatch(deleteDocument(documentId)).unwrap();
 
 				console.log("IN session -> new document created", docRes);
-				//use this id to navigate to desired page
-				const URL = `/session/${id}/doc/${docRes.documentId}`;
-				setRequestStatus("idle");
-				navigate(URL);
 			} catch (e) {
 				console.log(e);
 

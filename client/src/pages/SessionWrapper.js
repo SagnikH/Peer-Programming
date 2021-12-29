@@ -22,6 +22,12 @@ export default function SessionWrapper() {
 	const [connected, setConnected] = useState(false);
 
 	useEffect(() => {
+		if (!userId || !id) {
+			return () => {
+				console.log("userId or id not set");
+			};
+		}
+
 		console.log("New Session", id);
 		console.log("userId", userId);
 		const socket = io(URL, { auth: { userId, sessionId: id } });
@@ -48,7 +54,7 @@ export default function SessionWrapper() {
 			}
 			setConnected(false);
 		};
-	}, []);
+	}, [userId]);
 
 	useEffect(() => {
 		console.log("useEffect -> [Session]");
@@ -56,21 +62,26 @@ export default function SessionWrapper() {
 		dispatch(fetchSessionById(id));
 	}, []);
 
-	if (sessionStatus === "loading" || !connected) {
+	if (sessionStatus === "loading") {
 		console.log("loading");
 		return <Loading />;
 	} else if (sessionStatus === "failed") {
 		console.log("error failed");
 		return <Error404 />;
 	} else if (sessionStatus === "succeeded") {
-		return (
-			<div className="d-flex">
-				<div className={styles.main}>
-					<Outlet />
+		if (!connected) {
+			console.log("not connected");
+			return <Loading />;
+		} else {
+			return (
+				<div className="d-flex">
+					<div className={styles.main}>
+						<Outlet />
+					</div>
+					<div className={styles.videocall}></div>
 				</div>
-				<div className={styles.videocall}></div>
-			</div>
-		);
+			);
+		}
 	} else {
 		return <h1> Potential bug in Session</h1>;
 	}
