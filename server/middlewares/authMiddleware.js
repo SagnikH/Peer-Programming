@@ -3,6 +3,7 @@ const checkUser = (req, res, next) => {
 		// console.log("req.user");
 		next();
 	} else {
+    console.log("error in auth middleware");
 		res.status(403).json("unauthorized");
 	}
 };
