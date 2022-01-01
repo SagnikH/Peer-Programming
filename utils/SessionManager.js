@@ -55,9 +55,13 @@ class AutomergeStore {
     async applyChanges(docId, changes) {
         const doc = await this.get(docId);
         if (doc === null) return false;
-        const [newDoc] = Automerge.applyChanges(doc, deserializeChanges(changes));
-        console.log("applied new changes", docId);
-        this.#set(docId, newDoc);
+        try {
+            const [newDoc] = Automerge.applyChanges(doc, deserializeChanges(changes));
+            console.log("applied new changes", docId);
+            this.#set(docId, newDoc);
+        } catch (err) {
+            console.log("applyChanges", err, docId)
+        }
         return true;
     }
 }
