@@ -32,6 +32,7 @@ class AutomergeStore {
 
     #set(docId, doc) {
         this.#store.set(docId, doc);
+        console.log("set new doc for", docId);
     }
 
     async archive(docId) {
@@ -55,6 +56,7 @@ class AutomergeStore {
         const doc = await this.get(docId);
         if (doc === null) return false;
         const [newDoc] = Automerge.applyChanges(doc, deserializeChanges(changes));
+        console.log("applied new changes", docId);
         this.#set(docId, newDoc);
         return true;
     }
@@ -97,6 +99,7 @@ function SessionManager(io, dbManager) {
     }
 
     async function crdtChanges(socket, docId, changes) {
+        console.log("crdt changes", docId);
         const response = { docId };
         if (await automergeStore.applyChanges(docId, changes)) {
             socket.to(docId).emit(CRDT_CHANGES, { docId, changes });
