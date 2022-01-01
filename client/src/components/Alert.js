@@ -5,9 +5,9 @@ const Alert = (props) => {
 	const [show, setShow] = useState(false);
 
 	const handleClose = () => setShow(false);
-	const handleShow = () => setShow(true);
+	const handleShow = () => setShow(true); 
 
-	const handleYes = (e) => {
+	const handleYes = (e) => { 
 		props.alertFunction();
 	};
 

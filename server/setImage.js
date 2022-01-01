@@ -50,9 +50,17 @@ const setImage = (lc) => {
             img = img.replace(eraseStrings[i], `width="${Math.round(newWidths[i])}" /`);
         }
     }
+
+    img = img.replaceAll('</pre>', '<div><br/>');
+    img = img.replaceAll('<pre>', '<div>');
+
+    img = img.replaceAll('<strong>Output:</strong>', '<br/><strong>Output:</strong>');
+    img = img.replaceAll('<strong>Explanation:</strong>', '<br/><strong>Explanation:</strong>');
+    img = img.replaceAll('<p>&nbsp;</p>', '');
+    
     
 //
     return img;
 }
  
-export default setImage;
+module.exports = setImage;

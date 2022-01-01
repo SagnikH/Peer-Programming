@@ -7,7 +7,17 @@
     z-index: 999;
 }
 
+.brandContainer{
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    color: white;
+    height: 35px;
+}
 
+.brandContainer:hover{
+    color: #ff7d19;
+}
 
 .navbrand{
     text-decoration: none;
@@ -19,6 +29,12 @@
 
 .navbrand:hover{
     cursor: pointer;
+}
+
+.navbrandName{
+    font-size: 23px;
+    font-family: 'Carattere', cursive;
+    margin: 7px 0 0 15px;
 }
 
 .navIcon{
