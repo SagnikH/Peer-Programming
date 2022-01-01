@@ -20,12 +20,6 @@ export const fetchToken = createAsyncThunk(
 					withCredentials: true,
 				}
 			);
-
-			// const user = res.data.user;
-
-			// const actionPayload = JSON.stringify(user);
-
-			// console.log("data from authToken thunk", actionPayload);
 			return res.status;
 		} catch (e) {
 			console.log("error in authToken thunk", e.response);

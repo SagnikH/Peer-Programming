@@ -11,26 +11,7 @@ export const checkAuth = async () => {
 			}
 		);
 
-		const user = res.data.user;
-		const {
-			name,
-			email,
-			googleID,
-			picture,
-			_id,
-			sharedSessions,
-			userSessions,
-		} = user;
-
-		const userPayload = {
-			name,
-			email,
-			googleID,
-			picture,
-			_id,
-			sharedSessions,
-			userSessions,
-		};
+		const userPayload = res.data;
 
 		return userPayload;
 	} catch (e) {

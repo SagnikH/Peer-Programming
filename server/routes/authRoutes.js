@@ -1,33 +1,27 @@
-const passport = require("passport");
+const router = require("express").Router();
+const {
+	googleCallbackHandler,
+} = require("../controllers/authGoogleCallbackHandler");
+const { googleCallback } = require("../middlewares/authMiddleware");
+const { getGoogleAuthURL } = require("../utils/googleUtils");
+
 require("dotenv").config();
 
-const router = require("express").Router();
+router.get("/google", (req, res) => {
+	res.redirect(getGoogleAuthURL());
+});
 
-const CLIENT_URI = process.env.CLIENT_URL;
-// console.log("client URI from env", process.env.CLIENT_URL);
-
-router.get(
-	"/google",
-	passport.authenticate("google", {
-		scope: ["profile", "email"],
-	})
-);
-
-router.get(
-	"/google/callback",
-	passport.authenticate("google", {
-		failureRedirect: "/auth/login",
-	}),
-	function (req, res) {
-		// res.send(`Callback called ${req.user}`);
-		res.redirect(CLIENT_URI);
-	}
-);
+router.get("/google/callback", googleCallback, googleCallbackHandler);
 
 router.get("/logout", (req, res) => {
-	//logout is handled by
-	req.logout();
-	res.redirect(CLIENT_URI);
+	res
+		.cookie("jwtToken", "", {
+			httpOnly: true,
+			expires: new Date(0),
+			secure: true,
+			sameSite: "none",
+		})
+		.redirect(process.env.CLIENT_URL);
 });
 
 module.exports = router;
