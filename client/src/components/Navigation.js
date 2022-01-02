@@ -16,10 +16,6 @@ const Navigation = () => {
 	const userStatus = useSelector((state) => state.user.status);
 
 	useEffect(() => {
-		console.log(process.env.REACT_APP_SERVER_URL);
-	}, []);
-
-	useEffect(() => {
 		// console.log("in navbar");
 
 		if (authStatus === "idle") {

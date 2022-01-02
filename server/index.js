@@ -5,7 +5,6 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/authRoutes");
 const apiRoutes = require("./routes/apiRoutes");
-const checkUser = require("./middlewares/authMiddleware");
 const { DatabaseError, UserFacingError } = require("./utils/errors/baseErrors");
 require("dotenv").config();
 
