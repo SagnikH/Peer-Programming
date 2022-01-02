@@ -1,10 +1,8 @@
 const express = require("express");
 const app = require("express")();
-const passport = require("passport");
 const mongoose = require("mongoose");
-const cookieSession = require("cookie-session");
 const cors = require("cors");
-require("./utils/authUtils");
+const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/authRoutes");
 const apiRoutes = require("./routes/apiRoutes");
 const checkUser = require("./middlewares/authMiddleware");
@@ -13,6 +11,19 @@ require("dotenv").config();
 
 const { DBManager } = require("./utils/DBManager");
 const SessionManager = require("./utils/SessionManager");
+
+const URI = process.env.MONGODB_URI;
+const PORT = process.env.PORT;
+
+(async () => {
+	try {
+		const connection = await mongoose.connect(URI);
+
+		console.log("connected to db");
+	} catch (e) {
+		console.log(e);
+	}
+})();
 
 const server = require("http").createServer(app);
 
@@ -25,20 +36,8 @@ const io = require("socket.io")(server, {
 
 SessionManager(io, new DBManager());
 
-const URI = process.env.MONGODB_URI;
-const COOKIE_KEYS = process.env.COOKIE_KEYS;
-const PORT = process.env.PORT;
-
-app.set("view engine", "ejs");
 app.use(express.json());
-
-app.use(
-	cookieSession({
-		name: "pair-programming",
-		maxAge: 60 * 60 * 1000,
-		keys: [COOKIE_KEYS],
-	})
-);
+app.use(cookieParser());
 
 app.use(
 	cors({
@@ -47,24 +46,6 @@ app.use(
 		credentials: true, // allow session cookie from browser to pass through
 	})
 );
-
-//initilize passport and create a session
-app.use(passport.initialize());
-/* passport.session() acts as a middleware to alter the req object 
-and change the encrypted user value that is currently the session sig 
-(from the client cookie) into a user object.
-*/
-app.use(passport.session());
-
-(async () => {
-	try {
-		const connection = await mongoose.connect(URI);
-
-		console.log("connected to db");
-	} catch (e) {
-		console.error(e);
-	}
-})();
 
 app.use("/auth", authRoutes);
 //TODO: checkUser middleware implement later
