@@ -5,10 +5,11 @@ export default function MonacoEditor(props) {
     return (
         <div>
             <Editor
-                height="50vh"
+                height="84vh"
+                width="50vw"
                 theme="vs-dark"
                 defaultLanguage="javascript"
-                defaultValue=""
+                defaultValue="//Enter answer:"
                 value={props.value}
                 onMount={props.onMount}
             />

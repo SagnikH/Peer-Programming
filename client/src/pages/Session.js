@@ -9,7 +9,7 @@ import SessionList from "../components/SessionList.js";
 import LeetcodeQuestionForm from "../components/LeetcodeQuestionForm.js";
 import CustomQuestionForm from "../components/CustomQuestionForm.js";
 
-const Session = () => {
+const Session = () => { 
 	const [sessionName, setSessionName] = useState("");
 	const [qtype, setQtype] = useState("");
 	const [requestStatus, setRequestStatus] = useState("idle");

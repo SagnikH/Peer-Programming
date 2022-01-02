@@ -99,16 +99,19 @@ const Doc = () => {
 	} else {
 		return (
 			<div className={styles.docContainer}>
-				<div className={styles.question}>
-					<div dangerouslySetInnerHTML={{ __html: lc }}></div>
+				<div >
+					<div className={styles.qHeading}>Question:</div>
+					<div className={styles.question} dangerouslySetInnerHTML={{ __html: lc2 }}></div>
 				</div>
-				<div className={styles.question}>
+				<div className={styles.monacoEditor}>
 					<SyncedMonacoEditor socket={socket} docId={did} />
 				</div>
-				{/* <div className={styles.block}></div> */}
 			</div>
 		);
 	}
 };
 
 export default Doc;
+
+
+// <div dangerouslySetInnerHTML={{ __html: lc }}></div>

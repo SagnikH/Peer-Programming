@@ -10,7 +10,7 @@
 
 .contents{
   height: 500px;
-  width: 600px;
+  width: 800px;
   padding: 30px;
   display: flex;
   flex-direction: column;
@@ -34,6 +34,7 @@
   font-size: 23px;
   text-align: justify;
   margin-bottom: 40px;
+  width: 600px;
 }
 
 .formSection{
