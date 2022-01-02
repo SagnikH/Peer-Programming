@@ -1,8 +1,3 @@
-import ReactHtmlParser, {
-	processNodes,
-	convertNodeToElement,
-	htmlparser2,
-} from "react-html-parser";
 import styles from "../styles/doc.module.css";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
@@ -95,8 +90,6 @@ const Doc = () => {
 		"\t<li><code>1 &lt;= Node.val &lt;= 10<sup>5</sup></code></li>\n" +
 		"</ul>\n" +
 		"</div></div>";
-	const reactLc = ReactHtmlParser(lc);
-	// console.log(reactLc[0].props.children);
 
 	if (loading) {
 		return <Loading />;

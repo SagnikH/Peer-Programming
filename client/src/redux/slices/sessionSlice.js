@@ -69,6 +69,38 @@ export const addNewDocument = createAsyncThunk(
 	}
 );
 
+export const addNewLeetcodeDocument = createAsyncThunk(
+	"session/createLeetcodeDoc",
+
+	async ({ link, type}, { rejectWithValue, getState }) => {
+		const state = getState();
+
+		try {
+			const res = await axios.post(
+				`${process.env.REACT_APP_SERVER_URL}/api/document/leetcode`,
+				{
+					type,
+					link,
+					userId: state.session.userId,
+					sessionId: state.session._id,
+				},
+				{ withCredentials: true }
+			);
+
+			const actionPayload = {
+				documentId: res.data._id,
+				title: res.data.title,
+				createdAt: res.data.createdAt,
+			};
+
+			console.log("creating Leetcode document async thunk", actionPayload);
+			return actionPayload;
+		} catch (e) {
+			return rejectWithValue(e.response.status);
+		}
+	}
+);
+
 export const deleteDocument = createAsyncThunk(
 	"session/deleteDoc",
 
@@ -133,6 +165,10 @@ export const sessionSlice = createSlice({
 		});
 
 		builder.addCase(addNewDocument.fulfilled, (state, action) => {
+			state.documents.push(action.payload);
+		});
+
+    builder.addCase(addNewLeetcodeDocument.fulfilled, (state, action) => {
 			state.documents.push(action.payload);
 		});
 

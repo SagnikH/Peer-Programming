@@ -13,6 +13,7 @@
 	"license": "ISC",
 	"dependencies": {
 		"automerge": "^1.0.1-preview.6",
+		"axios": "^0.24.0",
 		"cheerio": "^1.0.0-rc.10",
 		"cookie-session": "^1.4.0",
 		"cors": "^2.8.5",

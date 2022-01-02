@@ -2,7 +2,9 @@ const mongoose = require("mongoose");
 const Document = require("../models/documentModel");
 const Session = require("../models/sessionModel");
 const { getNewDoc, serializeDoc } = require("../utils/automergeUtils");
+const Leetcode = require("../utils/Leetcode");
 const { NotFoundError } = require("../utils/errors/databaseFacingErrors");
+const { NotFoundLinkError } = require("../utils/errors/userFacingError");
 const ObjectId = mongoose.Types.ObjectId;
 
 const createDocument = async (req, res) => {
@@ -32,6 +34,51 @@ const createDocument = async (req, res) => {
 			createdAt: document.createdAt,
 		};
 		//TODO: don't send document as response -> socket stuff ask SUBODH
+		const session = await Session.findByIdAndUpdate(
+			sessionId,
+			{
+				$addToSet: { documents: documentObj },
+			},
+			{ new: true }
+		);
+
+		res.status(200).json(document);
+	} catch (e) {
+		console.log(e.message);
+		res.status(403).json(e.message);
+	}
+};
+
+const createLeetcodeDocument = async (req, res, next) => {
+  console.log("fetching leetcode");
+	const { link, type, userId, sessionId } = req.body;
+	const savedCode = serializeDoc(getNewDoc());
+
+	const leetcode = new Leetcode(link);
+	const leetcodeRes = await leetcode.fetch();
+  // console.log("after fetching", leetcodeRes);
+	if (!leetcodeRes) return next(new NotFoundLinkError("error in fetching leetcode"));
+
+	const title = leetcode.getTitle();
+	const question = leetcode.getQuestion();
+
+	try {
+		const document = await Document.create({
+			title,
+			type,
+			question,
+			link,
+			userId,
+			sessionId,
+			savedCode,
+		});
+
+		const documentObj = {
+			documentId: document._id,
+			title,
+			createdAt: document.createdAt,
+		};
+
 		const session = await Session.findByIdAndUpdate(
 			sessionId,
 			{
@@ -120,4 +167,5 @@ module.exports = {
 	getDocument,
 	updateDocument,
 	deleteDocument,
+	createLeetcodeDocument,
 };
