@@ -76,32 +76,14 @@ export const fetchUser = createAsyncThunk(
 					withCredentials: true,
 				}
 			);
+			// console.log(res);
 
-			const user = res.data.user;
-			const {
-				name,
-				email,
-				googleID,
-				picture,
-				_id,
-				sharedSessions,
-				userSessions,
-			} = user;
-
-			const actionPayload = {
-				name,
-				email,
-				googleID,
-				picture,
-				_id,
-				sharedSessions,
-				userSessions,
-			};
+			const actionPayload = res.data;
 
 			console.log("data from user thunk", actionPayload);
 			return actionPayload;
 		} catch (e) {
-			console.log("error in user thunk", e.response);
+			console.log("error in user thunk", e);
 
 			return rejectWithValue(e.response.status);
 		}

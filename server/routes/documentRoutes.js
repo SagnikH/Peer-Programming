@@ -3,10 +3,13 @@ const {
 	createDocument,
 	getDocument,
 	updateDocument,
-  deleteDocument
+	deleteDocument,
+	createLeetcodeDocument,
 } = require("../controllers/documentHandler");
 
 router.post("/", createDocument);
+
+router.post("/leetcode", createLeetcodeDocument);
 
 router.get("/:id", getDocument);
 

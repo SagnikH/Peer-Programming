@@ -9,12 +9,12 @@ import SessionList from "../components/SessionList.js";
 import LeetcodeQuestionForm from "../components/LeetcodeQuestionForm.js";
 import CustomQuestionForm from "../components/CustomQuestionForm.js";
 
-const Session = () => { 
-	const [sessionName, setSessionName] = useState("");
+const Session = () => {
 	const [qtype, setQtype] = useState("");
 	const [requestStatus, setRequestStatus] = useState("idle");
 	// const user = useSelector((state) => state.user);
 	const session = useSelector((state) => state.session);
+	const sessionName = useSelector((state) => state.session.name);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
