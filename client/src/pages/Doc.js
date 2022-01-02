@@ -143,7 +143,6 @@ const Doc = () => {
 				<div className={styles.monacoEditor}>
 					<SyncedMonacoEditor socket={socket} docId={did} />
 				</div>
-				{/* <div className={styles.block}></div> */}
 			</div>
 		);
 	}

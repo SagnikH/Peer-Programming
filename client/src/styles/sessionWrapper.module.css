@@ -1,10 +1,10 @@
 .main{
     width: 85%;
-    height: 88vh;
 }
 
 .videocall{
-    width: 15%;
+    width: 16vw;
     border-left: 1px solid grey;
-    height: 83vh;
+    height: 87vh;
+    background-color: grey;
 }
