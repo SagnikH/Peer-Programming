@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 
 
-const Leetcodequestionform = () => {
+const Leetcodequestionform = (props) => {
 	const [link, setLink] = useState("");
 	const [requestStatus, setRequestStatus] = useState("idle");
 
@@ -22,6 +22,7 @@ const Leetcodequestionform = () => {
 	const handleCreateDoc = async (e) => {
 		e.preventDefault();
 
+		props.setFetching(2);
 		const canSave = requestStatus === "idle" && link;
 
 		if (canSave) {
@@ -40,11 +41,12 @@ const Leetcodequestionform = () => {
 				const URL = `doc/${docRes.documentId}`;
 				console.log("custom q form navigate", URL);
 				setRequestStatus("idle");
+				props.setFetching(1);
 				navigate(URL);
 			} catch (e) {
 				console.log(e);
 
-				window.alert("error in creating doc");
+				props.setFetching(3);
 				setRequestStatus("idle");
 			}
 		}

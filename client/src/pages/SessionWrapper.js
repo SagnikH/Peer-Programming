@@ -76,7 +76,7 @@ export default function SessionWrapper() {
 			return <Loading />;
 		} else {
 			return (
-				<div className="d-flex">
+				<div className="d-flex" style={{overflow: 'hidden'}}>
 					<div className={styles.main}>
 						<Outlet context={socket} />
 					</div>

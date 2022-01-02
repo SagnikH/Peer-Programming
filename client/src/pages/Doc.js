@@ -15,10 +15,11 @@ const Doc = () => {
 	// const user = useSelector((state) => state.user);
 	const { id, did } = useParams();
 
-	const [documentData, setDocumentData] = useState("");
+	const [editorData, setEditorData] = useState("");
 	const [error, setError] = useState(null);
 	const [loading, setLoading] = useState(true);
-  const [question, setQuestion] = useState("");
+  	const [question, setQuestion] = useState("");
+	const [title, setTitle] = useState("")
 
 	const socket = useOutletContext();
 
@@ -34,8 +35,9 @@ const Doc = () => {
 				);
 
 				console.log("saved code in doc", doc.data);
-				setDocumentData(doc.data.savedCode);
-        setQuestion(doc.data.question);
+				setEditorData(doc.data.savedCode);
+        		setQuestion(doc.data.question);
+				setTitle(doc.data.title);
 			} catch (e) {
 				console.log(e);
 				setError(e.response.status);
@@ -46,7 +48,7 @@ const Doc = () => {
 	}, []);
 
 	const handleTextAreaChange = (e) => {
-		setDocumentData(e.target.value);
+		setEditorData(e.target.value);
 	};
 
 	const handleDocSave = async (e) => {
@@ -55,7 +57,7 @@ const Doc = () => {
 		try {
 			const savedDoc = await axios.patch(
 				`${process.env.REACT_APP_SERVER_URL}/api/document/${did}`,
-				{ savedCode: documentData },
+				{ savedCode: editorData },
 				{ withCredentials: true }
 			);
 
@@ -74,7 +76,7 @@ const Doc = () => {
 		return (
 			<div className={styles.docContainer}>
 				<div >
-					<div className={styles.qHeading}>Question:</div>
+					<div className={styles.qHeading}>Question: Leetcode {title}</div>
 					<div className={styles.question} dangerouslySetInnerHTML={{ __html: question }}></div>
 				</div>
 				<div className={styles.monacoEditor}>

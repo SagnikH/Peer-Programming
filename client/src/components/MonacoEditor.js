@@ -5,7 +5,7 @@ export default function MonacoEditor(props) {
     return (
         <div>
             <Editor
-                height="84vh"
+                height="87vh"
                 width="50vw"
                 theme="vs-dark"
                 defaultLanguage="javascript"
