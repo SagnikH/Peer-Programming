@@ -18,6 +18,7 @@ const Doc = () => {
 	const [documentData, setDocumentData] = useState("");
 	const [error, setError] = useState(null);
 	const [loading, setLoading] = useState(true);
+  const [question, setQuestion] = useState("");
 
 	const socket = useOutletContext();
 
@@ -34,6 +35,7 @@ const Doc = () => {
 
 				console.log("saved code in doc", doc.data);
 				setDocumentData(doc.data.savedCode);
+        setQuestion(doc.data.question);
 			} catch (e) {
 				console.log(e);
 				setError(e.response.status);
@@ -101,7 +103,7 @@ const Doc = () => {
 			<div className={styles.docContainer}>
 				<div >
 					<div className={styles.qHeading}>Question:</div>
-					<div className={styles.question} dangerouslySetInnerHTML={{ __html: lc2 }}></div>
+					<div className={styles.question} dangerouslySetInnerHTML={{ __html: question }}></div>
 				</div>
 				<div className={styles.monacoEditor}>
 					<SyncedMonacoEditor socket={socket} docId={did} />

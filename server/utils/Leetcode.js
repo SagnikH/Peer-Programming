@@ -36,14 +36,18 @@ class LeetCode {
 		}
 
 		const html = await page.content();
+    console.log("fetched, scrapping");
 		const $ = cheerio.load(html);
 		$.html();
 
 		let title = $("div[data-cy=question-title]").text();
 		title = title.trim();
+    console.log("title scrapped", title);
 
 		let descp = $("div .question-content__JfgR").get();
 		descp = $.html(descp);
+    console.log("description scrapped");
+
 
 		const boilerPlateLine = [];
 		$("span[role=presentation]").each(function (i, elem) {
@@ -51,6 +55,7 @@ class LeetCode {
 		});
 
 		await browser.close();
+    console.log("puppetter closed");
 
 		const details = {
 			title: title,
@@ -59,7 +64,7 @@ class LeetCode {
 		};
 
 		this.details = details;
-		console.log(details);
+		// console.log(details);
 
 		return details;
 	}
