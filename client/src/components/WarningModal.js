@@ -2,12 +2,12 @@ import React, {useState} from 'react'
 import {Modal, Button} from 'react-bootstrap';
 
 export default function WarningModal(props) {
-    const {message, showModal, setShowModal, id, handleDelete} = props;
+    const {message, showModal, setShowModal, id, handlePositive} = props;
     const handleClose = () => {
         setShowModal(false);
     }
     const handleYes = () => {
-        handleDelete(id);
+        handlePositive(id);
         setShowModal(false);
     }
 

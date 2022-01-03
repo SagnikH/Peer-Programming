@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useOutletContext } from "react-router-dom";
 import SyncedMonacoEditor from "../components/SyncedMonacoEditor";
-
+import ShareIcon from '../components/ShareIcon';
 import Error404 from "./Error404";
 import Loading from "../components/Loading";
 import { config } from "dotenv";
@@ -76,7 +76,11 @@ const Doc = () => {
 		return (
 			<div className={styles.docContainer}>
 				<div >
-					<div className={styles.qHeading}>Question: {title}</div>
+					<div className='d-flex justify-content-between align-items-center'>
+						<div className={styles.qHeading}>Question: {title}</div>
+						<div style={{width: '50px'}}><ShareIcon link={window.location}/></div>
+					</div>
+					
 					<div className={styles.question} dangerouslySetInnerHTML={{ __html: question }}></div>
 				</div>
 				<div className={styles.monacoEditor}>

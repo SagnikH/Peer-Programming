@@ -65,9 +65,10 @@ const Session = () => {
 	return (
 		<>
 			<div className={styles.body}>
-				<div className='d-flex align-items-center justify-content-center'>
+				<div className='d-flex align-items-center justify-content-between'>
+					<div></div>
 					<div className={styles.sessionName}>Session name: {sessionName}</div>
-					<ShareIcon size='1.7em' id={'<sessionID>'}/>
+					<div style={{width: '50px'}}><ShareIcon size='1.7em' link={window.location}/></div>
 				</div>
 				<div className={styles.sessionContainer}>
 					<SessionList

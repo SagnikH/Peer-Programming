@@ -4,12 +4,13 @@ import styles from "../styles/dashboard.module.css";
 import WarningModal from "./WarningModal";
 import ShareIcon from "./ShareIcon";
 
-import { BsXCircle, BsShareFill } from "react-icons/bs";
+import { BsXCircle } from "react-icons/bs";
 
 export default function SessionItem(props) {
 	const [showModal, setShowModal] = useState(false);
  	const name = props.item.name;
 	const link = props.item.link;
+	const sharedLink = window.location.host + link;
 	const id = props.item.id;
 	const handleDelete = props.handleDelete;
 	const modalMsg="Are you sure you want to delete this? This action cannot be undone."
@@ -22,15 +23,16 @@ export default function SessionItem(props) {
 			<WarningModal 
 				showModal={showModal} 
 				setShowModal={setShowModal} 
-				handleDelete={handleDelete} 
+				handlePositive={handleDelete} 
 				message={modalMsg} 
 				id={id}
 			/>
+			
 			<Link to={link} style={{textDecoration: 'none'}}>
 				<div className={styles.session}>
 					<div>Name: {name}</div>
 					<div>Date: {date}</div>
-					<div>Link: {link}</div>
+					<div>Id: {id}</div>
 				</div>
 			</Link>
 			<div className='d-flex flex-column'>
@@ -39,7 +41,7 @@ export default function SessionItem(props) {
 					className={styles.deleteIcon}
 					onClick={() => setShowModal(true)}
 				/>
-				<ShareIcon size='1.1em' id={id}/>
+				<ShareIcon size='1.1em' link={sharedLink}/>
 			</div>
 		</div>
 	);
