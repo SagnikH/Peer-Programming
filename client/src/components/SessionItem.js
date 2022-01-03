@@ -2,8 +2,9 @@ import React, {useState} from 'react';
 import { Link } from "react-router-dom";
 import styles from "../styles/dashboard.module.css";
 import WarningModal from "./WarningModal";
+import ShareIcon from "./ShareIcon";
 
-import { BsXCircleFill } from "react-icons/bs";
+import { BsXCircle, BsShareFill } from "react-icons/bs";
 
 export default function SessionItem(props) {
 	const [showModal, setShowModal] = useState(false);
@@ -11,11 +12,10 @@ export default function SessionItem(props) {
 	const link = props.item.link;
 	const id = props.item.id;
 	const handleDelete = props.handleDelete;
-	const modalMsg="Are you sure you want to delete this session?"
+	const modalMsg="Are you sure you want to delete this? This action cannot be undone."
 	let date = "";
 	if (props.item.date)
 		date = new Date(props.item.date).toLocaleString("en-IN");
-
 
 	return (
 		<div className={styles.sessionWrap}>
@@ -33,12 +33,14 @@ export default function SessionItem(props) {
 					<div>Link: {link}</div>
 				</div>
 			</Link>
-
-			<BsXCircleFill
-				size="1.5em"
-				className={styles.deleteIcon}
-				onClick={() => setShowModal(true)}
-			/>
+			<div className='d-flex flex-column'>
+				<BsXCircle
+					size="1.3em"
+					className={styles.deleteIcon}
+					onClick={() => setShowModal(true)}
+				/>
+				<ShareIcon size='1.1em' id={id}/>
+			</div>
 		</div>
 	);
 }

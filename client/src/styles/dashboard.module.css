@@ -4,6 +4,7 @@
     width: 75vw;
     justify-content: space-around;
     margin: auto;
+    margin-top: 30px;
 }
 
 .userImage{
@@ -54,6 +55,7 @@
     display: flex;
     width: 70%;
     margin: auto;
+    margin-top: 30px;
 }
 
 .sessionWrap{
@@ -73,7 +75,7 @@
     cursor: pointer;
 }
 .deleteIcon{
-    margin-top: 10px;
+    margin: 10px 0 10px 0;
     cursor: pointer;
     color: #d9534f;
 }

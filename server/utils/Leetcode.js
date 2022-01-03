@@ -5,6 +5,13 @@ const setImage = require("./setImage");
 const axios = require("axios");
 
 cors({ origin: true });
+
+const editTitle = (title) => {
+	title = title.trim();
+	let idx = title.indexOf('.');
+	title = title.substring(idx+2, title.length);
+}
+
 class LeetCode {
 	constructor(link) {
 		//TODO check validity
@@ -42,7 +49,9 @@ class LeetCode {
 
 		let title = $("div[data-cy=question-title]").text();
 		title = title.trim();
-    console.log("title scrapped", title);
+		let idx = title.indexOf('.');
+		title = title.substring(idx+2, title.length);
+    	console.log("title scrapped", title);
 
 		let descp = $("div .question-content__JfgR").get();
 		descp = $.html(descp);

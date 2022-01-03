@@ -8,6 +8,7 @@ export default function WarningModal(props) {
     }
     const handleYes = () => {
         handleDelete(id);
+        setShowModal(false);
     }
 
     return (

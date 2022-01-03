@@ -76,7 +76,7 @@ const Doc = () => {
 		return (
 			<div className={styles.docContainer}>
 				<div >
-					<div className={styles.qHeading}>Question: Leetcode {title}</div>
+					<div className={styles.qHeading}>Question: {title}</div>
 					<div className={styles.question} dangerouslySetInnerHTML={{ __html: question }}></div>
 				</div>
 				<div className={styles.monacoEditor}>

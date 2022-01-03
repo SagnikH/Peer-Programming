@@ -7,7 +7,16 @@
     color: #4c3b4d;
     font-weight: 900;
     text-align: center;
-    margin: 15px;
+    margin: 15px 50px 15px 50px;
+}
+
+.shareIcon{
+	margin-left: 30px;
+    cursor: pointer;
+    color: #00d900;
+}
+.shareIcon:hover{
+    color: #00ff00;
 }
 
 .sessionContainer {
