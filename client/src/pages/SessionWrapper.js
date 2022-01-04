@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
+import { Button } from 'react-bootstrap';
 import styles from "../styles/sessionWrapper.module.css";
 import { fetchSessionById } from "../redux/slices/sessionSlice";
 import { Outlet, useParams } from "react-router-dom";
@@ -7,6 +8,13 @@ import Loading from "../components/Loading";
 import Error404 from "./Error404";
 import { io } from "socket.io-client";
 import { config } from "dotenv";
+import VideoBar from '../components/VideoBar'
+import { BsFillMicFill } from "react-icons/bs";
+import { BsFillMicMuteFill } from "react-icons/bs";
+import { BsFillCameraVideoFill } from "react-icons/bs";
+import { BsFillCameraVideoOffFill } from "react-icons/bs";
+import { BsFillPlayCircleFill } from "react-icons/bs";
+import { BsFillPauseCircleFill } from "react-icons/bs";
 config();
 
 const URL = process.env.REACT_APP_SERVER_URL;
@@ -17,6 +25,9 @@ const CLIENT_CONNECTED = "client connected";
 export default function SessionWrapper() {
 	const dispatch = useDispatch();
 	const { id } = useParams();
+	const [allVideos, setAllVideos] = useState(1);
+	const [cam, setCam] = useState(1);
+	const [mic, setMic] = useState(1);
 
 	const userId = useSelector((state) => state.user._id);
 	const sessionStatus = useSelector((state) => state.session.status);
@@ -80,7 +91,22 @@ export default function SessionWrapper() {
 					<div className={styles.main}>
 						<Outlet context={socket} />
 					</div>
-					<div className={styles.videocall}></div>
+					<div className={styles.videocall}>
+						<div className={styles.videosSection}>
+							<VideoBar socket={socket} roomId={'aaa'} toggleVideo={allVideos} toggleCam={cam} toggleMic={mic} userName={'ok'} />
+						</div>
+						<div className='d-flex justify-content-around my-2'>
+							<Button className={styles.videoButton} onClick={()=>setAllVideos(1 ^ allVideos)}>
+								{allVideos ? <BsFillPauseCircleFill/> : <BsFillPlayCircleFill/>}
+							</Button>
+							<Button className={styles.videoButton} onClick={()=>setCam(1 ^ cam)}>
+								{cam ? <BsFillCameraVideoFill/> : <BsFillCameraVideoOffFill/>}
+							</Button>
+							<Button className={styles.videoButton} onClick={()=>setMic(1 ^ mic)}> 
+								{mic ? <BsFillMicFill/> : <BsFillMicMuteFill/>}
+							</Button>
+						</div>
+					</div>
 				</div>
 			);
 		}

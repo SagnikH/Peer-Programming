@@ -159,6 +159,21 @@ function SessionManager(io, dbManager) {
         const peers = await getPeers(socket.sessionId);
         socket.emit(SESSION_INIT, { ok: true, docs: ["doc2", "doc1"], peers });
         // use socket.userId and socket.sessionId for call
+
+        // Code from Ronak for video calling
+        socket.on('join-room', (roomId, userId, userName) => {
+            console.log('join', roomId, userId);
+    
+    
+            socket.join(roomId)
+            socket.to(roomId).emit('user-connected', { userId, userName })
+    
+            socket.on('disconnect', () => {
+                socket.to(roomId).emit('user-disconnected', userId)
+                console.log("user disconnected");
+    
+            })
+        })
     });
 
 }

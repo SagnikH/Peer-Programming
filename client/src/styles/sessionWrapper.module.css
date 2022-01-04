@@ -4,7 +4,15 @@
 
 .videocall{
     width: 16vw;
-    border-left: 1px solid grey;
     height: 86vh;
-    background-color: grey;
+}
+
+.videosSection{
+    height: 80vh;
+    overflow: scroll;
+}
+
+.videoButton{
+    width: 30%;
+    height: 35px;
 }
