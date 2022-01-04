@@ -33,15 +33,13 @@ export default function JoinForm() {
 			window.location.href = `${process.env.REACT_APP_SERVER_URL}/auth/google`;
 		}
 
-		//TODO: handle if only id is given
-		var URL = joinLinkValue;
-		console.log("URL :", URL);
-		var newURL = URL.replace(
-			/^[a-z]{4,5}\:\/{2}[a-z]{1,}\:[0-9]{1,4}.(.*)/,
-			"$1"
-		); // http or https
-
-		navigate(newURL);
+		//TODO: handle https in production, now its http
+    let URL = joinLinkValue;
+    if(!URL.startsWith("http://")){
+      URL = "http://".concat(joinLinkValue);
+    }
+    setJoinLinkValue("");
+		window.open(URL);
 	};
 
 	useEffect(() => {
