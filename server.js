@@ -41,7 +41,7 @@ io.on('connection', socket => {
 
 })
 
-if (process.env.NODE_ENV === 'production') { app.use(express.static(path.join(__dirname, 'build'))); }  //  app.get('*', (req, res) => {    res.sendfile(path.join(__dirname = 'client/build/index.html'));  })}
+// if (process.env.NODE_ENV === 'production') { app.use(express.static(path.join(__dirname, 'build'))); }  //  app.get('*', (req, res) => {    res.sendfile(path.join(__dirname = 'client/build/index.html'));  })}
 
 
 // server.listen(3001)

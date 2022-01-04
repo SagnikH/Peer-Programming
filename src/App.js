@@ -2,7 +2,7 @@ import './App.css';
 import { io } from 'socket.io-client';
 import { useEffect, useRef, useState } from 'react';
 import VideoBar from './components/VideoBar.js';
-const socket = io(process.env.URL ?? 'http://localhost:3001')
+const socket = io(process.env.REACT_APP_URL ?? 'http://localhost:3001')
 
 function App() {
   const [remoteVideo, setRemoteVideo] = useState(true);
