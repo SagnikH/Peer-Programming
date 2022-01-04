@@ -14,7 +14,7 @@ const createDocument = async (req, res) => {
 	//TODO: check to see if session id exists
 
 	// adding initial savedCode for Automerge
-	const savedCode = serializeDoc(getNewDoc());
+	const savedCode = serializeDoc(getNewDoc('//Enter Code Here:'));
 
 	try {
 		//TODO: check session id exists here if not throw error
