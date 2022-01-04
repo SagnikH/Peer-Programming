@@ -2,7 +2,6 @@ const express = require('express')
 const app = express()
 // const {server} = require('http').Server(app)
 // const io = require('socket.io')(server)
-const { v4: uuidV4 } = require('uuid')
 const cors = require('cors')
 const { Server } = require('socket.io')
 // app.use(
@@ -25,12 +24,12 @@ io.on('connection', socket => {
     console.log('connection', i++);
     // console.log(socket);
 
-    socket.on('join-room', (roomId, userId) => {
+    socket.on('join-room', (roomId, userId, userName) => {
         console.log('join', roomId, userId);
 
 
         socket.join(roomId)
-        socket.to(roomId).emit('user-connected', userId)
+        socket.to(roomId).emit('user-connected', { userId, userName })
 
         socket.on('disconnect', () => {
             socket.to(roomId).emit('user-disconnected', userId)

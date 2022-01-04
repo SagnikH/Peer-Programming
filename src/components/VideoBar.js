@@ -4,7 +4,7 @@ import Peer from 'peerjs';
 import '../styles/VideoBar.css'
 
 
-export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggleCam }) {
+export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggleCam, userName }) {
     const videoGridRef = useRef(null);
     const [remoteVideos] = useState(new Map());
     const [selfVideo, setSelfVideo] = useState(null);
@@ -44,8 +44,8 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
             })
 
 
-            socket.on('user-connected', userId => {
-                connectToNewUser(userId, stream)
+            socket.on('user-connected', (user) => {
+                connectToNewUser(user.userId, stream)
             })
         })
 
@@ -70,7 +70,7 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
         myPeer.on('open', id => {
             console.log("emitted join room");
 
-            socket.emit('join-room', roomId, id)
+            socket.emit('join-room', roomId, id, userName)
         })
 
         function connectToNewUser(userId, stream) {
@@ -79,12 +79,8 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
             call.on('stream', userVideoStream => {
                 addVideoStream(video, userVideoStream)
             })
-            // call.on('close', () => {
-            //     video.remove()
-            // })
 
             peers[userId] = call
-            // console.log(peers[userId]);
 
         }
 
