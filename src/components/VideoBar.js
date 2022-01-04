@@ -8,6 +8,8 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
     const videoGridRef = useRef(null);
     const [remoteVideos] = useState(new Map());
     const [selfVideo, setSelfVideo] = useState(null);
+    const [selfStream, setSelfStream] = useState(null);
+    const [selfId, setSelfId] = useState(null);
 
 
     useEffect(() => {
@@ -15,6 +17,7 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
 
         const videoGrid = videoGridRef.current;
         const myPeer = new Peer()
+        setSelfId(myPeer.id)
         const myVideo = document.createElement('video')
         myVideo.className = 'myVideos'
 
@@ -25,6 +28,7 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
             video: true,
             audio: true
         }).then(stream => {
+            setSelfStream(stream)
             addVideoStream(myVideo, stream)
 
             myPeer.on('call', call => {
@@ -110,6 +114,28 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
             if (selfVideo) selfVideo.style.display = 'none'
         }
     }, [toggleVideo])
+
+    useEffect(() => {
+
+        if (selfStream) {
+            console.log("toggled cam", toggleCam);
+
+            selfStream.getVideoTracks()[0].enabled = toggleCam;
+        }
+
+
+    }, [toggleCam])
+
+    useEffect(() => {
+
+        if (selfStream) {
+            console.log("toggled cam", toggleMic);
+
+            selfStream.getAudioTracks()[0].enabled = toggleMic;
+        }
+
+
+    }, [toggleMic])
 
     return (
         <>

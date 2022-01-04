@@ -10,7 +10,7 @@ function App() {
   const [mic, setMic] = useState(true);
   return (
     <>
-      <VideoBar socket={socket} roomId={'aaa'} toggleVideo={remoteVideo} />
+      <VideoBar socket={socket} roomId={'aaa'} toggleVideo={remoteVideo} toggleCam={cam} toggleMic={mic} />
       <button onClick={() => { setRemoteVideo(!remoteVideo) }}>Toggle Video</button>
       <button onClick={() => { setCam(!cam) }}>Toggle Cam</button>
       <button onClick={() => { setMic(!mic) }}>Toggle Mic</button>
