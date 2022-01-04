@@ -12,7 +12,7 @@ const { Server } = require('socket.io')
 //     })
 // );
 
-const io = new Server(3001, {
+const io = new Server(process.env.PORT ?? 3001, {
     cors: {
         origin: ['http://localhost:3000'],
         methods: ['GET', 'POST']
@@ -39,6 +39,8 @@ io.on('connection', socket => {
     })
 
 })
+
+if (process.env.NODE_ENV === 'production') { app.use(express.static(path.join(__dirname, 'client/build'))); }  //  app.get('*', (req, res) => {    res.sendfile(path.join(__dirname = 'client/build/index.html'));  })}
 
 
 // server.listen(3001)
