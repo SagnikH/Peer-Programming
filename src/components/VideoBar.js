@@ -6,7 +6,7 @@ import '../styles/VideoBar.css'
 
 export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggleCam }) {
     const videoGridRef = useRef(null);
-    const [remoteVideos] = useState([]);
+    const [remoteVideos] = useState(new Map());
     const [selfVideo, setSelfVideo] = useState(null);
 
 
@@ -28,15 +28,17 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
             addVideoStream(myVideo, stream)
 
             myPeer.on('call', call => {
+                console.log("called");
+
+                peers[call.peer] = call;
                 call.answer(stream)
-                const video = document.createElement('video')
-                // video.className = 'otherVideos'
-                remoteVideos.push(video);
+                const video = createRemoteVideo(call.peer)
 
                 call.on('stream', userVideoStream => {
                     addVideoStream(video, userVideoStream)
                 })
             })
+
 
             socket.on('user-connected', userId => {
                 connectToNewUser(userId, stream)
@@ -44,7 +46,21 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
         })
 
         socket.on('user-disconnected', userId => {
-            if (peers[userId]) peers[userId].close()
+            console.log("disconnect outside");
+
+
+            let vid = remoteVideos.get(userId);
+            console.log(vid);
+
+            if (vid) vid.remove();
+            console.log(peers[userId]);
+
+            if (peers[userId]) {
+                peers[userId].close();
+                console.log("INSIDE IF");
+            }
+
+
         })
 
         myPeer.on('open', id => {
@@ -55,17 +71,17 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
 
         function connectToNewUser(userId, stream) {
             const call = myPeer.call(userId, stream)
-            const video = document.createElement('video')
-            // video.className = 'otherVideos'
-            remoteVideos.push(video)
+            const video = createRemoteVideo(userId);
             call.on('stream', userVideoStream => {
                 addVideoStream(video, userVideoStream)
             })
-            call.on('close', () => {
-                video.remove()
-            })
+            // call.on('close', () => {
+            //     video.remove()
+            // })
 
             peers[userId] = call
+            // console.log(peers[userId]);
+
         }
 
         function addVideoStream(video, stream) {
@@ -74,6 +90,12 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
                 video.play()
             })
             videoGrid.append(video)
+        }
+        function createRemoteVideo(userId) {
+            const video = document.createElement('video')
+            video.className = 'remoteVideos'
+            remoteVideos.set(userId, video);
+            return video;
         }
     }, []);
 
