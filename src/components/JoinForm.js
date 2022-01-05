@@ -21,7 +21,6 @@ export default function JoinForm() {
 	
 	const [show, setShow] = useState(false);
 	const [messageModal, setMessageModal] = useState(false);
-
 	const handleShow = () => {
 		if (isLoggedIn) setShow(true);
 		else setMessageModal(true);
