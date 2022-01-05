@@ -4,17 +4,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { Dropdown } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
+import { Spinner } from 'react-bootstrap';
+import { BsShareFill } from "react-icons/bs";
 import { deleteDocument } from "../redux/slices/sessionSlice";
 import SessionList from "../components/SessionList.js";
+import ShareIcon from '../components/ShareIcon.js';
 import LeetcodeQuestionForm from "../components/LeetcodeQuestionForm.js";
 import CustomQuestionForm from "../components/CustomQuestionForm.js";
 
 const Session = () => {
-	const [sessionName, setSessionName] = useState("");
 	const [qtype, setQtype] = useState("");
 	const [requestStatus, setRequestStatus] = useState("idle");
+	const [fetching, setFetching] = useState(1);
 	// const user = useSelector((state) => state.user);
 	const session = useSelector((state) => state.session);
+	const sessionName = useSelector((state) => state.session.name);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
@@ -61,7 +65,11 @@ const Session = () => {
 	return (
 		<>
 			<div className={styles.body}>
-				<div className={styles.sessionName}>Session name: {sessionName}</div>
+				<div className='d-flex align-items-center justify-content-between'>
+					<div></div>
+					<div className={styles.sessionName}>Session name: {sessionName}</div>
+					<div style={{width: '50px'}}><ShareIcon size='1.7em' link={window.location}/></div>
+				</div>
 				<div className={styles.sessionContainer}>
 					<SessionList
 						title={"Documents History"}
@@ -87,7 +95,9 @@ const Session = () => {
 							</Dropdown.Menu>
 						</Dropdown>
 						<div>{qtype === "custom" && <CustomQuestionForm />}</div>
-						<div>{qtype === "leetcode" && <LeetcodeQuestionForm />}</div>
+						<div>{qtype === "leetcode" && <LeetcodeQuestionForm setFetching={setFetching} />}</div>
+						{fetching===2 && <Spinner animation="border" variant="secondary" className="mt-5" />}
+						{fetching===3 && <div className='text-danger mt-3'>Invalid Link!</div>}
 					</div>
 				</div>
 			</div>

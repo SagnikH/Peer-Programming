@@ -1,6 +1,7 @@
 import JoinForm from "../components/JoinForm.js";
 import styles from "../styles/home.module.css";
 import coWorking from "../assets/co-working.svg";
+import Footer from "../components/Footer.js";
 
 const Home = () => {
 	return (
@@ -10,7 +11,7 @@ const Home = () => {
 
 				<div className={styles.contents}>
 					<div className={styles.subHeading}>Think and Code Together, in</div>
-					<div className={styles.heading}>Apes Collab</div>
+					<div className={styles.heading}>Peer Programming</div>
 					<div className={styles.description}>
 						Turn your best ideas into reality, by coding and building together
 						with your peers and friends, in real-time. So what are you waiting

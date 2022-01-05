@@ -16,10 +16,6 @@ const Navigation = () => {
 	const userStatus = useSelector((state) => state.user.status);
 
 	useEffect(() => {
-		console.log(process.env.REACT_APP_SERVER_URL);
-	}, []);
-
-	useEffect(() => {
 		// console.log("in navbar");
 
 		if (authStatus === "idle") {
@@ -38,16 +34,19 @@ const Navigation = () => {
 	return (
 		<Navbar className={styles.navbar} expand="lg">
 			<Container>
-				<Link to="/">
+				
+				<Link to="/" className={styles.brandContainer}>
 					<img
 						className={styles.navbrand}
 						src={favicon}
-						width="60"
-						height="60"
+						width="35"
+						height="35"
 					/>
+					<div className={styles.navbrandName}>Peer Programming</div>
 				</Link>
+					
 				<div className="navbar-light" id="basic-navbar-nav">
-					<div className={styles.navlinks}>
+					<div>
 						{!isLoggedIn && (
 							<a
 								href={`${process.env.REACT_APP_SERVER_URL}/auth/google`}

@@ -8,10 +8,11 @@ export default function SessionList({title, list, handleDelete}) {
 			<div className={styles.heading}> {title} </div>
 			<div className={styles.contents}>
 				<div>
-					{list.map((item) => {
+					{list.map((item, idx, array) => {
+						const orderedItem = array[array.length-1-idx];
 						return (
 							<SessionItem
-								item={item}
+								item={orderedItem}
 								handleDelete={handleDelete}
 								key={item.id}
 							/>

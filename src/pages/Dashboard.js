@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { createSession, deleteSession } from "../redux/slices/userSlice";
-import Alert from "../components/Alert.js";
+import { Button } from 'react-bootstrap';
+import WarningModal from '../components/WarningModal';
 import UserInfo from "../components/UserInfo.js";
 import JoinForm from "../components/JoinForm.js";
 import Loading from "../components/Loading.js";
@@ -13,6 +14,7 @@ config();
 const Dashboard = () => {
 	const dispatch = useDispatch();
 	const [requestStatus, setRequestStatus] = useState("idle");
+	const [showModal, setShowModal] = useState(false);
 
 	const user = useSelector((state) => state.user);
 	const userStatus = useSelector((state) => state.user.status);
@@ -72,6 +74,13 @@ const Dashboard = () => {
 	else if (userStatus === "succeeded") {
 		return (
 			<>
+				<WarningModal 
+					showModal={showModal} 
+					setShowModal={setShowModal} 
+					handlePositive={logoutHandler} 
+					message={"Are you sure you want to log out?"} 
+					id={''}
+				/>
 				<div className={styles.dashboard}>
 					<UserInfo />
 					<SessionList
@@ -85,7 +94,9 @@ const Dashboard = () => {
 					<JoinForm />
 
 					<div className={styles.logoutButton}>
-						<Alert alertFunction={logoutHandler} />
+						<Button variant="danger" onClick={()=>setShowModal(true)}>
+							Log Out
+						</Button>
 					</div>
 				</div>
 			</>

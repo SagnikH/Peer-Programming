@@ -5,12 +5,13 @@
   flex-direction: row;
   justify-content: space-around;
   align-items: center; 
+  height: 86vh;
 }
 
 
 .contents{
   height: 500px;
-  width: 600px;
+  width: 800px;
   padding: 30px;
   display: flex;
   flex-direction: column;
@@ -34,6 +35,7 @@
   font-size: 23px;
   text-align: justify;
   margin-bottom: 40px;
+  width: 600px;
 }
 
 .formSection{
@@ -47,7 +49,7 @@
 }
 
 .formButton, .formButton:focus{
-  height: 40px;
+  height: 40px; 
   width: 120px;
   background-color: #4c3b4d !important;
   border: none !important;

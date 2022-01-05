@@ -1,0 +1,7 @@
+.shareIcon{
+    cursor: pointer;
+    color: #00d900;
+}
+.shareIcon:hover{
+    color: #00ff00;
+}

@@ -1,19 +1,22 @@
 .question{
-    width: 600px;
-    height: 76vh;
-    overflow: scroll;
-    margin: 30px;
+    width: 30vw;
+    height: 78vh;
+    overflow-y: scroll;
+    margin: 15px 30px 0 30px;
     display: inline-block;
+}
+
+.qHeading{
+    font-size: 20px;
+    margin: 5px 0 0 30px;
+    font-weight: bold;
+}
+
+.monacoEditor{
+    width: 50vw;
 }
 
 .docContainer{
     display: flex;
     flex-direction: row;
-    margin-top: -50px;
-}
-
-.block{
-    width: 700px;
-    height: 500px;
-    background-color: rgb(233, 177, 177);
 }

@@ -4,19 +4,13 @@ import { Button, Modal, Form } from "react-bootstrap";
 import styles from "../styles/home.module.css";
 
 const Inputmodal = (props) => {
-	const [show, setShow] = useState(false);
+	const {show, setShow} = props;
 	const [name, setName] = useState("");
-	const isLoggedIn = useSelector((state) => state.auth.token);
 
 	const handleClose = (e) => {
 		setName("");
 		setShow(false);
 	}
-	const handleShow = () => {
-		if (isLoggedIn) setShow(true);
-
-		//TODO: implement generic modal to ask user to login
-	};
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -30,10 +24,6 @@ const Inputmodal = (props) => {
 
 	return (
 		<>
-			<Button className={styles.formButton} onClick={handleShow}>
-				Create Link
-			</Button>
-
 			<Modal show={show} onHide={handleClose}>
 				<Modal.Dialog>
 					<Modal.Body>
