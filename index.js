@@ -5,7 +5,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/authRoutes");
 const apiRoutes = require("./routes/apiRoutes");
-const { DatabaseError } = require("./utils/errors/baseErrors");
+const { DatabaseError, UserFacingError } = require("./utils/errors/baseErrors");
 require("dotenv").config();
 
 const { DBManager } = require("./utils/DBManager");
@@ -56,14 +56,16 @@ app.get("/", (req, res) => {
 
 //error handler should be handled at the end
 app.use((err, req, res, next) => {
-	// console.log(err);
+	// console.log("error handler", err);
 	if (res.headersSent) {
 		return next(err);
 	}
 	if (err instanceof DatabaseError) {
 		res.status(err.statusCode).json(err.message);
+	} else if (err instanceof UserFacingError) {
+		res.status(err.statusCode).json(err.message);
 	} else {
-		res.status(500);
+		res.status(500).json(err.message);
 	}
 });
 

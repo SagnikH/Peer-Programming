@@ -32,7 +32,6 @@ class AutomergeStore {
 
     #set(docId, doc) {
         this.#store.set(docId, doc);
-        console.log("set new doc for", docId);
     }
 
     async archive(docId) {
@@ -55,13 +54,8 @@ class AutomergeStore {
     async applyChanges(docId, changes) {
         const doc = await this.get(docId);
         if (doc === null) return false;
-        try {
-            const [newDoc] = Automerge.applyChanges(doc, deserializeChanges(changes));
-            console.log("applied new changes", docId);
-            this.#set(docId, newDoc);
-        } catch (err) {
-            console.log("applyChanges", err, docId)
-        }
+        const [newDoc] = Automerge.applyChanges(doc, deserializeChanges(changes));
+        this.#set(docId, newDoc);
         return true;
     }
 }
@@ -103,7 +97,6 @@ function SessionManager(io, dbManager) {
     }
 
     async function crdtChanges(socket, docId, changes) {
-        console.log("crdt changes", docId);
         const response = { docId };
         if (await automergeStore.applyChanges(docId, changes)) {
             socket.to(docId).emit(CRDT_CHANGES, { docId, changes });
@@ -166,6 +159,21 @@ function SessionManager(io, dbManager) {
         const peers = await getPeers(socket.sessionId);
         socket.emit(SESSION_INIT, { ok: true, docs: ["doc2", "doc1"], peers });
         // use socket.userId and socket.sessionId for call
+
+        // Code from Ronak for video calling
+        socket.on('join-room', (roomId, userId, userName) => {
+            console.log('join', roomId, userId);
+    
+    
+            socket.join(roomId)
+            socket.to(roomId).emit('user-connected', { userId, userName })
+    
+            socket.on('disconnect', () => {
+                socket.to(roomId).emit('user-disconnected', userId)
+                console.log("user disconnected");
+    
+            })
+        })
     });
 
 }
