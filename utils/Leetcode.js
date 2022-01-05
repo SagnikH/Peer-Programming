@@ -9,7 +9,7 @@ cors({ origin: true });
 const editTitle = (title) => {
 	title = title.trim();
 	let idx = title.indexOf('.');
-	title = title.substring(idx+2, title.length);
+	title = title.substring(idx + 2, title.length);
 }
 
 class LeetCode {
@@ -30,10 +30,10 @@ class LeetCode {
 		const isValid = await this.validate(this.link);
 		if (!isValid) return null;
 
-    console.log("launching puppeteer");
-		const browser = await puppeteer.launch();
+		console.log("launching puppeteer");
+		const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
 		const page = await browser.newPage();
-    console.log("launched puppeteer");
+		console.log("launched puppeteer");
 
 		console.log("Fetching", this.link);
 		try {
@@ -43,19 +43,19 @@ class LeetCode {
 		}
 
 		const html = await page.content();
-    console.log("fetched, scrapping");
+		console.log("fetched, scrapping");
 		const $ = cheerio.load(html);
 		$.html();
 
 		let title = $("div[data-cy=question-title]").text();
 		title = title.trim();
 		let idx = title.indexOf('.');
-		title = title.substring(idx+2, title.length);
-    	console.log("title scrapped", title);
+		title = title.substring(idx + 2, title.length);
+		console.log("title scrapped", title);
 
 		let descp = $("div .question-content__JfgR").get();
 		descp = $.html(descp);
-    console.log("description scrapped");
+		console.log("description scrapped");
 
 
 		const boilerPlateLine = [];
@@ -64,7 +64,7 @@ class LeetCode {
 		});
 
 		await browser.close();
-    console.log("puppetter closed");
+		console.log("puppetter closed");
 
 		const details = {
 			title: title,
