@@ -93,18 +93,18 @@ export default function SessionWrapper() {
 					</div>
 					<div className={styles.videocall}>
 						<div className={styles.videosSection}>
-							<VideoBar socket={socket} roomId={'aaa'} toggleVideo={allVideos} toggleCam={cam} toggleMic={mic} userName={'ok'} />
+							<VideoBar socket={socket} roomId={id} toggleVideo={allVideos} toggleCam={cam} toggleMic={mic} userName={'ok'} />
 						</div>
-						<div className='d-flex justify-content-around my-2'>
-							<Button className={styles.videoButton} onClick={()=>setAllVideos(1 ^ allVideos)}>
-								{allVideos ? <BsFillPauseCircleFill/> : <BsFillPlayCircleFill/>}
-							</Button>
-							<Button className={styles.videoButton} onClick={()=>setCam(1 ^ cam)}>
-								{cam ? <BsFillCameraVideoFill/> : <BsFillCameraVideoOffFill/>}
-							</Button>
-							<Button className={styles.videoButton} onClick={()=>setMic(1 ^ mic)}> 
-								{mic ? <BsFillMicFill/> : <BsFillMicMuteFill/>}
-							</Button>
+						<div className='d-flex justify-content-around my-2 w-75 m-auto'>
+							<div className={styles.videoButton} onClick={()=>setAllVideos(1 ^ allVideos)}>
+								{allVideos ? <BsFillPauseCircleFill size='1.5em'/> : <BsFillPlayCircleFill size='1.5em'/>}
+							</div>
+							<div className={styles.videoButton} onClick={()=>setCam(1 ^ cam)}>
+								{cam ? <BsFillCameraVideoFill size='1.5em'/> : <BsFillCameraVideoOffFill size='1.5em'/>}
+							</div>
+							<div className={styles.videoButton} onClick={()=>setMic(1 ^ mic)}> 
+								{mic ? <BsFillMicFill size='1.5em'/> : <BsFillMicMuteFill size='1.5em'/>}
+							</div>
 						</div>
 					</div>
 				</div>

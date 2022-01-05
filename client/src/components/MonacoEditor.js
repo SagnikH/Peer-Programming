@@ -9,7 +9,7 @@ export default function MonacoEditor(props) {
                 width="50vw"
                 theme="vs-dark"
                 defaultLanguage="javascript"
-                defaultValue="//Enter answer:"
+                defaultValue=""
                 value={props.value}
                 onMount={props.onMount}
             />

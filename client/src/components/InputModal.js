@@ -2,24 +2,15 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { Button, Modal, Form } from "react-bootstrap";
 import styles from "../styles/home.module.css";
-import MessageModal from './MessageModal';
 
 const Inputmodal = (props) => {
-	const [show, setShow] = useState(false);
-	const [messageModal, setMessageModal] = useState(false);
+	const {show, setShow} = props;
 	const [name, setName] = useState("");
-	const isLoggedIn = useSelector((state) => state.auth.token);
 
 	const handleClose = (e) => {
 		setName("");
 		setShow(false);
 	}
-	const handleShow = () => {
-		if (isLoggedIn) setShow(true);
-		else setMessageModal(true);
-
-		//TODO: implement generic modal to ask user to login
-	};
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -33,16 +24,6 @@ const Inputmodal = (props) => {
 
 	return (
 		<>
-			<MessageModal
-				title='Failed to create!'
-				message='Please login first, before trying to create new link.'
-				showModal={messageModal}
-				setShowModal={setMessageModal}			
-			/>
-			<Button className={styles.formButton} onClick={handleShow}>
-				Create Link
-			</Button>
-
 			<Modal show={show} onHide={handleClose}>
 				<Modal.Dialog>
 					<Modal.Body>

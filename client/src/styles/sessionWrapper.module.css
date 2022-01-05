@@ -13,6 +13,6 @@
 }
 
 .videoButton{
-    width: 30%;
-    height: 35px;
+    color: #4c3b4d;
+    cursor: pointer;
 }
