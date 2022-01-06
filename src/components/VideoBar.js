@@ -10,7 +10,7 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
     const [selfVideo, setSelfVideo] = useState(null);
     const [selfStream, setSelfStream] = useState(null);
     const [selfId, setSelfId] = useState(null);
-    // const [loading, setLoading] = useState(true);
+    const [stremReady, setStreamReady] = useState(true);
 
 
     useEffect(() => {
@@ -44,15 +44,12 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
                     addVideoStream(video, userVideoStream)
                 })
             })
-            // socket.emit("user-video-ready", selfId)
-            // console.log("emitted ready");
+            setStreamReady(true);
+            console.log("Stream ready");
             socket.on('user-connected', (user) => {
                 connectToNewUser(user.userId, stream)
-                // setTimeout(connectToNewUser,1000,user,stream)
             })
-            console.log("emitted join room");
 
-            socket.emit('join-room', roomId, selfId, userName)
 
 
         })
@@ -69,13 +66,15 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
 
             if (peers[userId]) {
                 peers[userId].close();
-                console.log("INSIDE IF");
             }
 
 
         })
 
         myPeer.on('open', id => {
+            console.log("Peer Ready");
+
+            setSelfId(id);
 
         })
 
@@ -109,6 +108,14 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
 
 
     useEffect(() => {
+        if (selfId && stremReady) {
+            console.log("emitted join room");
+            socket.emit('join-room', roomId, selfId, userName);
+        }
+    }, [stremReady, selfId])
+
+
+    useEffect(() => {
         if (toggleVideo) {
             remoteVideos.forEach(video => video.style.display = 'inline')
             if (selfVideo) selfVideo.style.display = 'inline'
@@ -121,11 +128,17 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
 
     useEffect(() => {
 
-        if (selfStream) {
-            console.log("toggled cam", toggleCam);
+        // if (selfStream) {
+        //     console.log("toggled cam", toggleCam);
+        //     if (toggleCam) {
 
-            selfStream.getVideoTracks()[0].enabled = toggleCam;
-        }
+        //         selfStream.getVideoTracks()[0].stop();
+        //     }
+        //     else {
+        //         selfStream.getVideoTracks()[0].play();
+
+        //     }
+        // }
 
 
     }, [toggleCam])
