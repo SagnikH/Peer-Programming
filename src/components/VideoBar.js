@@ -26,7 +26,7 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
         setSelfVideo(myVideo)
         const peers = {}
         navigator.mediaDevices.getUserMedia({
-            video: false,
+            video: true,
             audio: true
         }).then(stream => {
             setSelfStream(stream)
