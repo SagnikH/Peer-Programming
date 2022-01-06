@@ -104,6 +104,7 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
             remoteVideos.set(userId, video);
             return video;
         }
+        return () => { selfStream.getTracks().forEach(tracks => tracks.stop()) }
     }, []);
 
 
