@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { createSession } from "../redux/slices/userSlice";
 import InputModal from "./InputModal.js";
+import MessageModal from './MessageModal.js';
 import { Button, Form } from "react-bootstrap";
 import styles2 from "../styles/home.module.css";
 import styles from "../styles/dashboard.module.css";
@@ -17,6 +18,15 @@ export default function JoinForm() {
 	const [modalResponse, setModalResponse] = useState("");
 	const [requestStatus, setRequestStatus] = useState("idle");
 	const [joinLinkValue, setJoinLinkValue] = useState("");
+	
+	const [show, setShow] = useState(false);
+	const [messageModal, setMessageModal] = useState(false);
+	const handleShow = () => {
+		if (isLoggedIn) setShow(true);
+		else setMessageModal(true);
+
+		//TODO: implement generic modal to ask user to login
+	};
 
 	const handleName = (modalResponse) => {
 		setModalResponse(modalResponse);
@@ -35,12 +45,14 @@ export default function JoinForm() {
 
 		//TODO: handle https in production, now its http
     let URL = joinLinkValue;
-    if(!URL.startsWith("http://")){
-      URL = "http://".concat(joinLinkValue);
-    }
-    setJoinLinkValue("");
-		window.open(URL);
-	};
+	if (URL){
+		if(!URL.startsWith("http://")){
+		URL = "http://".concat(joinLinkValue);
+		}
+		setJoinLinkValue("");
+			window.open(URL);
+		};
+	}	
 
 	useEffect(() => {
 		console.log("modalResponse :", modalResponse);
@@ -78,7 +90,17 @@ export default function JoinForm() {
 	return (
 		<div>
 			<div className={styles.linkButtons}>
-				<InputModal handleName={handleName} />
+				<InputModal handleName={handleName} show={show} setShow={setShow} />
+				<MessageModal
+					title='Failed to create!'
+					message='Please login first, before trying to create new link.'
+					showModal={messageModal}
+					setShowModal={setMessageModal}			
+				/>
+
+				<Button className={styles2.formButton} onClick={handleShow}>
+					Create Link
+				</Button>
 
 				<Form className="d-flex">
 					<Form.Control
