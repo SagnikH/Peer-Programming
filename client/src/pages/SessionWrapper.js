@@ -22,6 +22,7 @@ const URL = process.env.REACT_APP_SERVER_URL;
 const SESSION_INIT = "session init";
 const CLIENT_DISCONNECTED = "client disconnected";
 const CLIENT_CONNECTED = "client connected";
+const DOC_LIST_UPDATED = "doc list updated";
 
 export default function SessionWrapper() {
 	const dispatch = useDispatch();
@@ -59,6 +60,15 @@ export default function SessionWrapper() {
 		socket.on(SESSION_INIT, (data) => {
 			console.log("session init", data);
 		});
+
+		socket.on(DOC_LIST_UPDATED, () => {
+			try {
+				console.log("updating document list");
+				dispatch(fetchSessionById(id));
+			} catch (err) {
+				console.log(err);
+			}
+		})
 
 		return () => {
 			console.log("session cleanup");

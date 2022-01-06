@@ -33,7 +33,9 @@ const io = require("socket.io")(server, {
 	},
 });
 
-SessionManager(io, new DBManager());
+const [notifyDocListUpdated] = SessionManager(io, new DBManager());
+// TODO: when new document added to session or document deleted 
+// from session call notifyDocListUpdated(sessionId);
 
 app.use(express.json());
 app.use(cookieParser());

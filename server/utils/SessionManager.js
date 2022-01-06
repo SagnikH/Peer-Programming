@@ -9,6 +9,7 @@ const DOC_CLOSED = "doc closed"
 const CRDT_CHANGES = "crdt changes"
 const CLIENT_OPENED_DOC = "client opened doc";
 const CLIENT_CLOSED_DOC = "client closed doc";
+const DOC_LIST_UPDATED = "doc list updated";
 
 class AutomergeStore {
     #dbSavedCodeManager;
@@ -182,6 +183,13 @@ function SessionManager(io, dbManager) {
             })
         })
     });
+
+
+    function notifyDocListUpdated(sessionId) {
+        io.to(sessionId).emit(DOC_LIST_UPDATED);
+    }
+
+    return [notifyDocListUpdated];
 
 }
 
