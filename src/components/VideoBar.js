@@ -45,6 +45,8 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
                 })
             })
             socket.emit("user-video-ready", selfId)
+            console.log("emitted ready");
+
 
             socket.on('user-connected', (user) => {
                 connectToNewUser(user.userId, stream)

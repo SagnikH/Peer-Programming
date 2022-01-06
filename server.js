@@ -30,7 +30,7 @@ io.on('connection', socket => {
 
 
         socket.join(roomId)
-        socket.on('"user-video-ready', () => {
+        socket.on('user-video-ready', () => {
             socket.to(roomId).emit('user-connected', { userId, userName })
         })
 
