@@ -46,7 +46,7 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
 
             socket.on('user-connected', (user) => {
                 // connectToNewUser(user.userId, stream)
-                setTimeout(connectToNewUser,1000,userId,stream)
+                setTimeout(connectToNewUser,1000,user,stream)
             })
         })
 
