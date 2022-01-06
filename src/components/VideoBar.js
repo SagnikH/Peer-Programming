@@ -10,7 +10,7 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
     const [selfVideo, setSelfVideo] = useState(null);
     const [selfStream, setSelfStream] = useState(null);
     const [selfId, setSelfId] = useState(null);
-    const [streamReady, setStreamReady] = useState(true);
+    const [streamReady, setStreamReady] = useState(false);
 
 
     useEffect(() => {
