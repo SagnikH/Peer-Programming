@@ -46,15 +46,15 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
             })
             // socket.emit("user-video-ready", selfId)
             // console.log("emitted ready");
+            socket.on('user-connected', (user) => {
+                connectToNewUser(user.userId, stream)
+                // setTimeout(connectToNewUser,1000,user,stream)
+            })
             console.log("emitted join room");
 
             socket.emit('join-room', roomId, id, userName)
 
 
-            socket.on('user-connected', (user) => {
-                connectToNewUser(user.userId, stream)
-                // setTimeout(connectToNewUser,1000,user,stream)
-            })
         })
 
         socket.on('user-disconnected', userId => {
