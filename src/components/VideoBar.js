@@ -52,7 +52,7 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
             })
             console.log("emitted join room");
 
-            socket.emit('join-room', roomId, id, userName)
+            socket.emit('join-room', roomId, selfId, userName)
 
 
         })
