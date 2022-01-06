@@ -10,7 +10,7 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
     const [selfVideo, setSelfVideo] = useState(null);
     const [selfStream, setSelfStream] = useState(null);
     const [selfId, setSelfId] = useState(null);
-    const [stremReady, setStreamReady] = useState(true);
+    const [streamReady, setStreamReady] = useState(true);
 
 
     useEffect(() => {
@@ -108,11 +108,11 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
 
 
     useEffect(() => {
-        if (selfId && stremReady) {
+        if (selfId != null && streamReady) {
             console.log("emitted join room");
             socket.emit('join-room', roomId, selfId, userName);
         }
-    }, [stremReady, selfId])
+    }, [streamReady, selfId])
 
 
     useEffect(() => {
