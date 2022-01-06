@@ -10,6 +10,7 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
     const [selfVideo, setSelfVideo] = useState(null);
     const [selfStream, setSelfStream] = useState(null);
     const [selfId, setSelfId] = useState(null);
+    const [loading, setLoading] = useState(true);
 
 
     useEffect(() => {
@@ -29,6 +30,7 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
             audio: true
         }).then(stream => {
             setSelfStream(stream)
+            setLoading(false)
             addVideoStream(myVideo, stream)
 
             myPeer.on('call', call => {
@@ -45,8 +47,9 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
 
 
             socket.on('user-connected', (user) => {
-                // connectToNewUser(user.userId, stream)
-                setTimeout(connectToNewUser,1000,user,stream)
+                while (loading) continue;
+                connectToNewUser(user.userId, stream)
+                // setTimeout(connectToNewUser,1000,user,stream)
             })
         })
 
