@@ -209,12 +209,16 @@ export default function SyncedMonacoEditor({socket, docId}) {
         if (edits === null || edits === undefined) return null;
         if (text === null || text === undefined) return null;
 
-        if (edits.length > 1) {
-            console.log("LENGTH > 1", edits);
+        if (edits.length != 1) {
+            console.log("LENGTH != 1", edits);
         }
 
         let range, toInsert = "";
         const edit = edits[0];
+        if (edit === null || edit === undefined) {
+            console.log("WHERE EDIT?", edits);
+            return null;
+        }
 
         if (edit.action === "remove") {
             range = getRangeOfEditforRemove(edit.index, edit.count, text);
