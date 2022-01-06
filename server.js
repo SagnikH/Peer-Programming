@@ -30,6 +30,8 @@ io.on('connection', socket => {
 
 
         socket.join(roomId)
+        socket.to(roomId).emit('user-connected', { userId, userName })
+
 
         socket.on('disconnect', () => {
             socket.to(roomId).emit('user-disconnected', userId)
@@ -41,7 +43,6 @@ io.on('connection', socket => {
     socket.on('user-video-ready', (userId) => {
 
         console.log("broadcast user connected");
-        socket.to(roomId).emit('user-connected', { userId, userName })
     })
 })
 

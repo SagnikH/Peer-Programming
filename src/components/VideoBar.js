@@ -44,8 +44,11 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
                     addVideoStream(video, userVideoStream)
                 })
             })
-            socket.emit("user-video-ready", selfId)
-            console.log("emitted ready");
+            // socket.emit("user-video-ready", selfId)
+            // console.log("emitted ready");
+            console.log("emitted join room");
+
+            socket.emit('join-room', roomId, id, userName)
 
 
             socket.on('user-connected', (user) => {
@@ -73,9 +76,7 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
         })
 
         myPeer.on('open', id => {
-            console.log("emitted join room");
 
-            socket.emit('join-room', roomId, id, userName)
         })
 
         function connectToNewUser(userId, stream) {
