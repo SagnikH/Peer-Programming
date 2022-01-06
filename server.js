@@ -31,6 +31,8 @@ io.on('connection', socket => {
 
         socket.join(roomId)
         socket.on('user-video-ready', () => {
+
+            console.log("broadcast user connected");
             socket.to(roomId).emit('user-connected', { userId, userName })
         })
 
