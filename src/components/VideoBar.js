@@ -45,7 +45,8 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
 
 
             socket.on('user-connected', (user) => {
-                connectToNewUser(user.userId, stream)
+                // connectToNewUser(user.userId, stream)
+                setTimeout(connectToNewUser,1000,userId,stream)
             })
         })
 
@@ -76,7 +77,7 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
         function connectToNewUser(userId, stream) {
             console.log("connecting to user ", userId);
 
-            const call = myPeer.call(userId, stream)
+            const call = myPeer.call(userId, stream).on('error', () => console.log("error happen"))
             const video = createRemoteVideo(userId);
             call.on('stream', userVideoStream => {
                 addVideoStream(video, userVideoStream)
