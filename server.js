@@ -30,11 +30,6 @@ io.on('connection', socket => {
 
 
         socket.join(roomId)
-        socket.on('user-video-ready', () => {
-
-            console.log("broadcast user connected");
-            socket.to(roomId).emit('user-connected', { userId, userName })
-        })
 
         socket.on('disconnect', () => {
             socket.to(roomId).emit('user-disconnected', userId)
@@ -43,6 +38,11 @@ io.on('connection', socket => {
         })
     })
 
+    socket.on('user-video-ready', (userId) => {
+
+        console.log("broadcast user connected");
+        socket.to(roomId).emit('user-connected', { userId, userName })
+    })
 })
 
 // if (process.env.NODE_ENV === 'production') { app.use(express.static(path.join(__dirname, 'build'))); }  //  app.get('*', (req, res) => {    res.sendfile(path.join(__dirname = 'client/build/index.html'));  })}
