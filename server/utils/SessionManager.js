@@ -19,14 +19,24 @@ class AutomergeStore {
         this.#store = new Map();
     }
 
-    async get(docId) {
-        if (this.#store.has(docId))
-            return this.#store.get(docId);
-        if (await this.#dbSavedCodeManager.has(docId)) {
-            const doc = deserializeDoc(await this.#dbSavedCodeManager.get(docId));
-            this.#store.set(docId, doc);
-            return doc;
+    async load(docId) {
+        if (this.has(docId)) return;
+
+        const serializeDoc = await this.#dbSavedCodeManager.get(docId);
+        if (serializeDoc === null) {
+            log(`document: ${docId} not found in DB`);
+            return;
         }
+
+        const doc = deserializeDoc(serializeDoc);
+        this.#set(docId, doc);
+    }
+
+    has(docId) { return this.#store.has(docId); }
+
+    get(docId) {
+        if (this.has(docId))
+            return this.#store.get(docId);
         return null;
     }
 
@@ -34,29 +44,32 @@ class AutomergeStore {
         this.#store.set(docId, doc);
     }
 
+    #delete(docId) {
+        this.#store.delete(docId);
+    }
+
     async archive(docId) {
-        if (this.#store.has(docId)) {
-            await this.#dbSavedCodeManager.set(docId, serializeDoc(this.#store.get(docId)));
-            this.#store.delete(docId);
+        if (this.has(docId)) {
+            await this.#dbSavedCodeManager.set(docId, serializeDoc(this.get(docId)));
+            this.#delete(docId);
         }
     }
 
-    inStore(docId) {
-        return this.#store.has(docId);
+    // return changes or null
+    getAllChanges(docId) {
+        if (!this.has(docId)) return null; 
+        return serializeChanges(Automerge.getAllChanges(this.get(docId)));
     }
 
-    async getAllChanges(docId) {
-        const doc = await this.get(docId);
-        if (doc === null) return null;
-        return serializeChanges(Automerge.getAllChanges(doc));
-    }
-
-    async applyChanges(docId, changes) {
-        const doc = await this.get(docId);
-        if (doc === null) return false;
-        const [newDoc] = Automerge.applyChanges(doc, deserializeChanges(changes));
+    applyChanges(docId, changes) {
+        if (!this.has(docId)) return false; 
+        const [newDoc] = Automerge.applyChanges(this.get(docId), deserializeChanges(changes));
         this.#set(docId, newDoc);
         return true;
+    }
+
+    log(...data) {
+        console.log("[Automerge Store]", data);
     }
 }
 
@@ -64,61 +77,56 @@ class AutomergeStore {
 function SessionManager(io, dbManager) {
     console.log("setting up session manager");
     const automergeStore = new AutomergeStore(dbManager.dbSavedCodeManager);
-
-    function logClient(socket) {
-        console.log("--userId:", socket.userId);
-        console.log("--sessionId:", socket.sessionId);
-    }
+    function log(...data) { console.log("[Session Manager]", data); }
 
     async function docInit(socket, docId) {
-        const changes = await automergeStore.getAllChanges(docId);
-        const response = { ok: (changes !== null), changes };
-        if (changes === null) {
-            socket.docId = null;
-            response.message = "no such document";
-        } else {
-            socket.docId = docId;
-            socket.join(docId);
-            socket.to(socket.sessionId).emit(CLIENT_OPENED_DOC, { clientId: socket.id, docId });
+        if (!automergeStore.has(docId)) await automergeStore.load(docId);
+        const changes = automergeStore.getAllChanges(docId);
+        const response = {
+            docId,
+            changes,
         }
+        if (changes === null) {
+            response.ok = false;
+            response.message = "no such document";
+            log(`DOC_INIT FAILED on doc ${docId} by user ${userId}`);
+        } else {
+            response.ok = true;
+            socket.docId = docId;
+            socket.to(socket.sessionId).emit(CLIENT_OPENED_DOC, { clientId: socket.id, docId });
+            socket.join(docId);
+        }
+
         return response;
     }
 
     async function docClosed(socket, docId) {
-        await socket.leave(docId);
         socket.docId = null;
+        await socket.leave(docId);
         const sockets = await io.in(docId).allSockets();
         if (sockets.size === 0) {
-            console.log("Archived:", docId);
+            console.log("Archived: ", docId);
             await automergeStore.archive(docId);
         } else {
             socket.to(socket.sessionId).emit(CLIENT_CLOSED_DOC, { clientId: socket.id, docId });
         }
     }
 
-    async function crdtChanges(socket, docId, changes) {
+    function crdtChanges(socket, docId, changes) {
         const response = { docId };
-        if (await automergeStore.applyChanges(docId, changes)) {
-            socket.to(docId).emit(CRDT_CHANGES, { docId, changes });
+        if (automergeStore.applyChanges(docId, changes)) {
             response.ok = true;
+
+            socket.to(docId).emit(CRDT_CHANGES, { docId, changes });
         } else {
             response.ok = false;
             response.message = "no such document";
+            log(`CRDT_CHANGES FAILED for doc: ${docId} by user ${userId}`)
         }
         return response;
     }
 
-    async function getPeers(sessionId) {
-        const peers = [];
-        const sockets = await io.in(sessionId).allSockets();
-        for (const s of sockets) {
-            peers.push(s);
-        }
-        return peers;
-    }
-
-
-    io.use( async (socket, next) => {
+    io.use(async (socket, next) => {
         const userId = socket.handshake.auth.userId;
         const sessionId = socket.handshake.auth.sessionId;
 
@@ -134,10 +142,10 @@ function SessionManager(io, dbManager) {
 
 
     io.on('connection', async (socket) => {
-        console.log("client connected:", socket.userId, socket.sessionId);
+        log(`${socket.userId} connected | session: ${socket.sessionId}`);
 
         socket.on('disconnect', async (reason) => {
-            console.log("client disconnected:", socket.userId, socket.sessionId);
+            log(`${socket.userId} disconnected | session: ${socket.sessionId}`, reason);
             if (socket.docId) await docClosed(socket, socket.docId);
             socket.to(socket.sessionId).emit(CLIENT_DISCONNECTED, { clientId: socket.id });
         });
@@ -146,8 +154,8 @@ function SessionManager(io, dbManager) {
             callback(await docInit(socket, docId));
         });
 
-        socket.on(CRDT_CHANGES, async ({ docId, changes }, callback) => {
-            callback( await crdtChanges(socket, docId, changes));
+        socket.on(CRDT_CHANGES, ({ docId, changes }, callback) => {
+            callback(crdtChanges(socket, docId, changes));
         });
 
         socket.on(DOC_CLOSED, async ({ docId }) => {
@@ -156,22 +164,21 @@ function SessionManager(io, dbManager) {
 
         socket.join(socket.sessionId);
         socket.to(socket.sessionId).emit(CLIENT_CONNECTED, { clientId: socket.id });
-        const peers = await getPeers(socket.sessionId);
-        socket.emit(SESSION_INIT, { ok: true, docs: ["doc2", "doc1"], peers });
-        // use socket.userId and socket.sessionId for call
+        socket.emit(SESSION_INIT, { ok: true });
+
 
         // Code from Ronak for video calling
         socket.on('join-room', (roomId, userId, userName) => {
             console.log('join', roomId, userId);
-    
-    
+
+
             socket.join(roomId)
             socket.to(roomId).emit('user-connected', { userId, userName })
-    
+
             socket.on('disconnect', () => {
                 socket.to(roomId).emit('user-disconnected', userId)
                 console.log("user disconnected");
-    
+
             })
         })
     });
