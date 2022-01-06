@@ -37,6 +37,47 @@ const createSession = async (req, res) => {
 	}
 };
 
+const addSharedSession = async (req, res) => {
+	const _id = req.params.id;
+	const { userId } = req.body;
+
+	try {
+		const session = await Session.findById(_id);
+		// console.log(session);
+
+		const sharedSession = {
+			name: session.name,
+			sessionId: session._id,
+			createdAt: session.createdAt,
+		};
+
+		const dbRes = await User.find({
+			_id: userId,
+			"userSessions.sessionId": session._id,
+		});
+
+		if (dbRes.length === 0) {
+			const user = await User.findByIdAndUpdate(
+				userId,
+				{ $addToSet: { sharedSessions: sharedSession } },
+				{ new: true }
+			);
+
+			console.log(user);
+
+			res.status(200).json(session);
+			return;
+		}
+
+		console.log("shared session dbRes", dbRes);
+		//shared session already present
+		res.status(200).json(null);
+	} catch (e) {
+		console.error(e);
+		res.status(500).json("error in shared sessions checking");
+	}
+};
+
 const getSession = async (req, res, next) => {
 	const _id = req.params.id;
 	if (!ObjectId.isValid(_id))
@@ -127,4 +168,38 @@ const deleteSession = async (req, res, next) => {
 	}
 };
 
-module.exports = { createSession, getSession, updateSession, deleteSession };
+const deleteSharedSession = async (req, res, next) => {
+	const _id = req.params.id;
+	const { userId } = req.body;
+  console.log("shared", userId);
+
+	if (!ObjectId.isValid(_id))
+		return next(new NotFoundError("invalid document id"));
+
+	try {
+		const deletedSharedSession = await Session.findById(_id);
+		console.log("deleted shared session", deletedSharedSession);
+
+		const user = await User.findByIdAndUpdate(
+			userId,
+			{
+				$pull: { sharedSessions: { sessionId: deletedSharedSession._id } },
+			},
+			{ new: true }
+		);
+
+		res.status(202).json(deletedSharedSession);
+	} catch (e) {
+		console.log(e);
+		res.status(500).json(e);
+	}
+};
+
+module.exports = {
+	createSession,
+	getSession,
+	updateSession,
+	deleteSession,
+	addSharedSession,
+	deleteSharedSession,
+};

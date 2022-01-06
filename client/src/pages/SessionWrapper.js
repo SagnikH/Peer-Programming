@@ -7,6 +7,7 @@ import Loading from "../components/Loading";
 import Error404 from "./Error404";
 import { io } from "socket.io-client";
 import { config } from "dotenv";
+import { addSharedSession } from "../redux/slices/userSlice";
 config();
 
 const URL = process.env.REACT_APP_SERVER_URL;
@@ -59,9 +60,16 @@ export default function SessionWrapper() {
 	}, [userId]);
 
 	useEffect(() => {
-		console.log("useEffect -> [Session]");
-		console.log("fetching session data....");
-		dispatch(fetchSessionById(id));
+		try {
+			console.log("useEffect -> [Session]");
+			console.log("fetching session data....");
+			const session = dispatch(fetchSessionById(id));
+
+			//check if the session is created by the user
+			dispatch(addSharedSession({ sessionId: id, userId: userId }));
+		} catch (e) {
+			console.log(e);
+		}
 	}, []);
 
 	if (sessionStatus === "loading") {
@@ -76,7 +84,7 @@ export default function SessionWrapper() {
 			return <Loading />;
 		} else {
 			return (
-				<div className="d-flex" style={{overflow: 'hidden'}}>
+				<div className="d-flex" style={{ overflow: "hidden" }}>
 					<div className={styles.main}>
 						<Outlet context={socket} />
 					</div>

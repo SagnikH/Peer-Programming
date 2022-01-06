@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { createSession, deleteSession } from "../redux/slices/userSlice";
-import { Button } from 'react-bootstrap';
-import WarningModal from '../components/WarningModal';
+import {
+	createSession,
+	deleteSession,
+	deleteSharedSession,
+} from "../redux/slices/userSlice";
+import { Button } from "react-bootstrap";
+import WarningModal from "../components/WarningModal";
 import UserInfo from "../components/UserInfo.js";
 import JoinForm from "../components/JoinForm.js";
 import Loading from "../components/Loading.js";
@@ -26,10 +30,6 @@ const Dashboard = () => {
 	//push inside a utility funciton
 	const handleDeleteSession = async (sessionId) => {
 		console.log("deleting session....", sessionId);
-		//get this session id from the respective clicked item
-		// const sessionId = "61a9aef6417576b9f074f427";  //deleted session id
-		// const sessionId = "61c0e931fd1dbb86d17cb546";
-		// e.preventDefault();
 
 		const canDelete = requestStatus === "idle";
 
@@ -42,6 +42,30 @@ const Dashboard = () => {
 				).unwrap();
 
 				console.log("IN dashboard -> session deleted", deletedSession);
+			} catch (e) {
+				console.log(e);
+
+				window.alert("document not deleted try again");
+			} finally {
+				setRequestStatus("idle");
+			}
+		}
+	};
+
+	const handleDeleteSharedSession = async (sessionId) => {
+		console.log("deleting shared session....", sessionId);
+
+		const canDelete = requestStatus === "idle";
+
+		if (canDelete) {
+			try {
+				setRequestStatus("pending");
+
+				const deletedSession = await dispatch(
+					deleteSharedSession({sessionId, userId: user._id})
+				).unwrap();
+
+				console.log("IN dashboard -> shared session deleted", deletedSession);
 			} catch (e) {
 				console.log(e);
 
@@ -74,12 +98,12 @@ const Dashboard = () => {
 	else if (userStatus === "succeeded") {
 		return (
 			<>
-				<WarningModal 
-					showModal={showModal} 
-					setShowModal={setShowModal} 
-					handlePositive={logoutHandler} 
-					message={"Are you sure you want to log out?"} 
-					id={''}
+				<WarningModal
+					showModal={showModal}
+					setShowModal={setShowModal}
+					handlePositive={logoutHandler}
+					message={"Are you sure you want to log out?"}
+					id={""}
 				/>
 				<div className={styles.dashboard}>
 					<UserInfo />
@@ -88,13 +112,17 @@ const Dashboard = () => {
 						list={getUserSessionsList(user.userSessions)}
 						handleDelete={handleDeleteSession}
 					/>
-					<SessionList title={"Shared Sessions"} list={[]} />
+					<SessionList
+						title={"Shared Sessions"}
+						list={getUserSessionsList(user.sharedSessions)}
+						handleDelete={handleDeleteSharedSession}
+					/>
 				</div>
 				<div className={styles.buttons}>
 					<JoinForm />
 
 					<div className={styles.logoutButton}>
-						<Button variant="danger" onClick={()=>setShowModal(true)}>
+						<Button variant="danger" onClick={() => setShowModal(true)}>
 							Log Out
 						</Button>
 					</div>
