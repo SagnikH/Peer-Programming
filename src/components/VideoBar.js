@@ -26,7 +26,7 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
         setSelfVideo(myVideo)
         const peers = {}
         navigator.mediaDevices.getUserMedia({
-            video: true,
+            video: false,
             audio: true
         }).then(stream => {
             setSelfStream(stream)
@@ -127,21 +127,34 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
     }, [toggleVideo])
 
     useEffect(() => {
-
-        // if (selfStream) {
-        //     console.log("toggled cam", toggleCam);
-        //     if (toggleCam) {
-
-        //         selfStream.getVideoTracks()[0].stop();
-        //     }
-        //     else {
-        //         selfStream.getVideoTracks()[0].play();
-
-        //     }
+        // function addVideoStream(video, stream) {
+        //     video.srcObject = stream
+        //     video.addEventListener('loadedmetadata', () => {
+        //         video.play()
+        //     })
+        //     videoGridRef.current.append(video)
         // }
 
+        if (selfStream && selfVideo) {
+            console.log("toggled cam", toggleCam);
+            if (toggleCam) {
+                selfStream.getVideoTracks().forEach(tracks => tracks.stop())
+            }
+            else {
+                navigator.mediaDevices.getUserMedia({
+                    video: true,
+                    audio: true
+                }).then(stream => {
+                    setSelfStream(stream)
+                    // setLoading(false)
+                    selfVideo.srcObject = stream
+                }
+                )
+            }
 
-    }, [toggleCam])
+        }
+    }
+        , [toggleCam])
 
     useEffect(() => {
 
