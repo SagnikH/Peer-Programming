@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import { useEffect, useRef } from 'react';
 import Peer from 'peerjs';
-import '../styles/VideoBar.css'
-
+import styles from '../styles/videoBar.module.css'
 
 export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggleCam, userName }) {
     const videoGridRef = useRef(null);
@@ -20,7 +19,7 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
         const myPeer = new Peer()
         setSelfId(myPeer.id)
         const myVideo = document.createElement('video')
-        myVideo.className = 'myVideos'
+        myVideo.className = styles.myVideos
 
         myVideo.muted = true
         setSelfVideo(myVideo)
@@ -100,7 +99,7 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
         }
         function createRemoteVideo(userId) {
             const video = document.createElement('video')
-            video.className = 'remoteVideos'
+            video.className = styles.remoteVideos
             remoteVideos.set(userId, video);
             return video;
         }
