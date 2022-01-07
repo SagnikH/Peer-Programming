@@ -106,13 +106,11 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
         }
         return () => {
             console.log("cleanup called");
-            // socket.to(roomId).emit('user-disconnected', myPeer.id)
             socket.emit('video-disconnected', myPeer.id)
             socket.off('user-connected');
             socket.off('user-disconnected');
             remoteVideos.forEach(video => video.remove())
             myVideo.srcObject.getTracks().forEach(track => track.stop())
-            for (const peer in peers) { peer.close() }
 
         }
     }, []);
@@ -139,26 +137,20 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
 
     useEffect(() => {
 
-        if (selfStream && selfVideo) {
+        if (selfStream) {
             console.log("toggled cam", toggleCam);
-            if (toggleCam) {
-                selfStream.getTracks().forEach(tracks => {
-                    console.log("CLOSED");
-                    tracks.enabled = toggleCam
-                    tracks.stop()
-                })
-            }
-            else {
-                navigator.mediaDevices.getUserMedia({
-                    video: true,
-                    audio: true
-                }).then(stream => {
-                    setSelfStream(stream)
-                    // setLoading(false)
-                    selfVideo.srcObject = stream
-                }
-                )
-            }
+            selfStream.getVideoTracks().forEach(track => { track.enabled = toggleCam })
+            // if (!toggleCam) {
+            //     navigator.mediaDevices.getUserMedia({
+            //         video: true,
+            //         audio: true
+            //     }).then(stream => {
+            //         setSelfStream(stream)
+            //         // setLoading(false)
+            //         selfVideo.srcObject = stream
+            //     }
+            //     )
+            // }
 
         }
     }
