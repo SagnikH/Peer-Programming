@@ -38,6 +38,11 @@ io.on('connection', socket => {
             console.log("user disconnected");
 
         })
+        socket.on('video-disconnected', (userId) => {
+            socket.to(roomId).emit('user-disconnected', userId)
+            console.log("user disconnected");
+
+        })
     })
 
     socket.on('user-video-ready', (userId) => {

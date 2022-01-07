@@ -26,7 +26,7 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
         setSelfVideo(myVideo)
         const peers = {}
         navigator.mediaDevices.getUserMedia({
-            video: false,
+            video: true,
             audio: true
         }).then(stream => {
             setSelfStream(stream)
@@ -104,7 +104,17 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
             remoteVideos.set(userId, video);
             return video;
         }
-        return () => { if (selfStream) selfStream.getTracks().forEach(tracks => tracks.stop()) }
+        return () => {
+            console.log("cleanup called");
+            // socket.to(roomId).emit('user-disconnected', myPeer.id)
+            socket.emit('video-disconnected', myPeer.id)
+            socket.off('user-connected');
+            socket.off('user-disconnected');
+            remoteVideos.forEach(video => video.remove())
+            myVideo.srcObject.getTracks().forEach(track => track.stop())
+            for (const peer in peers) { peer.close() }
+
+        }
     }, []);
 
 
@@ -128,20 +138,13 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
     }, [toggleVideo])
 
     useEffect(() => {
-        // function addVideoStream(video, stream) {
-        //     video.srcObject = stream
-        //     video.addEventListener('loadedmetadata', () => {
-        //         video.play()
-        //     })
-        //     videoGridRef.current.append(video)
-        // }
 
         if (selfStream && selfVideo) {
             console.log("toggled cam", toggleCam);
             if (toggleCam) {
                 selfStream.getTracks().forEach(tracks => {
                     console.log("CLOSED");
-
+                    tracks.enabled = toggleCam
                     tracks.stop()
                 })
             }
