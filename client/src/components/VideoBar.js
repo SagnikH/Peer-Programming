@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useEffect, useRef } from 'react';
 import Peer from 'peerjs';
-import styles from '../styles/videoBar.module.css'
+import '../styles/VideoBar.css'
 
 
 export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggleCam, userName }) {
@@ -10,6 +10,7 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
     const [selfVideo, setSelfVideo] = useState(null);
     const [selfStream, setSelfStream] = useState(null);
     const [selfId, setSelfId] = useState(null);
+    const [streamReady, setStreamReady] = useState(false);
 
 
     useEffect(() => {
@@ -19,7 +20,7 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
         const myPeer = new Peer()
         setSelfId(myPeer.id)
         const myVideo = document.createElement('video')
-        myVideo.className = styles.myVideos;
+        myVideo.className = 'myVideos'
 
         myVideo.muted = true
         setSelfVideo(myVideo)
@@ -29,10 +30,11 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
             audio: true
         }).then(stream => {
             setSelfStream(stream)
+            // setLoading(false)
             addVideoStream(myVideo, stream)
 
             myPeer.on('call', call => {
-                console.log("called");
+                console.log("called by ", call.peer);
 
                 peers[call.peer] = call;
                 call.answer(stream)
@@ -42,11 +44,14 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
                     addVideoStream(video, userVideoStream)
                 })
             })
-
-
+            setStreamReady(true);
+            console.log("Stream ready");
             socket.on('user-connected', (user) => {
                 connectToNewUser(user.userId, stream)
             })
+
+
+
         })
 
         socket.on('user-disconnected', userId => {
@@ -61,20 +66,22 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
 
             if (peers[userId]) {
                 peers[userId].close();
-                console.log("INSIDE IF");
             }
 
 
         })
 
         myPeer.on('open', id => {
-            console.log("emitted join room");
+            console.log("Peer Ready");
 
-            socket.emit('join-room', roomId, id, userName)
+            setSelfId(id);
+
         })
 
         function connectToNewUser(userId, stream) {
-            const call = myPeer.call(userId, stream)
+            console.log("connecting to user ", userId);
+
+            const call = myPeer.call(userId, stream).on('error', () => console.log("error happen"))
             const video = createRemoteVideo(userId);
             call.on('stream', userVideoStream => {
                 addVideoStream(video, userVideoStream)
@@ -93,11 +100,28 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
         }
         function createRemoteVideo(userId) {
             const video = document.createElement('video')
-            video.className = styles.remoteVideos
+            video.className = 'remoteVideos'
             remoteVideos.set(userId, video);
             return video;
         }
+        return () => {
+            console.log("cleanup called");
+            socket.emit('video-disconnected', myPeer.id)
+            socket.off('user-connected');
+            socket.off('user-disconnected');
+            remoteVideos.forEach(video => video.remove())
+            myVideo.srcObject.getTracks().forEach(track => track.stop())
+
+        }
     }, []);
+
+
+    useEffect(() => {
+        if (selfId != null && streamReady) {
+            console.log("emitted join room");
+            socket.emit('join-room', roomId, selfId, userName);
+        }
+    }, [streamReady, selfId])
 
 
     useEffect(() => {
@@ -115,12 +139,22 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
 
         if (selfStream) {
             console.log("toggled cam", toggleCam);
+            selfStream.getVideoTracks().forEach(track => { track.enabled = toggleCam })
+            // if (!toggleCam) {
+            //     navigator.mediaDevices.getUserMedia({
+            //         video: true,
+            //         audio: true
+            //     }).then(stream => {
+            //         setSelfStream(stream)
+            //         // setLoading(false)
+            //         selfVideo.srcObject = stream
+            //     }
+            //     )
+            // }
 
-            selfStream.getVideoTracks()[0].enabled = toggleCam;
         }
-
-
-    }, [toggleCam])
+    }
+        , [toggleCam])
 
     useEffect(() => {
 
@@ -135,7 +169,7 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
 
     return (
         <>
-            <div ref={videoGridRef} >
+            <div ref={videoGridRef}>
 
             </div>
         </>
