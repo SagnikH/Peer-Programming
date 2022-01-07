@@ -51,9 +51,9 @@ const Session = () => {
 				setRequestStatus("pending");
 
 				const docRes = await dispatch(deleteDocument(documentId)).unwrap();
-				if (socket && socket.connected) {
-					socket.emit(DOC_LIST_UPDATED);
-				}
+
+				notifyDocumentUpdate();
+
 				console.log("IN session -> new document deleted", docRes);
 			} catch (e) {
 				console.log(e);
@@ -64,6 +64,12 @@ const Session = () => {
 			}
 		}
 	};
+
+	function notifyDocumentUpdate() {
+		if (socket && socket.connected) {
+			socket.emit(DOC_LIST_UPDATED);
+		}
+	}
 
 	function getDocumentList(documents) {
 		return documents.map((doc) => {
@@ -108,8 +114,8 @@ const Session = () => {
 								</Dropdown.Item>
 							</Dropdown.Menu>
 						</Dropdown>
-						<div>{qtype === "custom" && <CustomQuestionForm />}</div>
-						<div>{qtype === "leetcode" && <LeetcodeQuestionForm setFetching={setFetching} />}</div>
+						<div>{qtype === "custom" && <CustomQuestionForm notifyDocumentUpdate={notifyDocumentUpdate}/>}</div>
+						<div>{qtype === "leetcode" && <LeetcodeQuestionForm setFetching={setFetching} notifyDocumentUpdate={notifyDocumentUpdate}/>}</div>
 						{fetching===2 && <Spinner animation="border" variant="secondary" className="mt-5" />}
 						{fetching===3 && <div className='text-danger mt-3'>Invalid Link!</div>}
 					</div>

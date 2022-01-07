@@ -37,6 +37,7 @@ const Leetcodequestionform = (props) => {
 				).unwrap();
 
 				console.log("IN session -> new document created", docRes);
+				props.notifyDocumentUpdate();
 				//use this id to navigate to desired page
 				const URL = `doc/${docRes.documentId}`;
 				console.log("custom q form navigate", URL);
