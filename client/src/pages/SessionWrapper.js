@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
-import { Button } from 'react-bootstrap';
+import { Button } from "react-bootstrap";
 import styles from "../styles/sessionWrapper.module.css";
 import { fetchSessionById } from "../redux/slices/sessionSlice";
 import { Outlet, useParams } from "react-router-dom";
@@ -9,7 +9,7 @@ import Error404 from "./Error404";
 import { io } from "socket.io-client";
 import { config } from "dotenv";
 import { addSharedSession } from "../redux/slices/userSlice";
-import VideoBar from '../components/VideoBar'
+import VideoBar from "../components/VideoBar";
 import { BsFillMicFill } from "react-icons/bs";
 import { BsFillMicMuteFill } from "react-icons/bs";
 import { BsFillCameraVideoFill } from "react-icons/bs";
@@ -33,6 +33,8 @@ export default function SessionWrapper() {
 
 	const userId = useSelector((state) => state.user._id);
 	const sessionStatus = useSelector((state) => state.session.status);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(false);
 	const [socket, setSocket] = useState(null);
 	const [connected, setConnected] = useState(false);
 
@@ -68,7 +70,7 @@ export default function SessionWrapper() {
 			} catch (err) {
 				console.log(err);
 			}
-		})
+		});
 
 		return () => {
 			console.log("session cleanup");
@@ -81,25 +83,29 @@ export default function SessionWrapper() {
 	}, [userId]);
 
 	useEffect(() => {
-		try {
-			console.log("useEffect -> [Session]");
-			console.log("fetching session data....");
-			const session = dispatch(fetchSessionById(id));
+		async(() => {
+			try {
+				console.log("useEffect -> [Session]");
+				console.log("fetching session data....");
+				const session = await dispatch(fetchSessionById(id)).unwrap();
 
-			//check if the session is created by the user
-			dispatch(addSharedSession({ sessionId: id, userId: userId }));
-		} catch (e) {
-			console.log(e);
-		}
+				//check if the session is created by the user
+				dispatch(addSharedSession({ sessionId: id, userId: userId }));
+				setLoading(false);
+			} catch (e) {
+				console.log(e);
+				setError(true);
+			}
+		})();
 	}, []);
 
-	if (sessionStatus === "loading") {
+	if (loading) {
 		console.log("loading");
 		return <Loading />;
-	} else if (sessionStatus === "failed") {
+	} else if (error) {
 		console.log("error failed");
 		return <Error404 />;
-	} else if (sessionStatus === "succeeded") {
+	} else if (!loading) {
 		if (!connected) {
 			console.log("not connected");
 			return <Loading />;
@@ -111,17 +117,45 @@ export default function SessionWrapper() {
 					</div>
 					<div className={styles.videocall}>
 						<div className={styles.videosSection}>
-							<VideoBar socket={socket} roomId={id} toggleVideo={allVideos} toggleCam={cam} toggleMic={mic} userName={'ok'} />
+							<VideoBar
+								socket={socket}
+								roomId={id}
+								toggleVideo={allVideos}
+								toggleCam={cam}
+								toggleMic={mic}
+								userName={"ok"}
+							/>
 						</div>
-						<div className='d-flex justify-content-around my-2 w-75 m-auto'>
-							<div className={styles.videoButton} onClick={()=>setAllVideos(1 ^ allVideos)}>
-								{allVideos ? <BsFillPauseCircleFill size='1.5em'/> : <BsFillPlayCircleFill size='1.5em'/>}
+						<div className="d-flex justify-content-around my-2 w-75 m-auto">
+							<div
+								className={styles.videoButton}
+								onClick={() => setAllVideos(1 ^ allVideos)}
+							>
+								{allVideos ? (
+									<BsFillPauseCircleFill size="1.5em" />
+								) : (
+									<BsFillPlayCircleFill size="1.5em" />
+								)}
 							</div>
-							<div className={styles.videoButton} onClick={()=>setCam(1 ^ cam)}>
-								{cam ? <BsFillCameraVideoFill size='1.5em'/> : <BsFillCameraVideoOffFill size='1.5em'/>}
+							<div
+								className={styles.videoButton}
+								onClick={() => setCam(1 ^ cam)}
+							>
+								{cam ? (
+									<BsFillCameraVideoFill size="1.5em" />
+								) : (
+									<BsFillCameraVideoOffFill size="1.5em" />
+								)}
 							</div>
-							<div className={styles.videoButton} onClick={()=>setMic(1 ^ mic)}> 
-								{mic ? <BsFillMicFill size='1.5em'/> : <BsFillMicMuteFill size='1.5em'/>}
+							<div
+								className={styles.videoButton}
+								onClick={() => setMic(1 ^ mic)}
+							>
+								{mic ? (
+									<BsFillMicFill size="1.5em" />
+								) : (
+									<BsFillMicMuteFill size="1.5em" />
+								)}
 							</div>
 						</div>
 					</div>
