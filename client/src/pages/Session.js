@@ -1,7 +1,7 @@
 import styles from "../styles/sessions.module.css";
 
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Dropdown } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { Spinner } from 'react-bootstrap';
@@ -11,6 +11,9 @@ import SessionList from "../components/SessionList.js";
 import ShareIcon from '../components/ShareIcon.js';
 import LeetcodeQuestionForm from "../components/LeetcodeQuestionForm.js";
 import CustomQuestionForm from "../components/CustomQuestionForm.js";
+import { useOutletContext } from "react-router-dom";
+
+const DOC_LIST_UPDATED = "doc list updated";
 
 const Session = () => {
 	const [qtype, setQtype] = useState("");
@@ -21,6 +24,15 @@ const Session = () => {
 	const sessionName = useSelector((state) => state.session.name);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+
+	const socket = useOutletContext();
+
+	useEffect(() => {
+
+		return () => {
+
+		}
+	}, []);
 
 	const { id } = useParams();
 
@@ -40,7 +52,9 @@ const Session = () => {
 
 				const docRes = await dispatch(deleteDocument(documentId)).unwrap();
 
-				console.log("IN session -> new document created", docRes);
+				notifyDocumentUpdate();
+
+				console.log("IN session -> new document deleted", docRes);
 			} catch (e) {
 				console.log(e);
 
@@ -50,6 +64,12 @@ const Session = () => {
 			}
 		}
 	};
+
+	function notifyDocumentUpdate() {
+		if (socket && socket.connected) {
+			socket.emit(DOC_LIST_UPDATED);
+		}
+	}
 
 	function getDocumentList(documents) {
 		return documents.map((doc) => {
@@ -94,8 +114,8 @@ const Session = () => {
 								</Dropdown.Item>
 							</Dropdown.Menu>
 						</Dropdown>
-						<div>{qtype === "custom" && <CustomQuestionForm />}</div>
-						<div>{qtype === "leetcode" && <LeetcodeQuestionForm setFetching={setFetching} />}</div>
+						<div>{qtype === "custom" && <CustomQuestionForm notifyDocumentUpdate={notifyDocumentUpdate}/>}</div>
+						<div>{qtype === "leetcode" && <LeetcodeQuestionForm setFetching={setFetching} notifyDocumentUpdate={notifyDocumentUpdate}/>}</div>
 						{fetching===2 && <Spinner animation="border" variant="secondary" className="mt-5" />}
 						{fetching===3 && <div className='text-danger mt-3'>Invalid Link!</div>}
 					</div>

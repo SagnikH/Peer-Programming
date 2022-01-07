@@ -32,7 +32,7 @@ export default function SessionWrapper() {
 	const [mic, setMic] = useState(1);
 
 	const userId = useSelector((state) => state.user._id);
-	const sessionStatus = useSelector((state) => state.session.status);
+	// const sessionStatus = useSelector((state) => state.session.status);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(false);
 	const [socket, setSocket] = useState(null);
@@ -66,7 +66,7 @@ export default function SessionWrapper() {
 		socket.on(DOC_LIST_UPDATED, () => {
 			try {
 				console.log("updating document list");
-				dispatch(fetchSessionById(id));
+				docListUpdated();
 			} catch (err) {
 				console.log(err);
 			}
@@ -99,7 +99,12 @@ export default function SessionWrapper() {
 		})();
 	}, []);
 
-	if (loading) {
+	function docListUpdated() {
+		// handle doc list update
+		dispatch(fetchSessionById(id));
+	}
+
+	if (loading === "loading") {
 		console.log("loading");
 		return <Loading />;
 	} else if (error) {

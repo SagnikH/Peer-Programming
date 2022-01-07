@@ -5,7 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addNewDocument } from "../redux/slices/sessionSlice";
 
-export default function CustomQuestionForm() {
+export default function CustomQuestionForm(props) {
 	const [docTitle, setDocTitle] = useState("");
 	const [docQuestionText, setDocQuestionText] = useState("");
 	const [requestStatus, setRequestStatus] = useState("idle");
@@ -45,6 +45,9 @@ export default function CustomQuestionForm() {
 				).unwrap();
 
 				console.log("IN session -> new document created", docRes);
+
+				props.notifyDocumentUpdate();
+
 				//use this id to navigate to desired page
 				const URL = `doc/${docRes.documentId}`;
 				console.log("custom q form navigate", URL);

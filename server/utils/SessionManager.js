@@ -163,6 +163,10 @@ function SessionManager(io, dbManager) {
             await docClosed(socket, docId);
         })
 
+        socket.on(DOC_LIST_UPDATED, () => {
+            socket.to(socket.sessionId).emit(DOC_LIST_UPDATED);
+        });
+
         socket.join(socket.sessionId);
         socket.to(socket.sessionId).emit(CLIENT_CONNECTED, { clientId: socket.id });
         socket.emit(SESSION_INIT, { ok: true });
