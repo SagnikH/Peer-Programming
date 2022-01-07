@@ -64,7 +64,7 @@ export default function SessionWrapper() {
 		socket.on(DOC_LIST_UPDATED, () => {
 			try {
 				console.log("updating document list");
-				dispatch(fetchSessionById(id));
+				docListUpdated();
 			} catch (err) {
 				console.log(err);
 			}
@@ -92,6 +92,11 @@ export default function SessionWrapper() {
 			console.log(e);
 		}
 	}, []);
+
+	function docListUpdated() {
+		// handle doc list update
+		dispatch(fetchSessionById(id));
+	}
 
 	if (sessionStatus === "loading") {
 		console.log("loading");
