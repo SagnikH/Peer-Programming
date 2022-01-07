@@ -26,7 +26,7 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
         setSelfVideo(myVideo)
         const peers = {}
         navigator.mediaDevices.getUserMedia({
-            video: true,
+            video: false,
             audio: true
         }).then(stream => {
             setSelfStream(stream)
@@ -104,7 +104,7 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
             remoteVideos.set(userId, video);
             return video;
         }
-        return () => { selfStream.getTracks().forEach(tracks => tracks.stop()) }
+        return () => { if (selfStream) selfStream.getTracks().forEach(tracks => tracks.stop()) }
     }, []);
 
 
@@ -139,7 +139,11 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
         if (selfStream && selfVideo) {
             console.log("toggled cam", toggleCam);
             if (toggleCam) {
-                selfStream.getVideoTracks().forEach(tracks => tracks.stop())
+                selfStream.getTracks().forEach(tracks => {
+                    console.log("CLOSED");
+
+                    tracks.stop()
+                })
             }
             else {
                 navigator.mediaDevices.getUserMedia({
