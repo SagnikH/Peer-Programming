@@ -15,7 +15,7 @@ const googleCallbackHandler = (req, res) => {
 			secure: true,
 			sameSite: "none",
 		})
-		.redirect(process.env.CLIENT_URL);
+		.redirect(process.env.CLIENT_URL + "/dashboard");
 };
 
 module.exports = { googleCallbackHandler };

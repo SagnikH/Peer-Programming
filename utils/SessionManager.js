@@ -9,6 +9,7 @@ const DOC_CLOSED = "doc closed"
 const CRDT_CHANGES = "crdt changes"
 const CLIENT_OPENED_DOC = "client opened doc";
 const CLIENT_CLOSED_DOC = "client closed doc";
+const DOC_LIST_UPDATED = "doc list updated";
 
 class AutomergeStore {
     #dbSavedCodeManager;
@@ -57,12 +58,12 @@ class AutomergeStore {
 
     // return changes or null
     getAllChanges(docId) {
-        if (!this.has(docId)) return null; 
+        if (!this.has(docId)) return null;
         return serializeChanges(Automerge.getAllChanges(this.get(docId)));
     }
 
     applyChanges(docId, changes) {
-        if (!this.has(docId)) return false; 
+        if (!this.has(docId)) return false;
         const [newDoc] = Automerge.applyChanges(this.get(docId), deserializeChanges(changes));
         this.#set(docId, newDoc);
         return true;
@@ -162,6 +163,10 @@ function SessionManager(io, dbManager) {
             await docClosed(socket, docId);
         })
 
+        socket.on(DOC_LIST_UPDATED, () => {
+            socket.to(socket.sessionId).emit(DOC_LIST_UPDATED);
+        });
+
         socket.join(socket.sessionId);
         socket.to(socket.sessionId).emit(CLIENT_CONNECTED, { clientId: socket.id });
         socket.emit(SESSION_INIT, { ok: true });
@@ -180,8 +185,20 @@ function SessionManager(io, dbManager) {
                 console.log("user disconnected");
 
             })
+            socket.on('video-disconnected', (userId) => {
+                socket.to(roomId).emit('user-disconnected', userId)
+                console.log("user disconnected");
+
+            })
         })
     });
+
+
+    function notifyDocListUpdated(sessionId) {
+        io.to(sessionId).emit(DOC_LIST_UPDATED);
+    }
+
+    return [notifyDocListUpdated];
 
 }
 
