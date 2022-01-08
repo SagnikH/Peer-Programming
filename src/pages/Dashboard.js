@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
-	createSession,
 	deleteSession,
 	deleteSharedSession,
 } from "../redux/slices/userSlice";

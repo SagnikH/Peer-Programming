@@ -1,4 +1,3 @@
-import Layout from '../components/Layout'
 import {useSelector} from 'react-redux';
 import {useEffect} from 'react'; 
 import { checkAuth } from "../utils/checkAuth";

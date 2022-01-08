@@ -94,6 +94,7 @@ export default function SessionWrapper() {
 				setLoading(false);
 			} catch (e) {
 				console.log(e);
+				setLoading(false);
 				setError(true);
 			}
 		})();
@@ -104,15 +105,15 @@ export default function SessionWrapper() {
 		dispatch(fetchSessionById(id));
 	}
 
-	if (loading === "loading") {
-		console.log("loading");
+	if (loading) {
+		// console.log("loading");
 		return <Loading />;
 	} else if (error) {
-		console.log("error failed");
+		// console.log("error failed");
 		return <Error404 />;
 	} else if (!loading) {
 		if (!connected) {
-			console.log("not connected");
+			// console.log("not connected");
 			return <Loading />;
 		} else {
 			return (

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import { addNewLeetcodeDocument } from "../redux/slices/sessionSlice";
 import styles from "../styles/sessions.module.css";
