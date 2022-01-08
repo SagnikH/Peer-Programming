@@ -11,7 +11,6 @@ We found it inconvenient, that for any mock interview we needed to have a gmeet,
 
 - Collaborative editing
 - Video calling
-- Leetcode question alongside the editor
 - Archiving one's progress
 - Secure login using Google Oauth2
 
