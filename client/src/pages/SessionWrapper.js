@@ -91,9 +91,10 @@ export default function SessionWrapper() {
 
 				//check if the session is created by the user
 				dispatch(addSharedSession({ sessionId: id, userId: userId }));
-				setLoading(false);
+				setLoading(false);  
 			} catch (e) {
 				console.log(e);
+				setLoading(false);
 				setError(true);
 			}
 		})();
@@ -104,7 +105,7 @@ export default function SessionWrapper() {
 		dispatch(fetchSessionById(id));
 	}
 
-	if (loading === "loading") {
+	if (loading) {
 		console.log("loading");
 		return <Loading />;
 	} else if (error) {
