@@ -2,9 +2,9 @@
 <img src="https://github.com/SagnikH/pair-programming/blob/master/logo.png" />
 
 
-# Peer Programming
+<!-- # Peer Programming -->
 
-A collaborative code editor, for your mock interviews & coding assesments. 
+<h3 align= "center"> A collaborative code editor, for your mock interviews & coding assesments </h3>
 
 ## Motivation
 
