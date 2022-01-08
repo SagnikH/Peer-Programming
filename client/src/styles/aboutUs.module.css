@@ -1,0 +1,82 @@
+.peer{
+    display: flex;
+    justify-content: space-between;
+    height: 88vh;
+}
+
+.peerDesc{
+    width: 50%;
+    margin: auto;
+}
+
+.peerImage{
+    width: 50vw;
+}
+
+.title{
+    font-size: 3.5vw;
+    margin-bottom: 50px;
+}
+
+.peerDesc{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 30%;
+    font-size: 1.2vw;
+}
+
+.peerDescText{
+    text-align: justify;
+}
+
+.contributors{
+    font-size: 4vw;
+    text-align: center;
+    margin: 20px 0 70px 0;
+}
+
+
+.person{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: 30px 0;
+}
+
+.personImage{
+    width: 30vw;
+}
+
+.nameTitle{
+    font-size: 3vw;
+    margin:  0 0 40px 0;
+}
+
+.shortPersonDesc{
+    width: 30vw;
+    font-size: 1.2vw;
+    margin: 40px 0;
+}
+
+.btn{
+    text-decoration: none;
+    color: black;
+}
+
+.btn:hover{
+    text-decoration: none;
+    color: white;
+    background-color: #FB750D;
+}
+
+.btn{
+    border: 1px solid;
+    width: 100px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px;
+}

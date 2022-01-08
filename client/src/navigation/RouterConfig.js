@@ -7,6 +7,7 @@ import Dashboard from "../pages/Dashboard";
 import Session from "../pages/Session";
 import Doc from "../pages/Doc";
 import SessionWrapper from "../pages/SessionWrapper";
+import AboutUs from '../pages/AboutUs';
 
 export const RouterConfig = () => {
 	return (
@@ -64,6 +65,13 @@ export const RouterConfig = () => {
 							</PrivateRoute>
 						}
 					/>
+				</Route>
+				<Route
+					path="/aboutUs"
+					element={
+						<AboutUs/>
+					}
+				>
 				</Route>
 				<Route path="*" element={<Error404 />} />
 			</Routes>
