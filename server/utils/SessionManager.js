@@ -1,5 +1,5 @@
 const Automerge = require('automerge');
-const { deserializeChanges, deserializeDoc, serializeChanges, serializeDoc } = require("./automergeUtils.js");
+const { deserializeChanges, deserializeDoc, serializeChanges, serializeDoc, getNewDoc } = require("./automergeUtils.js");
 
 const SESSION_INIT = "session init"
 const CLIENT_DISCONNECTED = "client disconnected";
@@ -51,8 +51,10 @@ class AutomergeStore {
 
     async archive(docId) {
         if (this.has(docId)) {
-            await this.#dbSavedCodeManager.set(docId, serializeDoc(this.get(docId)));
+            const doc = this.get(docId);
             this.#delete(docId);
+            const text = doc.text.toString();
+            await this.#dbSavedCodeManager.set(docId, serializeDoc(getNewDoc(text)));
         }
     }
 
