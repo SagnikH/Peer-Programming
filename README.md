@@ -1,10 +1,8 @@
 
 <img src="https://github.com/SagnikH/pair-programming/blob/master/logo.png" />
 
-
-<!-- # Peer Programming -->
-
 <h3 align= "center"> A collaborative code editor, for your mock interviews & coding assesments </h3>
+</br>
 
 ## Motivation
 
@@ -97,6 +95,8 @@ Start the client ( PORT : 3000 )
 - [@Sattam Bandyopadhyay](https://github.com/bsattam)
 - [@Rounak Sanpui](https://github.com/SanpuiRonak)
 
+## Special thanks
+- [@Soumitri Chattopadhyay](https://github.com/soumitri2001)
 
 ## Feedback
 
