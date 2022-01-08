@@ -1,14 +1,14 @@
 import styles from "../styles/doc.module.css";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useOutletContext, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useOutletContext } from "react-router-dom";
 import SyncedMonacoEditor from "../components/SyncedMonacoEditor";
 import ShareIcon from '../components/ShareIcon';
 import Error404 from "./Error404";
 import Loading from "../components/Loading";
 import { config } from "dotenv";
+import BackButton from '../components/BackButton.js';
 config();
 
 const Doc = () => {
@@ -22,6 +22,7 @@ const Doc = () => {
 	const [title, setTitle] = useState("")
 
 	const socket = useOutletContext();
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		//fetch curr doc data
@@ -67,6 +68,15 @@ const Doc = () => {
 		}
 	};
 
+	const goBackHandler = () => {
+		let currentUrl = window.location + "";
+		let indexOfDoc = currentUrl.indexOf('/doc/');
+		let goToUrl = currentUrl.slice(0, indexOfDoc);
+		console.log(goToUrl);
+		//navigate(goToUrl);
+		window.location = goToUrl;
+	}
+
 	if (loading) {
 		return <Loading />;
 	} else if (error) {
@@ -77,6 +87,9 @@ const Doc = () => {
 			<div className={styles.docContainer}>
 				<div >
 					<div className='d-flex justify-content-between align-items-center'>
+						<div style={{marginLeft: '20px'}} onClick={goBackHandler}>
+							<BackButton/>
+						</div>
 						<div className={styles.qHeading}>Question: {title}</div>
 						<div style={{width: '50px'}}><ShareIcon link={window.location}/></div>
 					</div>

@@ -10,6 +10,7 @@
     font-size: 20px;
     margin: 5px 0 0 30px;
     font-weight: bold;
+    flex: 1;
 }
 
 .monacoEditor{

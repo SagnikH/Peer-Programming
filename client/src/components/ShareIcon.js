@@ -11,7 +11,7 @@ export default function ShareIcon(props) {
         programming.`;
         
 	const shareHandler = async () => {
-		await navigator.clipboard.writeText(link);
+		await navigator.clipboard.writeText('https://' + link);
 		setShowModal(true);
 	};
 
