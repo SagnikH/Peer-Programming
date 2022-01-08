@@ -24,6 +24,8 @@ export default function JoinForm() {
 	const handleShow = () => {
 		if (isLoggedIn) setShow(true);
 		else setMessageModal(true);
+
+		//TODO: implement generic modal to ask user to login
 	};
 
 	const handleName = (modalResponse) => {
@@ -44,8 +46,8 @@ export default function JoinForm() {
 		//TODO: handle https in production, now its http
     let URL = joinLinkValue;
 	if (URL){
-		if(!URL.startsWith("https://")){
-		URL = "https://".concat(joinLinkValue);
+		if(!URL.startsWith("http://")){
+		URL = "http://".concat(joinLinkValue);
 		}
 		setJoinLinkValue("");
 			window.open(URL);

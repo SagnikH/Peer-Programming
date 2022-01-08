@@ -47,19 +47,75 @@ export const createSession = createAsyncThunk(
 	}
 );
 
+export const addSharedSession = createAsyncThunk(
+	"user/addSharedSessions",
+
+	async ({ sessionId, userId }, { rejectWithValue }) => {
+		try {
+			console.log("creating shared session thunk", { userId });
+
+			console.log("sending request for session");
+
+			const session = await axios.post(
+				`${process.env.REACT_APP_SERVER_URL}/api/session/shared/${sessionId}`,
+				{ userId },
+				{ withCredentials: true }
+			);
+
+			console.log("new shared session created", session.data);
+
+			if (session.data) {
+				const sharedSession = {
+					name: session.data.name,
+					sessionId: session.data._id,
+					createdAt: session.data.createdAt,
+				};
+
+				console.log("server sharedSession", sharedSession);
+				return sharedSession;
+			} else return "";
+		} catch (e) {
+			console.log("creation error in session thunk", e.response);
+			return rejectWithValue(e.response.status);
+		}
+	}
+);
+
 export const deleteSession = createAsyncThunk(
 	"user/deleteSession",
 
 	async (sessionId, { rejectWithValue }) => {
 		try {
 			const delSession = await axios.delete(
-				`${process.env.REACT_APP_SERVER_URL}/api/session/${sessionId}`
+				`${process.env.REACT_APP_SERVER_URL}/api/session/${sessionId}`,
+				{ withCredentials: true }
 			);
 
 			console.log("deleting session", delSession.data);
 			return delSession.data._id;
 		} catch (e) {
 			console.log("creation error in session thunk", e.response);
+			return rejectWithValue(e.response.status);
+		}
+	}
+);
+
+export const deleteSharedSession = createAsyncThunk(
+	"user/deleteSharedSession",
+
+	async ({ sessionId, userId }, { rejectWithValue }) => {
+		try {
+			console.log({ userId });
+			const delSession = await axios.patch(
+				`${process.env.REACT_APP_SERVER_URL}/api/session/shared/${sessionId}`,
+				{ userId },
+				{ withCredentials: true }
+			);
+
+			console.log("deleting shared session", delSession.data);
+			return delSession.data._id;
+		} catch (e) {
+			console.log("creation error in shared session thunk", e.response);
 			return rejectWithValue(e.response.status);
 		}
 	}
@@ -141,12 +197,36 @@ export const useSlice = createSlice({
 			state.userSessions.push(action.payload);
 		});
 
+		builder.addCase(addSharedSession.fulfilled, (state, action) => {
+			if (action.payload) {
+				const _id = action.payload.sessionId;
+				const pos = state.sharedSessions
+					.map((session) => {
+						return session.sessionId;
+					})
+					.indexOf(_id);
+
+				if (pos === -1) {
+					console.log("pelam na");
+					state.sharedSessions.push(action.payload);
+				}
+			}
+		});
+
 		builder.addCase(deleteSession.fulfilled, (state, action) => {
 			const newUserSessions = state.userSessions.filter(
 				(session) => session.sessionId !== action.payload
 			);
 
 			state.userSessions = newUserSessions;
+		});
+
+		builder.addCase(deleteSharedSession.fulfilled, (state, action) => {
+			const newSharedSessions = state.sharedSessions.filter(
+				(session) => session.sessionId !== action.payload
+			);
+
+			state.sharedSessions = newSharedSessions;
 		});
 	},
 });

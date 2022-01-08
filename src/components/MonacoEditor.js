@@ -8,7 +8,6 @@ export default function MonacoEditor(props) {
                 height="86vh"
                 width="50vw"
                 theme="vs-dark"
-                defaultLanguage="javascript"
                 defaultValue=""
                 value={props.value}
                 onMount={props.onMount}
