@@ -39,7 +39,7 @@ async function getGoogleUser({ code }) {
 		)
 		.then((res) => res.data)
 		.catch((error) => {
-			//console.log("throwing error");
+			console.log("throwing error");
 			next(new Error(error.message));
 		});
 

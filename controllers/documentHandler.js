@@ -14,7 +14,7 @@ const createDocument = async (req, res) => {
 	//TODO: check to see if session id exists
 
 	// adding initial savedCode for Automerge
-	const savedCode = serializeDoc(getNewDoc("//Enter Code Here:"));
+	const savedCode = serializeDoc(getNewDoc('//Enter Code Here:'));
 
 	try {
 		//TODO: check session id exists here if not throw error
@@ -44,21 +44,20 @@ const createDocument = async (req, res) => {
 
 		res.status(200).json(document);
 	} catch (e) {
-		//console.log(e.message);
+		console.log(e.message);
 		res.status(403).json(e.message);
 	}
 };
 
 const createLeetcodeDocument = async (req, res, next) => {
-	//console.log("fetching leetcode");
+  console.log("fetching leetcode");
 	const { link, type, userId, sessionId } = req.body;
 	const savedCode = serializeDoc(getNewDoc());
 
 	const leetcode = new Leetcode(link);
 	const leetcodeRes = await leetcode.fetch();
-	// //console.log("after fetching", leetcodeRes);
-	if (!leetcodeRes)
-		return next(new NotFoundLinkError("error in fetching leetcode"));
+  // console.log("after fetching", leetcodeRes);
+	if (!leetcodeRes) return next(new NotFoundLinkError("error in fetching leetcode"));
 
 	const title = leetcode.getTitle();
 	const question = leetcode.getQuestion();
@@ -90,7 +89,7 @@ const createLeetcodeDocument = async (req, res, next) => {
 
 		res.status(200).json(document);
 	} catch (e) {
-		//console.log(e.message);
+		console.log(e.message);
 		res.status(403).json(e.message);
 	}
 };
@@ -110,7 +109,7 @@ const getDocument = async (req, res, next) => {
 
 		res.status(200).json(documentInfo);
 	} catch (e) {
-		//console.log(e);
+		console.log(e);
 		res.status(500).json(e);
 	}
 };
@@ -131,7 +130,7 @@ const updateDocument = async (req, res, next) => {
 
 		res.status(200).json(document);
 	} catch (e) {
-		//console.log(e);
+		console.log(e);
 		res.status(500).json(e);
 	}
 };
@@ -143,7 +142,7 @@ const deleteDocument = async (req, res, next) => {
 
 	try {
 		const deletedDocument = await Document.findByIdAndDelete(_id);
-		//console.log(deletedDocument);
+		console.log(deletedDocument);
 		const { sessionId } = deletedDocument;
 		// TODO: delete from the session as well
 
@@ -155,10 +154,10 @@ const deleteDocument = async (req, res, next) => {
 			{ new: true, safe: true }
 		);
 
-		//console.log(session);
+		console.log(session);
 		res.status(202).json(deletedDocument);
 	} catch (e) {
-		//console.log(e);
+		console.log(e);
 		res.status(500).json(e);
 	}
 };

@@ -8,9 +8,9 @@ cors({ origin: true });
 
 const editTitle = (title) => {
 	title = title.trim();
-	let idx = title.indexOf(".");
+	let idx = title.indexOf('.');
 	title = title.substring(idx + 2, title.length);
-};
+}
 
 class LeetCode {
 	constructor(link) {
@@ -30,12 +30,12 @@ class LeetCode {
 		const isValid = await this.validate(this.link);
 		if (!isValid) return null;
 
-		//console.log("launching puppeteer");
-		const browser = await puppeteer.launch({ args: ["--no-sandbox"] });
+		console.log("launching puppeteer");
+		const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
 		const page = await browser.newPage();
-		//console.log("launched puppeteer");
+		console.log("launched puppeteer");
 
-		//console.log("Fetching", this.link);
+		console.log("Fetching", this.link);
 		try {
 			await page.goto(this.link, { waitUntil: "networkidle0", timeout: 0 });
 		} catch (e) {
@@ -43,19 +43,20 @@ class LeetCode {
 		}
 
 		const html = await page.content();
-		//console.log("fetched, scrapping");
+		console.log("fetched, scrapping");
 		const $ = cheerio.load(html);
 		$.html();
 
 		let title = $("div[data-cy=question-title]").text();
 		title = title.trim();
-		let idx = title.indexOf(".");
+		let idx = title.indexOf('.');
 		title = title.substring(idx + 2, title.length);
-		//console.log("title scrapped", title);
+		console.log("title scrapped", title);
 
 		let descp = $("div .question-content__JfgR").get();
 		descp = $.html(descp);
-		//console.log("description scrapped");
+		console.log("description scrapped");
+
 
 		const boilerPlateLine = [];
 		$("span[role=presentation]").each(function (i, elem) {
@@ -63,7 +64,7 @@ class LeetCode {
 		});
 
 		await browser.close();
-		//console.log("puppetter closed");
+		console.log("puppetter closed");
 
 		const details = {
 			title: title,
@@ -72,7 +73,7 @@ class LeetCode {
 		};
 
 		this.details = details;
-		// //console.log(details);
+		// console.log(details);
 
 		return details;
 	}
@@ -84,7 +85,7 @@ class LeetCode {
 
 		try {
 			const res = await axios.head(link);
-			//console.log(res.status);
+			console.log(res.status);
 			if (res.status != 200) return false;
 		} catch (e) {
 			return false;
@@ -115,7 +116,7 @@ module.exports = LeetCode;
 // const lc = new LeetCode('https://leetcode.com/problems/balance-a-binary-search-tree/');
 
 // const res = await lc.fetch();
-// //console.log(res);
+// console.log(res);
 // const temp = setImage(res.description);
 // const leetcodeJSX = {...res, description: temp};
-// //console.log(leetcodeJSX);
+// console.log(leetcodeJSX);

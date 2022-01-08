@@ -10,21 +10,21 @@ const googleCallback = async (req, res, next) => {
 
 	try {
 		const googleUser = await getGoogleUser({ code });
-		// //console.log("google user", googleUser);
+		// console.log("google user", googleUser);
 
 		const { email, name, id, picture } = googleUser;
 
 		var user = await User.findOne({ email });
 
 		if (!user) {
-			//console.log("creating new user");
+			console.log("creating new user");
 			user = await User.create({ email, name, googleID: id, picture });
 		}
 
 		res.locals._id = user._id;
 		next();
 	} catch (e) {
-		//console.error(e);
+		console.error(e);
 		res.status(500).json(e);
 	}
 };
@@ -39,12 +39,12 @@ const verifyJWT = async (req, res, next) => {
 
 	try {
 		const decoded = jwt.verify(jwtToken, process.env.JWT_PRIVATE_KEY);
-		//console.log("decoded", decoded);
+		console.log("decoded", decoded);
 		res.locals._id = decoded._id;
 
 		next();
 	} catch (e) {
-		//console.error("error in verify jwt", e);
+		console.error("error in verify jwt", e);
 		res.status(403).json(e);
 	}
 };
