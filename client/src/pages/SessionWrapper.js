@@ -83,7 +83,7 @@ export default function SessionWrapper() {
 	}, [userId]);
 
 	useEffect(() => {
-		async(() => {
+		(async() => {
 			try {
 				console.log("useEffect -> [Session]");
 				console.log("fetching session data....");
