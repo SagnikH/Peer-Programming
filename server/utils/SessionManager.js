@@ -58,12 +58,12 @@ class AutomergeStore {
 
     // return changes or null
     getAllChanges(docId) {
-        if (!this.has(docId)) return null; 
+        if (!this.has(docId)) return null;
         return serializeChanges(Automerge.getAllChanges(this.get(docId)));
     }
 
     applyChanges(docId, changes) {
-        if (!this.has(docId)) return false; 
+        if (!this.has(docId)) return false;
         const [newDoc] = Automerge.applyChanges(this.get(docId), deserializeChanges(changes));
         this.#set(docId, newDoc);
         return true;
@@ -181,6 +181,11 @@ function SessionManager(io, dbManager) {
             socket.to(roomId).emit('user-connected', { userId, userName })
 
             socket.on('disconnect', () => {
+                socket.to(roomId).emit('user-disconnected', userId)
+                console.log("user disconnected");
+
+            })
+            socket.on('video-disconnected', (userId) => {
                 socket.to(roomId).emit('user-disconnected', userId)
                 console.log("user disconnected");
 
