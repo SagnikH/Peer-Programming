@@ -18,9 +18,9 @@ const PORT = process.env.PORT;
 	try {
 		const connection = await mongoose.connect(URI);
 
-		console.log("connected to db");
+		//console.log("connected to db");
 	} catch (e) {
-		console.log(e);
+		//console.log(e);
 	}
 })();
 
@@ -34,7 +34,7 @@ const io = require("socket.io")(server, {
 });
 
 const [notifyDocListUpdated] = SessionManager(io, new DBManager());
-// TODO: when new document added to session or document deleted 
+// TODO: when new document added to session or document deleted
 // from session call notifyDocListUpdated(sessionId);
 
 app.use(express.json());
@@ -58,7 +58,7 @@ app.get("/", (req, res) => {
 
 //error handler should be handled at the end
 app.use((err, req, res, next) => {
-	// console.log("error handler", err);
+	// //console.log("error handler", err);
 	if (res.headersSent) {
 		return next(err);
 	}
@@ -73,7 +73,7 @@ app.use((err, req, res, next) => {
 
 // replacing
 // app.listen(PORT, () => {
-// 	console.log("connected to port 4000");
+// 	//console.log("connected to port 4000");
 // });
 // by server.listen to allow socket.io to listen on same port
 server.listen(PORT);

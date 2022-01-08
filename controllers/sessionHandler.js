@@ -7,9 +7,9 @@ const ObjectId = mongoose.Types.ObjectId;
 
 const createSession = async (req, res) => {
 	const { name, userId } = req.body;
-	console.log("creating session", { name, userId });
+	//console.log("creating session", { name, userId });
 	// documents.documentId = mongoose.Types.ObjectId(documents.documentId);
-	// console.log(documents.documentId);
+	// //console.log(documents.documentId);
 
 	try {
 		//TODO: check userid validity
@@ -20,7 +20,7 @@ const createSession = async (req, res) => {
 			sessionId: session._id,
 			createdAt: session.createdAt,
 		};
-		console.log("server userSession", userSession);
+		//console.log("server userSession", userSession);
 
 		const user = await User.findByIdAndUpdate(
 			userId,
@@ -28,11 +28,11 @@ const createSession = async (req, res) => {
 			{ new: true }
 		);
 
-		console.log(user);
+		//console.log(user);
 
 		res.status(200).json(session);
 	} catch (e) {
-		console.log("error in session", e.message);
+		//console.log("error in session", e.message);
 		res.status(403).json(e.message);
 	}
 };
@@ -43,7 +43,7 @@ const addSharedSession = async (req, res) => {
 
 	try {
 		const session = await Session.findById(_id);
-		// console.log(session);
+		// //console.log(session);
 
 		const sharedSession = {
 			name: session.name,
@@ -63,17 +63,17 @@ const addSharedSession = async (req, res) => {
 				{ new: true }
 			);
 
-			console.log(user);
+			//console.log(user);
 
 			res.status(200).json(session);
 			return;
 		}
 
-		console.log("shared session dbRes", dbRes);
+		//console.log("shared session dbRes", dbRes);
 		//shared session already present
 		res.status(200).json(null);
 	} catch (e) {
-		console.error(e);
+		//console.error(e);
 		res.status(500).json("error in shared sessions checking");
 	}
 };
@@ -93,7 +93,7 @@ const getSession = async (req, res, next) => {
 		res.status(200).json(sessionInfo);
 	} catch (e) {
 		//404 -> data not found
-		console.log(e);
+		//console.log(e);
 		res.status(500).json(e);
 	}
 };
@@ -105,7 +105,7 @@ const updateSession = async (req, res, next) => {
 
 	const { documentId, title } = req.body;
 	const document = { documentId, title };
-	// console.log(document);
+	// //console.log(document);
 	if (!ObjectId.isValid(documentId))
 		return next(new NotFoundError("invalid document id"));
 
@@ -120,7 +120,7 @@ const updateSession = async (req, res, next) => {
 
 		res.status(200).json(session);
 	} catch (e) {
-		console.log(e);
+		//console.log(e);
 		res.status(500).json(e);
 	}
 };
@@ -133,7 +133,7 @@ const deleteSession = async (req, res, next) => {
 
 	try {
 		const deletedSession = await Session.findByIdAndDelete(_id);
-		console.log("deleted session", deletedSession);
+		//console.log("deleted session", deletedSession);
 
 		//if session doesnot exist it returns null -> so throw a custom error
 		if (deletedSession === null)
@@ -157,13 +157,13 @@ const deleteSession = async (req, res, next) => {
 			const _id = doc.documentId;
 
 			const deletedDoc = await Document.findByIdAndDelete(_id);
-			console.log("Session handler -> deleted doc", deletedDoc);
+			//console.log("Session handler -> deleted doc", deletedDoc);
 		});
 
 		//use this user to update frontend state (maybe)
 		res.status(202).json(deletedSession);
 	} catch (e) {
-		console.log(e);
+		//console.log(e);
 		res.status(500).json(e);
 	}
 };
@@ -171,14 +171,14 @@ const deleteSession = async (req, res, next) => {
 const deleteSharedSession = async (req, res, next) => {
 	const _id = req.params.id;
 	const { userId } = req.body;
-  console.log("shared", userId);
+	//console.log("shared", userId);
 
 	if (!ObjectId.isValid(_id))
 		return next(new NotFoundError("invalid document id"));
 
 	try {
 		const deletedSharedSession = await Session.findById(_id);
-		console.log("deleted shared session", deletedSharedSession);
+		//console.log("deleted shared session", deletedSharedSession);
 
 		const user = await User.findByIdAndUpdate(
 			userId,
@@ -190,7 +190,7 @@ const deleteSharedSession = async (req, res, next) => {
 
 		res.status(202).json(deletedSharedSession);
 	} catch (e) {
-		console.log(e);
+		//console.log(e);
 		res.status(500).json(e);
 	}
 };

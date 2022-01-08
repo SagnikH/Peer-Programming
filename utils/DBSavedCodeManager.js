@@ -12,7 +12,7 @@ const Document = require("../models/documentModel");
 
 class DBSavedCodeManager {
 	constructor() {
-		console.log("Document collection object");
+		//console.log("Document collection object");
 	}
 
 	//checks if the given docId is a valid ObjectId datatype
@@ -31,7 +31,7 @@ class DBSavedCodeManager {
 
 			return docInfo;
 		} catch (e) {
-			console.log("Error in fetching document in class", e);
+			//console.log("Error in fetching document in class", e);
 
 			return null;
 		}
@@ -63,7 +63,7 @@ class DBSavedCodeManager {
 
 			return null;
 		} catch (e) {
-			console.log("error in getting document", e);
+			//console.log("error in getting document", e);
 
 			return null;
 		}
@@ -83,12 +83,11 @@ class DBSavedCodeManager {
 
 			return document;
 		} catch (e) {
-			console.log("error in setting to document");
+			//console.log("error in setting to document");
 
 			return null;
 		}
 	}
 }
-
 
 module.exports = { DBSavedCodeManager };

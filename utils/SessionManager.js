@@ -70,15 +70,15 @@ class AutomergeStore {
     }
 
     log(...data) {
-        console.log("[Automerge Store]", data);
+        //console.log("[Automerge Store]", data);
     }
 }
 
 
 function SessionManager(io, dbManager) {
-    console.log("setting up session manager");
+    //console.log("setting up session manager");
     const automergeStore = new AutomergeStore(dbManager.dbSavedCodeManager);
-    function log(...data) { console.log("[Session Manager]", data); }
+    function log(...data) { //console.log("[Session Manager]", data); }
 
     async function docInit(socket, docId) {
         if (!automergeStore.has(docId)) await automergeStore.load(docId);
@@ -106,7 +106,7 @@ function SessionManager(io, dbManager) {
         await socket.leave(docId);
         const sockets = await io.in(docId).allSockets();
         if (sockets.size === 0) {
-            console.log("Archived: ", docId);
+            //console.log("Archived: ", docId);
             await automergeStore.archive(docId);
         } else {
             socket.to(socket.sessionId).emit(CLIENT_CLOSED_DOC, { clientId: socket.id, docId });
@@ -174,7 +174,7 @@ function SessionManager(io, dbManager) {
 
         // Code from Ronak for video calling
         socket.on('join-room', (roomId, userId, userName) => {
-            console.log('join', roomId, userId);
+            //console.log('join', roomId, userId);
 
 
             socket.join(roomId)
@@ -182,12 +182,12 @@ function SessionManager(io, dbManager) {
 
             socket.on('disconnect', () => {
                 socket.to(roomId).emit('user-disconnected', userId)
-                console.log("user disconnected");
+                //console.log("user disconnected");
 
             })
             socket.on('video-disconnected', (userId) => {
                 socket.to(roomId).emit('user-disconnected', userId)
-                console.log("user disconnected");
+                //console.log("user disconnected");
 
             })
         })
