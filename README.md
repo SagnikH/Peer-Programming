@@ -105,5 +105,5 @@ If you have any feedback, please reach out to us at peerprogramming.apes@gmail.c
 
 ## License
 
-[MIT](https://choosealicense.com/licenses/mit/)
+[Apache](https://choosealicense.com/licenses/apache-2.0/)
 
