@@ -15,16 +15,16 @@ export default function SyncedMonacoEditor({socket, docId}) {
     const toDisposeRef = useRef(null);  // to store Disposable reference for attached handler
 
     useEffect(() => {
-        console.log("SyncedMonacoEditor:useEffect");
+        // console.log("SyncedMonacoEditor:useEffect");
 
 
         socket.on(CRDT_CHANGES, (data) => {
             if (data.docId === docId) {
-                console.log("change:Applying remote changes");
+                // console.log("change:Applying remote changes");
                 applyRemoteChanges((data.changes));
             }
             else {
-                console.log("change:wrong docId", data);
+                // console.log("change:wrong docId", data);
                 setIsReady(false);
             }
         });
@@ -38,13 +38,13 @@ export default function SyncedMonacoEditor({socket, docId}) {
             } else {
                 setIsReady(false);
             }
-            console.log(DOC_INIT, docId, response);
+            // console.log(DOC_INIT, docId, response);
         });
 
 
 
         return () => {
-            console.log("SyncedMonacoEditor:~useEffect", docId);
+            // console.log("SyncedMonacoEditor:~useEffect", docId);
             if (socket) {
                 socket.off(CRDT_CHANGES);
                 if (socket.connected && docId)
@@ -57,7 +57,7 @@ export default function SyncedMonacoEditor({socket, docId}) {
 
     useEffect(() => {
         if (socket && docId && isReady === false) {
-            console.log("SyncedMonacoEditor:socketCleanUp", docId);
+            // console.log("SyncedMonacoEditor:socketCleanUp", docId);
             socket.off(CRDT_CHANGES);
             if (socket.connected)
                 socket.emit(DOC_CLOSED, { docId: docId });
@@ -75,7 +75,7 @@ export default function SyncedMonacoEditor({socket, docId}) {
             };
             socket.emit(CRDT_CHANGES, data, (response) => {
                 if (!response.ok) {
-                    console.log("emitchange: response not ok", data, response);
+                    // console.log("emitchange: response not ok", data, response);
                     setIsReady(false);
                 }
             });
@@ -140,7 +140,7 @@ export default function SyncedMonacoEditor({socket, docId}) {
 
         // ensure edit is "valid"
         if (editToExecute === null) {
-            console.log("executable edit null", "edits:", edits, "text:", text);
+            // console.log("executable edit null", "edits:", edits, "text:", text);
             return;
         }
 
@@ -210,13 +210,13 @@ export default function SyncedMonacoEditor({socket, docId}) {
         if (text === null || text === undefined) return null;
 
         if (edits.length != 1) {
-            console.log("LENGTH != 1", edits);
+            // console.log("LENGTH != 1", edits);
         }
 
         let range, toInsert = "";
         const edit = edits[0];
         if (edit === null || edit === undefined) {
-            console.log("WHERE EDIT?", edits);
+            // console.log("WHERE EDIT?", edits);
             return null;
         }
 
@@ -229,7 +229,7 @@ export default function SyncedMonacoEditor({socket, docId}) {
             range = getRangeForInsert(edit.index, text);
             toInsert = edit.values.join('');
         } else {
-            console.log("ACTION NOT HANDLED", edits, edit, edit.action);
+            // console.log("ACTION NOT HANDLED", edits, edit, edit.action);
         }
         return { range, text: toInsert };
     }

@@ -22,7 +22,7 @@ export const fetchToken = createAsyncThunk(
 			);
 			return res.status;
 		} catch (e) {
-			console.log("error in authToken thunk", e.response);
+			// console.log("error in authToken thunk", e.response);
 
 			return rejectWithValue(e.response.status);
 		}

@@ -26,10 +26,10 @@ export const fetchSessionById = createAsyncThunk(
 			// console.log(res.data);
 			const { documents, _id, name, userId } = res.data;
 			const actionPayload = { documents, _id, name, userId };
-			console.log("data in session thunk", actionPayload);
+			// console.log("data in session thunk", actionPayload);
 			return actionPayload;
 		} catch (e) {
-			console.log("error in session thunk", e.response);
+			// console.log("error in session thunk", e.response);
 			return rejectWithValue(e.response.status);
 		}
 	}
@@ -61,7 +61,7 @@ export const addNewDocument = createAsyncThunk(
 				createdAt: res.data.createdAt,
 			};
 
-			console.log("creating document async thunk", actionPayload);
+			// console.log("creating document async thunk", actionPayload);
 			return actionPayload;
 		} catch (e) {
 			return rejectWithValue(e.response.status);
@@ -93,7 +93,7 @@ export const addNewLeetcodeDocument = createAsyncThunk(
 				createdAt: res.data.createdAt,
 			};
 
-			console.log("creating Leetcode document async thunk", actionPayload);
+			// console.log("creating Leetcode document async thunk", actionPayload);
 			return actionPayload;
 		} catch (e) {
 			return rejectWithValue(e.response.status);
@@ -110,10 +110,10 @@ export const deleteDocument = createAsyncThunk(
 				`${process.env.REACT_APP_SERVER_URL}/api/document/${documentId}`
 			);
 
-			console.log("deleting session", delDocument.data);
+			// console.log("deleting session", delDocument.data);
 			return delDocument.data._id;
 		} catch (e) {
-			console.log("creation error in session thunk", e.response);
+			// console.log("creation error in session thunk", e.response);
 			return rejectWithValue(e.response.status);
 		}
 	}

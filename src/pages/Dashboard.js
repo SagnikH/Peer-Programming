@@ -29,7 +29,7 @@ const Dashboard = () => {
 
 	//push inside a utility funciton
 	const handleDeleteSession = async (sessionId) => {
-		console.log("deleting session....", sessionId);
+		// console.log("deleting session....", sessionId);
 
 		const canDelete = requestStatus === "idle";
 
@@ -41,9 +41,9 @@ const Dashboard = () => {
 					deleteSession(sessionId)
 				).unwrap();
 
-				console.log("IN dashboard -> session deleted", deletedSession);
+				// console.log("IN dashboard -> session deleted", deletedSession);
 			} catch (e) {
-				console.log(e);
+				// console.log(e);
 
 				window.alert("document not deleted try again");
 			} finally {
@@ -53,7 +53,7 @@ const Dashboard = () => {
 	};
 
 	const handleDeleteSharedSession = async (sessionId) => {
-		console.log("deleting shared session....", sessionId);
+		// console.log("deleting shared session....", sessionId);
 
 		const canDelete = requestStatus === "idle";
 
@@ -65,9 +65,9 @@ const Dashboard = () => {
 					deleteSharedSession({sessionId, userId: user._id})
 				).unwrap();
 
-				console.log("IN dashboard -> shared session deleted", deletedSession);
+				// console.log("IN dashboard -> shared session deleted", deletedSession);
 			} catch (e) {
-				console.log(e);
+				// console.log(e);
 
 				window.alert("document not deleted try again");
 			} finally {

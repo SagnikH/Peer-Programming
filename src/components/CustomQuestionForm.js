@@ -24,13 +24,13 @@ export default function CustomQuestionForm(props) {
 	};
 
 	const handleCreateDoc = async (e) => {
-		console.log("creating doc......");
+		// console.log("creating doc......");
 		e.preventDefault();
 
 		let canSave = requestStatus === "idle";
 
 		canSave = canSave && docTitle && docQuestionText;
-		console.log("Entered custom section", canSave);
+		// console.log("Entered custom section", canSave);
 
 		if (canSave) {
 			try {
@@ -44,19 +44,19 @@ export default function CustomQuestionForm(props) {
 					})
 				).unwrap();
 
-				console.log("IN session -> new document created", docRes);
+				// console.log("IN session -> new document created", docRes);
 
 				props.notifyDocumentUpdate();
 
 				//use this id to navigate to desired page
 				const URL = `doc/${docRes.documentId}`;
-				console.log("custom q form navigate", URL);
+				// console.log("custom q form navigate", URL);
 				setRequestStatus("idle");
 				navigate(URL);
 
 				//TODO: handle new url routing
 			} catch (e) {
-				console.log(e);
+				// console.log(e);
 
 				window.alert("document not created try again");
 				setRequestStatus("idle");

@@ -41,39 +41,39 @@ export default function SessionWrapper() {
 	useEffect(() => {
 		if (!userId || !id) {
 			return () => {
-				console.log("userId or id not set");
+				// console.log("userId or id not set");
 			};
 		}
 
-		console.log("New Session", id);
-		console.log("userId", userId);
+		// console.log("New Session", id);
+		// console.log("userId", userId);
 		const socket = io(URL, { auth: { userId, sessionId: id } });
 		setSocket(socket);
-		socket.onAny((event, ...args) => console.log(event, args));
+		// socket.onAny((event, ...args) => console.log(event, args));
 		socket.on("connect", () => {
-			console.log("Connected!");
+			// console.log("Connected!");
 			setConnected(true);
 		});
 		socket.on("disconnect", (reason) => {
-			console.log("disconnected:", reason);
+			// console.log("disconnected:", reason);
 			setConnected(false);
 		});
 
 		socket.on(SESSION_INIT, (data) => {
-			console.log("session init", data);
+			// console.log("session init", data);
 		});
 
 		socket.on(DOC_LIST_UPDATED, () => {
 			try {
-				console.log("updating document list");
+				// console.log("updating document list");
 				docListUpdated();
 			} catch (err) {
-				console.log(err);
+				// console.log(err);
 			}
 		});
 
 		return () => {
-			console.log("session cleanup");
+			// console.log("session cleanup");
 			if (socket) {
 				if (socket.connected) socket.disconnect();
 				socket.offAny(); // remove all event listeners
@@ -85,15 +85,15 @@ export default function SessionWrapper() {
 	useEffect(() => {
 		(async () => {
 			try {
-				console.log("useEffect -> [Session]");
-				console.log("fetching session data....");
+				// console.log("useEffect -> [Session]");
+				// console.log("fetching session data....");
 				const session = await dispatch(fetchSessionById(id)).unwrap();
 
 				//check if the session is created by the user
 				dispatch(addSharedSession({ sessionId: id, userId: userId }));
 				setLoading(false);  
 			} catch (e) {
-				console.log(e);
+				// console.log(e);
 				setLoading(false);
 				setError(true);
 			}
@@ -106,14 +106,14 @@ export default function SessionWrapper() {
 	}
 
 	if (loading) {
-		console.log("loading");
+		// console.log("loading");
 		return <Loading />;
 	} else if (error) {
-		console.log("error failed");
+		// console.log("error failed");
 		return <Error404 />;
 	} else if (!loading) {
 		if (!connected) {
-			console.log("not connected");
+			// console.log("not connected");
 			return <Loading />;
 		} else {
 			return (

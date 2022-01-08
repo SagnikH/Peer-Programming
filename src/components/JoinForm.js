@@ -55,7 +55,7 @@ export default function JoinForm() {
 	}	
 
 	useEffect(() => {
-		console.log("modalResponse :", modalResponse);
+		// console.log("modalResponse :", modalResponse);
 
 		const canSave = requestStatus === "idle" && modalResponse;
 
@@ -71,13 +71,13 @@ export default function JoinForm() {
 
 					//remove states
 
-					console.log(sessRes); //newly created session data
+					// console.log(sessRes); //newly created session data
 					setRequestStatus("idle");
 
 					const URL = `/session/${sessRes.sessionId}`;
 					navigate(URL);
 				} catch (e) {
-					console.log(e);
+					// console.log(e);
 
 					//catches error, show a generic alert
 					window.alert("enter session name / refresh");

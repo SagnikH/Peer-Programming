@@ -35,12 +35,12 @@ const Doc = () => {
 					}
 				);
 
-				console.log("saved code in doc", doc.data);
+				// console.log("saved code in doc", doc.data);
 				setEditorData(doc.data.savedCode);
         		setQuestion(doc.data.question);
 				setTitle(doc.data.title);
 			} catch (e) {
-				console.log(e);
+				// console.log(e);
 				setError(e.response.status);
 			} finally {
 				setLoading(false);
@@ -62,9 +62,9 @@ const Doc = () => {
 				{ withCredentials: true }
 			);
 
-			console.log("after saving doc ", savedDoc);
+			// console.log("after saving doc ", savedDoc);
 		} catch (e) {
-			console.log("error in doc", e);
+			// console.log("error in doc", e);
 		}
 	};
 
@@ -72,7 +72,7 @@ const Doc = () => {
 		let currentUrl = window.location + "";
 		let indexOfDoc = currentUrl.indexOf('/doc/');
 		let goToUrl = currentUrl.slice(0, indexOfDoc);
-		console.log(goToUrl);
+		// console.log(goToUrl);
 		//navigate(goToUrl);
 		window.location = goToUrl;
 	}
@@ -80,7 +80,7 @@ const Doc = () => {
 	if (loading) {
 		return <Loading />;
 	} else if (error) {
-		console.log("error in doc");
+		// console.log("error in doc");
 		return <Error404 />;
 	} else {
 		return (
