@@ -91,7 +91,7 @@ export default function SessionWrapper() {
 
 				//check if the session is created by the user
 				dispatch(addSharedSession({ sessionId: id, userId: userId }));
-				setLoading(false);
+				setLoading(false);  
 			} catch (e) {
 				console.log(e);
 				setLoading(false);
@@ -106,14 +106,14 @@ export default function SessionWrapper() {
 	}
 
 	if (loading) {
-		// console.log("loading");
+		console.log("loading");
 		return <Loading />;
 	} else if (error) {
-		// console.log("error failed");
+		console.log("error failed");
 		return <Error404 />;
 	} else if (!loading) {
 		if (!connected) {
-			// console.log("not connected");
+			console.log("not connected");
 			return <Loading />;
 		} else {
 			return (

@@ -1,14 +1,14 @@
 import styles from "../styles/doc.module.css";
+import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useOutletContext, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useOutletContext } from "react-router-dom";
 import SyncedMonacoEditor from "../components/SyncedMonacoEditor";
-import ShareIcon from "../components/ShareIcon";
+import ShareIcon from '../components/ShareIcon';
 import Error404 from "./Error404";
 import Loading from "../components/Loading";
-import BackButton from "../components/BackButton.js";
 import { config } from "dotenv";
+import BackButton from '../components/BackButton.js';
 config();
 
 const Doc = () => {
@@ -18,10 +18,11 @@ const Doc = () => {
 	const [editorData, setEditorData] = useState("");
 	const [error, setError] = useState(null);
 	const [loading, setLoading] = useState(true);
-	const [question, setQuestion] = useState("");
-	const [title, setTitle] = useState("");
+  	const [question, setQuestion] = useState("");
+	const [title, setTitle] = useState("")
 
 	const socket = useOutletContext();
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		//fetch curr doc data
@@ -36,7 +37,7 @@ const Doc = () => {
 
 				console.log("saved code in doc", doc.data);
 				setEditorData(doc.data.savedCode);
-				setQuestion(doc.data.question);
+        		setQuestion(doc.data.question);
 				setTitle(doc.data.title);
 			} catch (e) {
 				console.log(e);
@@ -69,12 +70,12 @@ const Doc = () => {
 
 	const goBackHandler = () => {
 		let currentUrl = window.location + "";
-		let indexOfDoc = currentUrl.indexOf("/doc/");
+		let indexOfDoc = currentUrl.indexOf('/doc/');
 		let goToUrl = currentUrl.slice(0, indexOfDoc);
 		console.log(goToUrl);
 		//navigate(goToUrl);
 		window.location = goToUrl;
-	};
+	}
 
 	if (loading) {
 		return <Loading />;
@@ -84,21 +85,16 @@ const Doc = () => {
 	} else {
 		return (
 			<div className={styles.docContainer}>
-				<div>
-					<div className="d-flex justify-content-between align-items-center">
-						<div style={{ marginLeft: "20px" }} onClick={goBackHandler}>
-							<BackButton />
+				<div >
+					<div className='d-flex justify-content-between align-items-center'>
+						<div style={{marginLeft: '20px'}} onClick={goBackHandler}>
+							<BackButton/>
 						</div>
 						<div className={styles.qHeading}>Question: {title}</div>
-						<div style={{ width: "50px" }}>
-							<ShareIcon link={window.location} />
-						</div>
+						<div style={{width: '50px'}}><ShareIcon link={window.location}/></div>
 					</div>
-
-					<div
-						className={styles.question}
-						dangerouslySetInnerHTML={{ __html: question }}
-					></div>
+					
+					<div className={styles.question} dangerouslySetInnerHTML={{ __html: question }}></div>
 				</div>
 				<div className={styles.monacoEditor}>
 					<SyncedMonacoEditor socket={socket} docId={did} />
@@ -109,5 +105,6 @@ const Doc = () => {
 };
 
 export default Doc;
+
 
 // <div dangerouslySetInnerHTML={{ __html: lc }}></div>

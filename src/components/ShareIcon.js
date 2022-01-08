@@ -9,9 +9,9 @@ export default function ShareIcon(props) {
 	const message = `The link was successfully copied. 
         Share the link to your peers! Happy collaborative 
         programming.`;
-
+        
 	const shareHandler = async () => {
-		await navigator.clipboard.writeText("https://" + link);
+		await navigator.clipboard.writeText('https://' + link);
 		setShowModal(true);
 	};
 

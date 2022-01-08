@@ -1,6 +1,7 @@
 import JoinForm from "../components/JoinForm.js";
 import styles from "../styles/home.module.css";
 import coWorking from "../assets/co-working.svg";
+import Footer from "../components/Footer.js";
 
 const Home = () => {
 	return (

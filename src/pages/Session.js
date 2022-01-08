@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Dropdown } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { Spinner } from 'react-bootstrap';
+import { BsShareFill } from "react-icons/bs";
 import { deleteDocument } from "../redux/slices/sessionSlice";
 import SessionList from "../components/SessionList.js";
 import ShareIcon from '../components/ShareIcon.js';
