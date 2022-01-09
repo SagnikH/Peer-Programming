@@ -1,0 +1,8 @@
+/.vscode
+/Other-resources
+
+node_modules/
+
+.env
+
+/package-lock.json

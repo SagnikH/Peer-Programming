@@ -1,0 +1,18 @@
+.main{
+    width: 85%;
+}
+
+.videocall{
+    width: 16vw;
+    height: 86vh;
+}
+
+.videosSection{
+    height: 80vh;
+    overflow: scroll;
+}
+
+.videoButton{
+    color: #4c3b4d;
+    cursor: pointer;
+}

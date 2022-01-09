@@ -1,0 +1,7 @@
+.otherVideos {
+  display: inline;
+}
+
+.myVideos, .remoteVideos{
+  width: 100%;
+}
