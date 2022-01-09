@@ -39,9 +39,9 @@ export default function JoinForm() {
 	const joinLinkHandler = (e) => {
 		e.preventDefault();
 
-		if (!isLoggedIn) {
-			window.location.href = `${process.env.REACT_APP_SERVER_URL}/auth/google`;
-		}
+		// if (!isLoggedIn) {
+		// 	window.location.href = `${process.env.REACT_APP_SERVER_URL}/auth/google`;
+		// }
 
 		//TODO: handle https in production, now its http
     let URL = joinLinkValue;
@@ -50,7 +50,7 @@ export default function JoinForm() {
 		URL = "http://".concat(joinLinkValue);
 		}
 		setJoinLinkValue("");
-			window.open(URL);
+			window.open(URL, "_self");
 		};
 	}	
 
