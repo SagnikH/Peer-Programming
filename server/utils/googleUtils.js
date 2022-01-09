@@ -8,10 +8,16 @@ const oauth2Client = new auth.OAuth2(
 	process.env.CALLBACK_URL
 );
 
-function getGoogleAuthURL() {
+function getGoogleAuthURL({redirect}) {
 	/*
 	 * Generate a url that asks permissions to the user's email and profile
 	 */
+  //default redirect path
+  let state = "/dashboard";
+
+  if(redirect)
+    state = redirect;
+    
 	const scopes = [
 		"https://www.googleapis.com/auth/userinfo.profile",
 		"https://www.googleapis.com/auth/userinfo.email",
@@ -21,6 +27,7 @@ function getGoogleAuthURL() {
 		access_type: "offline",
 		prompt: "consent",
 		scope: scopes, // If you only need one scope you can pass it as string
+    state
 	});
 }
 

@@ -8,7 +8,8 @@ const { getGoogleAuthURL } = require("../utils/googleUtils");
 require("dotenv").config();
 
 router.get("/google", (req, res) => {
-	res.redirect(getGoogleAuthURL());
+	console.log(req.query);
+	res.redirect(getGoogleAuthURL(req.query));
 });
 
 router.get("/google/callback", googleCallback, googleCallbackHandler);

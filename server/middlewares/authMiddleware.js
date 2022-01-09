@@ -7,6 +7,7 @@ require("dotenv").config();
 //send the mongodb _id onto handler
 const googleCallback = async (req, res, next) => {
 	const code = req.query.code;
+  res.locals.redirect = req.query.state;
 
 	try {
 		const googleUser = await getGoogleUser({ code });
