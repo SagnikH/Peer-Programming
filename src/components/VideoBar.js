@@ -3,7 +3,10 @@ import { useEffect, useRef } from 'react';
 import Peer from 'peerjs';
 import '../styles/VideoBar.css'
 
-
+const peers = {}
+let myPeer
+let myVideo
+let myStream
 export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggleCam, userName }) {
     const videoGridRef = useRef(null);
     const [remoteVideos] = useState(new Map());
@@ -17,33 +20,44 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
         console.log(document);
 
         const videoGrid = videoGridRef.current;
-        const myPeer = new Peer()
+        myPeer = new Peer()
         setSelfId(myPeer.id)
-        const myVideo = document.createElement('video')
+        myVideo = document.createElement('video')
         myVideo.className = 'myVideos'
 
         myVideo.muted = true
         setSelfVideo(myVideo)
-        const peers = {}
+        // peers = {}
         navigator.mediaDevices.getUserMedia({
-            video: true,
+            video: false,
             audio: true
         }).then(stream => {
+            myStream = stream
             setSelfStream(stream)
             // setLoading(false)
             addVideoStream(myVideo, stream)
 
             myPeer.on('call', call => {
-                console.log("called by ", call.peer);
+                console.log("called by ", call);
 
                 peers[call.peer] = call;
                 call.answer(stream)
                 const video = createRemoteVideo(call.peer)
 
+                call.peerConnection.ontrack = (event) => {
+                    socket.on('video-toggled', userId => {
+                        console.log("track added", event, userId);
+
+                    })
+
+                }
+
                 call.on('stream', userVideoStream => {
                     addVideoStream(video, userVideoStream)
                 })
             })
+
+
             setStreamReady(true);
             console.log("Stream ready");
             socket.on('user-connected', (user) => {
@@ -77,15 +91,29 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
             setSelfId(id);
 
         })
+        // myPeer.on('connection', conn => {
+        //     console.log("conn", conn);
+
+        // })
 
         function connectToNewUser(userId, stream) {
             console.log("connecting to user ", userId);
 
             const call = myPeer.call(userId, stream).on('error', () => console.log("error happen"))
             const video = createRemoteVideo(userId);
+
+            call.peerConnection.ontrack = (event) => {
+                socket.on('video-toggled', userId => {
+                    console.log("track added", event, userId);
+
+                })
+
+            }
             call.on('stream', userVideoStream => {
                 addVideoStream(video, userVideoStream)
             })
+
+            console.log("call", call);
 
             peers[userId] = call
 
@@ -137,21 +165,59 @@ export default function VideoBar({ socket, roomId, toggleMic, toggleVideo, toggl
 
     useEffect(() => {
 
-        if (selfStream) {
-            console.log("toggled cam", toggleCam);
-            selfStream.getVideoTracks().forEach(track => { track.enabled = toggleCam })
-            // if (!toggleCam) {
-            //     navigator.mediaDevices.getUserMedia({
-            //         video: true,
-            //         audio: true
-            //     }).then(stream => {
-            //         setSelfStream(stream)
-            //         // setLoading(false)
-            //         selfVideo.srcObject = stream
-            //     }
-            //     )
-            // }
 
+        // function replaceStream(peerConnection, mediaStream) {
+        //     console.log(mediaStream.getAudioTracks()[0], mediaStream.getVideoTracks()[0]);
+
+
+
+        //     if (mediaStream.getVideoTracks().length > 0) {
+        //         console.log("adding");
+
+        //         peerConnection.addTrack(mediaStream.getVideoTracks()[0]);
+        //     }
+        //     else {
+        //         console.log("removing");
+        //         for (const sender of peerConnection.getSenders()) {
+        //             peerConnection.removeTrack(sender)
+        //         }
+        //     }
+        // }
+        function replaceStream(mediaStream) {
+            for (const peer in peers) {
+                console.log("loop", peers[peer]);
+
+                if (!peers[peer].peerConnection) continue;
+                for (const sender of peers[peer].peerConnection.getSenders()) {
+                    peers[peer].peerConnection.removeTrack(sender);
+                }
+
+                mediaStream.getTracks().forEach(track => { peers[peer].peerConnection.addTrack(track) })
+                socket.emit('video-toggled', selfId)
+            }
+        }
+
+
+        if (selfStream) selfStream.getTracks().forEach(track => { track.stop() })
+        if (toggleCam) {
+            navigator.mediaDevices.getUserMedia({
+                video: false,
+                audio: true
+            }).then(stream => {
+                myVideo.srcObject = stream;
+                replaceStream(stream)
+                setSelfStream(stream);
+            })
+        }
+        else {
+            navigator.mediaDevices.getUserMedia({
+                video: true,
+                audio: true
+            }).then(stream => {
+                myVideo.srcObject = stream;
+                replaceStream(stream)
+                setSelfStream(stream);
+            })
         }
     }
         , [toggleCam])

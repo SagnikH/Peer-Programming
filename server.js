@@ -43,6 +43,10 @@ io.on('connection', socket => {
             console.log("user disconnected");
 
         })
+        socket.on('video-toggled', (userId) => {
+            socket.to(roomId).emit('user-videp-toggled', userId)
+
+        })
     })
 
     socket.on('user-video-ready', (userId) => {
