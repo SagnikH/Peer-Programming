@@ -7,6 +7,7 @@
 ## Motivation
 
 We found it inconvenient, that for any mock interview we needed to have a gmeet, an editor and a question set open on multiple tabs for a single purpose. This lead us to the idea of an all in one solution for mock interviews.
+
 ## Features
 
 - Collaborative editing
@@ -86,6 +87,12 @@ Start the client ( PORT : 3000 )
 ```
   npm start
 ```
+
+## Future plans
+- Integrate language switching option
+- Sent invite links via social media platforms
+- Admin access control features
+- Online compiler
 
 ## Contributors
 
