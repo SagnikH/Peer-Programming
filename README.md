@@ -99,7 +99,7 @@ Start the client ( PORT : 3000 )
 - [@Sagnik Haldar](https://github.com/SagnikH)
 - [@Subodh Singh](https://github.com/subodh0201)
 - [@Sattam Bandyopadhyay](https://github.com/bsattam)
-- [@Rounak Sanpui](https://github.com/SanpuiRonak)
+- [@Ronak Sanpui](https://github.com/SanpuiRonak)
 
 ## Special thanks
 - [@Soumitri Chattopadhyay](https://github.com/soumitri2001)
