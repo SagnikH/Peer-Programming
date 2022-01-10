@@ -91,7 +91,7 @@ const Doc = () => {
 							<BackButton/>
 						</div>
 						<div className={styles.qHeading}>Question: {title}</div>
-						<div style={{width: '50px'}}><ShareIcon link={window.location}/></div>
+						<div style={{width: '50px'}}><ShareIcon link={window.location.href}/></div>
 					</div>
 					
 					<div className={styles.question} dangerouslySetInnerHTML={{ __html: question }}></div>

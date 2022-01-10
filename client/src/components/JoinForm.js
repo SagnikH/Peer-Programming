@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { createSession } from "../redux/slices/userSlice";
 import InputModal from "./InputModal.js";
-import MessageModal from './MessageModal.js';
+import MessageModal from "./MessageModal.js";
 import { Button, Form } from "react-bootstrap";
 import styles2 from "../styles/home.module.css";
 import styles from "../styles/dashboard.module.css";
@@ -18,7 +18,7 @@ export default function JoinForm() {
 	const [modalResponse, setModalResponse] = useState("");
 	const [requestStatus, setRequestStatus] = useState("idle");
 	const [joinLinkValue, setJoinLinkValue] = useState("");
-	
+
 	const [show, setShow] = useState(false);
 	const [messageModal, setMessageModal] = useState(false);
 	const handleShow = () => {
@@ -44,15 +44,15 @@ export default function JoinForm() {
 		}
 
 		//TODO: handle https in production, now its http
-    let URL = joinLinkValue;
-	if (URL){
-		if(!URL.startsWith("http://")){
-		URL = "http://".concat(joinLinkValue);
-		}
+		let URL = joinLinkValue;
+		// if (URL){
+		// 	if(!URL.startsWith("http://")){
+		// 	URL = "http://".concat(joinLinkValue);
+		// 	}
 		setJoinLinkValue("");
-			window.open(URL);
-		};
-	}	
+		window.open(URL, "_self");
+		// };
+	};
 
 	useEffect(() => {
 		console.log("modalResponse :", modalResponse);
@@ -92,10 +92,10 @@ export default function JoinForm() {
 			<div className={styles.linkButtons}>
 				<InputModal handleName={handleName} show={show} setShow={setShow} />
 				<MessageModal
-					title='Failed to create!'
-					message='Please login first, before trying to create new link.'
+					title="Failed to create!"
+					message="Please login first, before trying to create new link."
 					showModal={messageModal}
-					setShowModal={setMessageModal}			
+					setShowModal={setMessageModal}
 				/>
 
 				<Button className={styles2.formButton} onClick={handleShow}>

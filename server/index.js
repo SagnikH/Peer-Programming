@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/authRoutes");
 const apiRoutes = require("./routes/apiRoutes");
 const { DatabaseError, UserFacingError } = require("./utils/errors/baseErrors");
+const { verifyJWT } = require("./middlewares/authMiddleware");
 require("dotenv").config();
 
 const { DBManager } = require("./utils/DBManager");
@@ -34,7 +35,7 @@ const io = require("socket.io")(server, {
 });
 
 const [notifyDocListUpdated] = SessionManager(io, new DBManager());
-// TODO: when new document added to session or document deleted 
+// TODO: when new document added to session or document deleted
 // from session call notifyDocListUpdated(sessionId);
 
 app.use(express.json());
@@ -50,7 +51,7 @@ app.use(
 
 app.use("/auth", authRoutes);
 //TODO: checkUser middleware implement later
-app.use("/api", apiRoutes);
+app.use("/api", verifyJWT, apiRoutes);
 
 app.get("/", (req, res) => {
 	res.send("homepage");
