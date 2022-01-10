@@ -37,26 +37,31 @@ export default function VideoBar({
                 audio: true,
             })
             .then((stream) => {
-                if (isMounted) setSelfStream(stream);
-                // setLoading(false)
-                addVideoStream(myVideo, stream);
+                if (isMounted) {
+                    setSelfStream(stream);
+                    // setLoading(false)
+                    addVideoStream(myVideo, stream);
 
-                myPeer.on("call", (call) => {
-                    console.log("called by ", call.peer);
+                    myPeer.on("call", (call) => {
+                        console.log("called by ", call.peer);
 
-                    peers[call.peer] = call;
-                    call.answer(stream);
-                    const video = createRemoteVideo(call.peer);
+                        peers[call.peer] = call;
+                        call.answer(stream);
+                        const video = createRemoteVideo(call.peer);
 
-                    call.on("stream", (userVideoStream) => {
-                        addVideoStream(video, userVideoStream);
+                        call.on("stream", (userVideoStream) => {
+                            addVideoStream(video, userVideoStream);
+                        });
                     });
-                });
-                if (isMounted) setStreamReady(true);
-                console.log("Stream ready");
-                socket.on("user-connected", (user) => {
-                    connectToNewUser(user.userId, stream);
-                });
+                    setStreamReady(true);
+                    console.log("Stream ready");
+                    socket.on("user-connected", (user) => {
+                        connectToNewUser(user.userId, stream);
+                    });
+                }
+                else {
+                    stream.getTracks().forEach(track => { track.stop() })
+                }
             });
 
         socket.on("user-disconnected", (userId) => {
