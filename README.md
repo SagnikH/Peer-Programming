@@ -1,7 +1,7 @@
 
 <img src="https://github.com/SagnikH/pair-programming/blob/master/logo.png" />
 
-<h3 align= "center"> A collaborative code editor, for your mock interviews & coding assesments </h3>
+<h3 align= "center"> A collaborative code editor, for your mock interviews & coding assessments </h3>
 </br>
 
 ## Motivation
