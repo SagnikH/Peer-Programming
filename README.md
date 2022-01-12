@@ -4,6 +4,8 @@
 <h3 align= "center"> A collaborative code editor, for your mock interviews & coding assessments </h3>
 </br>
 
+**NOTE: Our app uses cookies to authorize users, please allow cookies to use our app**
+
 ## Motivation
 
 We found it inconvenient, that for any mock interview we needed to have a gmeet, an editor and a question set open on multiple tabs for a single purpose. This lead us to the idea of an all in one solution for mock interviews.
