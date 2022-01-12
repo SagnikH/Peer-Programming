@@ -2,6 +2,9 @@ import React from 'react'
 import styles from '../styles/aboutUs.module.css'
 import favicon from '../assets/peer.png';
 import sattam from '../assets/sattam.jpg';
+import ronak from '../assets/ronak.jpg';
+import sagnik from '../assets/sagnik.jpg';
+import subodh from '../assets/subodh.jpg';
 
 export default function AboutUs() {
     return (
@@ -28,8 +31,91 @@ export default function AboutUs() {
             <div className={styles.person}>
                 <div><img
                     className={styles.personImage}
-                    src={sattam}
+                    src={sagnik}
                 /></div>
+                <div className={styles.personDesc}>
+                    <div className={styles.nameTitle}>Sagnik Halder</div>
+                    <div className={styles.shortPersonDesc}>
+                        Undergraduate student of Jadavpur University, majoring in 
+                        Information Technology. Love to work on Front-end web-technologies. 
+                        Hands on experience in Html, Css, Javascript, React, NodeJs,
+                        Git, Sql and NoSql Databases. 
+                        <br/><br/>
+                        Interested in Cloud computing and Blockchain. 
+                    </div>
+                    <div className='d-flex w-50 justify-content-around'>
+                        <a className={styles.btn} 
+                        href="https://github.com/SagnikH" 
+                        target="_blank">
+                            Github
+                        </a>
+                        <a className={styles.btn} 
+                        href="https://www.linkedin.com/in/sagnik-haldar-126b661b0/" 
+                        target="_blank">
+                            LinkedIn
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div className={styles.person}>
+                <div className={styles.personDesc}>
+                    <div className={styles.nameTitle}>Ronak Sanpui</div>
+                    <div className={styles.shortPersonDesc}>
+                        Undergraduate student of Jadavpur University, majoring in 
+                        Information Technology. Love to work on Front-end web-technologies. 
+                        Hands on experience in Html, Css, Javascript, React, NodeJs,
+                        Git, Sql and NoSql Databases. 
+                        <br/><br/>
+                        Interested in Cloud computing and Blockchain. 
+                    </div>
+                    <div className='d-flex w-50 justify-content-around'>
+                        <a className={styles.btn} 
+                        href="https://github.com/SanpuiRonak" 
+                        target="_blank">
+                            Github
+                        </a>
+                        <a className={styles.btn} 
+                        href="https://www.linkedin.com/in/ronak-sanpui/" 
+                        target="_blank">
+                            LinkedIn
+                        </a>
+                    </div>
+                </div>
+                <div><img
+                    className={styles.personImage}
+                    src={ronak}
+                /></div>
+            </div>
+            <div className={styles.person}>
+                <div><img
+                    className={styles.personImage}
+                    src={subodh}
+                /></div>
+                <div className={styles.personDesc}>
+                    <div className={styles.nameTitle}>Subodh Singh</div>
+                    <div className={styles.shortPersonDesc}>
+                        Undergraduate student of Jadavpur University, majoring in 
+                        Information Technology. Love to work on Front-end web-technologies. 
+                        Hands on experience in Html, Css, Javascript, React, NodeJs,
+                        Git, Sql and NoSql Databases. 
+                        <br/><br/>
+                        Interested in Cloud computing and Blockchain. 
+                    </div>
+                    <div className='d-flex w-50 justify-content-around'>
+                        <a className={styles.btn} 
+                        href="https://github.com/subodh0201" 
+                        target="_blank">
+                            Github
+                        </a>
+                        <a className={styles.btn} 
+                        href="https://www.linkedin.com/in/subodh-singh-ju/" 
+                        target="_blank">
+                            LinkedIn
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div className={styles.person}>
                 <div className={styles.personDesc}>
                     <div className={styles.nameTitle}>Sattam Bandyopadhyay</div>
                     <div className={styles.shortPersonDesc}>
@@ -53,18 +139,10 @@ export default function AboutUs() {
                         </a>
                     </div>
                 </div>
-            </div>
-            <div className={styles.person}>
-                <div className={styles.personImage}></div>
-                <div className={styles.personDesc}></div>
-            </div>
-            <div className={styles.person}>
-                <div className={styles.personImage}></div>
-                <div className={styles.personDesc}></div>
-            </div>
-            <div className={styles.person}>
-                <div className={styles.personImage}></div>
-                <div className={styles.personDesc}></div>
+                <div><img
+                    className={styles.personImage}
+                    src={sattam}
+                /></div>
             </div>
         </div>
     )
