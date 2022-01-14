@@ -11,7 +11,7 @@ export const PrivateRoute = ({ children, redirect }) => {
   const pathname = window.location.pathname;
 
 	useEffect(() => {
-    console.log("location", pathname);
+    // console.log("location", pathname);
 
 		(async () => {
 			try {

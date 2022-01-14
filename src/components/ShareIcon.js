@@ -11,7 +11,7 @@ export default function ShareIcon(props) {
         programming.`;
 
 	const shareHandler = async () => {
-    console.log(link);
+    // console.log(link);
 		let URL = link;
 		if (URL) {
 			if (!URL.startsWith("https://")) {

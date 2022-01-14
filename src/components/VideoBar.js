@@ -42,7 +42,7 @@ export default function VideoBar({
 					addVideoStream(myVideo, stream);
 
 					myPeer.on("call", (call) => {
-						console.log("called by ", call.peer);
+						// console.log("called by ", call.peer);
 
 						peers[call.peer] = call;
 						call.answer(stream);
@@ -53,7 +53,7 @@ export default function VideoBar({
 						});
 					});
 					setStreamReady(true);
-					console.log("Stream ready");
+					// console.log("Stream ready");
 					socket.on("user-connected", (user) => {
 						connectToNewUser(user.userId, stream);
 					});
@@ -65,7 +65,7 @@ export default function VideoBar({
 			});
 
 		socket.on("user-disconnected", (userId) => {
-			console.log("disconnect outside");
+			// console.log("disconnect outside");
 
 			let vid = remoteVideos.get(userId);
 			// console.log(vid);
@@ -79,7 +79,7 @@ export default function VideoBar({
 		});
 
 		myPeer.on("open", (id) => {
-			console.log("Peer Ready");
+			// console.log("Peer Ready");
 
 			if (isMounted) setSelfId(id);
 		});
@@ -113,7 +113,7 @@ export default function VideoBar({
 		}
 		return () => {
 			isMounted = false;
-			console.log("cleanup called");
+			// console.log("cleanup called");
 			socket.emit("video-disconnected", myPeer.id);
 			socket.off("user-connected");
 			socket.off("user-disconnected");
@@ -125,7 +125,7 @@ export default function VideoBar({
 
 	useEffect(() => {
 		if (selfId != null && streamReady) {
-			console.log("emitted join room");
+			// console.log("emitted join room");
 			socket.emit("join-room", roomId, selfId, userName);
 		}
 	}, [streamReady, selfId]);
@@ -142,7 +142,7 @@ export default function VideoBar({
 
 	useEffect(() => {
 		if (selfStream) {
-			console.log("toggled cam", toggleCam);
+			// console.log("toggled cam", toggleCam);
 			selfStream.getVideoTracks().forEach((track) => {
 				track.enabled = toggleCam;
 			});
