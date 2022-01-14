@@ -37,8 +37,7 @@ function getNewDoc(initialText = "") {
     let doc = Automerge.init();
     doc = Automerge.change(doc, (doc) => {
         doc.text = new Automerge.Text();
-        for (let i = 0; i < initialText.length; i++)
-            doc.text.insertAt(i, initialText[i]);
+        doc.text.insertAt(0, ...initialText);
     });
     return doc;
 }
