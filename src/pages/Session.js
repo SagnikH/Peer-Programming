@@ -42,7 +42,7 @@ const Session = () => {
 	};
 
 	const handleDeleteDocument = async (documentId) => {
-		console.log("deleting doc....", documentId);
+		// console.log("deleting doc....", documentId);
 
 		const canDelete = requestStatus === "idle";
 
@@ -54,9 +54,9 @@ const Session = () => {
 
 				notifyDocumentUpdate();
 
-				console.log("IN session -> new document deleted", docRes);
+				// console.log("IN session -> new document deleted", docRes);
 			} catch (e) {
-				console.log(e);
+				// console.log(e);
 
 				window.alert("document not deleted try again");
 			} finally {

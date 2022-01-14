@@ -15,7 +15,7 @@ export const checkAuth = async () => {
 
 		return userPayload;
 	} catch (e) {
-		console.log(e);
+		// console.log(e);
 
 		return null;
 	}

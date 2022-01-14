@@ -22,7 +22,7 @@ export const PrivateRoute = ({ children, redirect }) => {
 				//set load after setting data
 				setisLoaded(true);
 			} catch (e) {
-				console.log(e);
+				// console.log(e);
 
 				setisLoaded(true);
 			}

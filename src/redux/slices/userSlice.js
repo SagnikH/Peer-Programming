@@ -20,9 +20,9 @@ export const createSession = createAsyncThunk(
 
 	async ({ name, userId }, { rejectWithValue }) => {
 		try {
-			console.log("creating session thunk", { name, userId });
+			// console.log("creating session thunk", { name, userId });
 
-			console.log("sending request for session");
+			// console.log("sending request for session");
 
 			const session = await axios.post(
 				`${process.env.REACT_APP_SERVER_URL}/api/session`,
@@ -37,11 +37,11 @@ export const createSession = createAsyncThunk(
 				sessionId: session.data._id,
 				createdAt: session.data.createdAt,
 			};
-			console.log("server userSession", userSession);
+			// console.log("server userSession", userSession);
 
 			return userSession;
 		} catch (e) {
-			console.log("creation error in session thunk", e.response);
+			// console.log("creation error in session thunk", e.response);
 			return rejectWithValue(e.response.status);
 		}
 	}
@@ -52,9 +52,9 @@ export const addSharedSession = createAsyncThunk(
 
 	async ({ sessionId, userId }, { rejectWithValue }) => {
 		try {
-			console.log("creating shared session thunk", { userId });
+			// console.log("creating shared session thunk", { userId });
 
-			console.log("sending request for session");
+			// console.log("sending request for session");
 
 			const session = await axios.post(
 				`${process.env.REACT_APP_SERVER_URL}/api/session/shared/${sessionId}`,
@@ -62,7 +62,7 @@ export const addSharedSession = createAsyncThunk(
 				{ withCredentials: true }
 			);
 
-			console.log("new shared session created", session.data);
+			// console.log("new shared session created", session.data);
 
 			if (session.data) {
 				const sharedSession = {
@@ -71,11 +71,11 @@ export const addSharedSession = createAsyncThunk(
 					createdAt: session.data.createdAt,
 				};
 
-				console.log("server sharedSession", sharedSession);
+				// console.log("server sharedSession", sharedSession);
 				return sharedSession;
 			} else return "";
 		} catch (e) {
-			console.log("creation error in session thunk", e.response);
+			// console.log("creation error in session thunk", e.response);
 			return rejectWithValue(e.response.status);
 		}
 	}
@@ -91,10 +91,10 @@ export const deleteSession = createAsyncThunk(
 				{ withCredentials: true }
 			);
 
-			console.log("deleting session", delSession.data);
+			// console.log("deleting session", delSession.data);
 			return delSession.data._id;
 		} catch (e) {
-			console.log("creation error in session thunk", e.response);
+			// console.log("creation error in session thunk", e.response);
 			return rejectWithValue(e.response.status);
 		}
 	}
@@ -105,17 +105,17 @@ export const deleteSharedSession = createAsyncThunk(
 
 	async ({ sessionId, userId }, { rejectWithValue }) => {
 		try {
-			console.log({ userId });
+			// console.log({ userId });
 			const delSession = await axios.patch(
 				`${process.env.REACT_APP_SERVER_URL}/api/session/shared/${sessionId}`,
 				{ userId },
 				{ withCredentials: true }
 			);
 
-			console.log("deleting shared session", delSession.data);
+			// console.log("deleting shared session", delSession.data);
 			return delSession.data._id;
 		} catch (e) {
-			console.log("creation error in shared session thunk", e.response);
+			// console.log("creation error in shared session thunk", e.response);
 			return rejectWithValue(e.response.status);
 		}
 	}
@@ -136,10 +136,10 @@ export const fetchUser = createAsyncThunk(
 
 			const actionPayload = res.data;
 
-			console.log("data from user thunk", actionPayload);
+			// console.log("data from user thunk", actionPayload);
 			return actionPayload;
 		} catch (e) {
-			console.log("error in user thunk", e);
+			// console.log("error in user thunk", e);
 
 			return rejectWithValue(e.response.status);
 		}
@@ -185,7 +185,7 @@ export const useSlice = createSlice({
 			state.status = "failed";
 
 			if (action.payload) {
-				console.log("payload", action.payload);
+				// console.log("payload", action.payload);
 				// Being that we passed in ValidationErrors to rejectType in `createAsyncThunk`, the payload will be available here.
 				state.error = action.payload;
 			} else {
@@ -207,7 +207,7 @@ export const useSlice = createSlice({
 					.indexOf(_id);
 
 				if (pos === -1) {
-					console.log("pelam na");
+					// console.log("pelam na");
 					state.sharedSessions.push(action.payload);
 				}
 			}

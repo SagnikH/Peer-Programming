@@ -36,16 +36,16 @@ const Leetcodequestionform = (props) => {
 					})
 				).unwrap();
 
-				console.log("IN session -> new document created", docRes);
+				// console.log("IN session -> new document created", docRes);
 				props.notifyDocumentUpdate();
 				//use this id to navigate to desired page
 				const URL = `doc/${docRes.documentId}`;
-				console.log("custom q form navigate", URL);
+				// console.log("custom q form navigate", URL);
 				setRequestStatus("idle");
 				props.setFetching(1);
 				navigate(URL);
 			} catch (e) {
-				console.log(e);
+				// console.log(e);
 
 				props.setFetching(3);
 				setRequestStatus("idle");
