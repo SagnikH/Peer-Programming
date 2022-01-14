@@ -1,12 +1,15 @@
 
 <img src="https://github.com/SagnikH/pair-programming/blob/master/logo.png" />
 
-<h3 align= "center"> A collaborative code editor, for your mock interviews & coding assesments </h3>
+<h3 align= "center"> A collaborative code editor, for your mock interviews & coding assessments </h3>
 </br>
+
+**NOTE: Our app uses cookies to authorize users, please allow cookies to use our app**
 
 ## Motivation
 
 We found it inconvenient, that for any mock interview we needed to have a gmeet, an editor and a question set open on multiple tabs for a single purpose. This lead us to the idea of an all in one solution for mock interviews.
+
 ## Features
 
 - Collaborative editing
@@ -87,12 +90,18 @@ Start the client ( PORT : 3000 )
   npm start
 ```
 
+## Future plans
+- Integrate language switching option
+- Sent invite links via social media platforms
+- Admin access control features
+- Online compiler
+
 ## Contributors
 
 - [@Sagnik Haldar](https://github.com/SagnikH)
 - [@Subodh Singh](https://github.com/subodh0201)
 - [@Sattam Bandyopadhyay](https://github.com/bsattam)
-- [@Rounak Sanpui](https://github.com/SanpuiRonak)
+- [@Ronak Sanpui](https://github.com/SanpuiRonak)
 
 ## Special thanks
 - [@Soumitri Chattopadhyay](https://github.com/soumitri2001)
