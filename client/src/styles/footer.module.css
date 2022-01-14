@@ -13,3 +13,7 @@
     color: white;
     margin-left: 10px;
 }
+
+.footerLink:hover{
+    color: #FB750D !important;
+}
