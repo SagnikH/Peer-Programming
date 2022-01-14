@@ -29,6 +29,35 @@ export default function AboutUs() {
             </div>
             <div className={styles.contributors}>Contributors</div>
             <div className={styles.person}>
+                <div className={styles.personDesc}>
+                    <div className={styles.nameTitle}>Sattam Bandyopadhyay</div>
+                    <div className={styles.shortPersonDesc}>
+                        Undergraduate student of Jadavpur University, majoring in 
+                        Information Technology. Love to work on Front-end web-technologies. 
+                        Hands on experience in Html, Css, Javascript, React, NodeJs,
+                        Git, Sql and NoSql Databases. 
+                        <br/><br/>
+                        Interested in Cloud computing and Blockchain. 
+                    </div>
+                    <div className='d-flex w-50 justify-content-around'>
+                        <a className={styles.btn} 
+                        href="https://github.com/bsattam" 
+                        target="_blank">
+                            Github
+                        </a>
+                        <a className={styles.btn} 
+                        href="https://www.linkedin.com/in/sattam-bandyopadhyay/" 
+                        target="_blank">
+                            LinkedIn
+                        </a>
+                    </div>
+                </div>
+                <div><img
+                    className={styles.personImage}
+                    src={sattam}
+                /></div>
+            </div>
+            <div className={styles.person}>
                 <div><img
                     className={styles.personImage}
                     src={sagnik}
@@ -95,11 +124,10 @@ export default function AboutUs() {
                     <div className={styles.nameTitle}>Subodh Singh</div>
                     <div className={styles.shortPersonDesc}>
                         Undergraduate student of Jadavpur University, majoring in 
-                        Information Technology. Love to work on Front-end web-technologies. 
-                        Hands on experience in Html, Css, Javascript, React, NodeJs,
-                        Git, Sql and NoSql Databases. 
+                        Information Technology. Love to work on Back-end web-technologies. 
+                        Hands on experience in Javascript, NodeJs, React, Git.
                         <br/><br/>
-                        Interested in Cloud computing and Blockchain. 
+                        Interested in pretty much everything related to Computers. 
                     </div>
                     <div className='d-flex w-50 justify-content-around'>
                         <a className={styles.btn} 
@@ -114,35 +142,6 @@ export default function AboutUs() {
                         </a>
                     </div>
                 </div>
-            </div>
-            <div className={styles.person}>
-                <div className={styles.personDesc}>
-                    <div className={styles.nameTitle}>Sattam Bandyopadhyay</div>
-                    <div className={styles.shortPersonDesc}>
-                        Undergraduate student of Jadavpur University, majoring in 
-                        Information Technology. Love to work on Front-end web-technologies. 
-                        Hands on experience in Html, Css, Javascript, React, NodeJs,
-                        Git, Sql and NoSql Databases. 
-                        <br/><br/>
-                        Interested in Cloud computing and Blockchain. 
-                    </div>
-                    <div className='d-flex w-50 justify-content-around'>
-                        <a className={styles.btn} 
-                        href="https://github.com/bsattam" 
-                        target="_blank">
-                            Github
-                        </a>
-                        <a className={styles.btn} 
-                        href="https://www.linkedin.com/in/sattam-bandyopadhyay/" 
-                        target="_blank">
-                            LinkedIn
-                        </a>
-                    </div>
-                </div>
-                <div><img
-                    className={styles.personImage}
-                    src={sattam}
-                /></div>
             </div>
         </div>
     )
