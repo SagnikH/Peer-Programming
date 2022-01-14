@@ -8,7 +8,11 @@ export const PrivateRoute = ({ children, redirect }) => {
 	const [isLoaded, setisLoaded] = useState(false);
 	const [isAuthorized, setisAuthorized] = useState(null);
 
+  const pathname = window.location.pathname;
+
 	useEffect(() => {
+    console.log("location", pathname);
+
 		(async () => {
 			try {
 				const userPayload = await checkAuth();
@@ -25,12 +29,17 @@ export const PrivateRoute = ({ children, redirect }) => {
 		})();
 	}, []);
 
+	useEffect(() => {
+		if (isLoaded && !isAuthorized)
+			window.location = `${process.env.REACT_APP_SERVER_URL}/auth/google?redirect=${pathname}`;
+	}, [isLoaded, isAuthorized]);
+
 	if (!isLoaded) return <Loading />;
 	else {
 		return isAuthorized ? (
 			children
 		) : (
-			<Navigate to={redirect ? redirect : "/"} />
+			<Loading />
 		);
 	}
 };

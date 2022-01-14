@@ -97,8 +97,7 @@ export default function SyncedMonacoEditor({socket, docId}) {
             if (deleteCount > 0) {
                 const newDoc = Automerge.change(docRef.current, doc => {
                     // delete deleteCount characters starting from offSet!
-                    for (let i = 0; i < deleteCount; i++)
-                        doc.text.deleteAt(offset)
+                    doc.text.deleteAt(offset, deleteCount);
                 });
                 const changes = Automerge.getChanges(docRef.current, newDoc);
                 docRef.current = newDoc;
@@ -108,8 +107,7 @@ export default function SyncedMonacoEditor({socket, docId}) {
             if (text.length > 0) {
                 const newDoc = Automerge.change(docRef.current, doc => {
                     // insert all characters from text starting at offset
-                    for (let i = 0; i < text.length; i++)
-                        doc.text.insertAt(offset + i, text[i]);
+                    doc.text.insertAt(offset, ...text);
                 });
                 const changes = Automerge.getChanges(docRef.current, newDoc);
                 docRef.current = newDoc;
