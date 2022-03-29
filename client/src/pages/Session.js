@@ -4,11 +4,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { Dropdown } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
-import { Spinner } from 'react-bootstrap';
+import { Spinner } from "react-bootstrap";
 import { BsShareFill } from "react-icons/bs";
 import { deleteDocument } from "../redux/slices/sessionSlice";
 import SessionList from "../components/SessionList.js";
-import ShareIcon from '../components/ShareIcon.js';
+import ShareIcon from "../components/ShareIcon.js";
 import LeetcodeQuestionForm from "../components/LeetcodeQuestionForm.js";
 import CustomQuestionForm from "../components/CustomQuestionForm.js";
 import { useOutletContext } from "react-router-dom";
@@ -28,10 +28,7 @@ const Session = () => {
 	const socket = useOutletContext();
 
 	useEffect(() => {
-
-		return () => {
-
-		}
+		return () => {};
 	}, []);
 
 	const { id } = useParams();
@@ -85,10 +82,12 @@ const Session = () => {
 	return (
 		<>
 			<div className={styles.body}>
-				<div className='d-flex align-items-center justify-content-between'>
+				<div className="d-flex align-items-center justify-content-between">
 					<div></div>
 					<div className={styles.sessionName}>Session name: {sessionName}</div>
-					<div style={{width: '50px'}}><ShareIcon size='1.7em' link={window.location}/></div>
+					<div style={{ width: "50px" }}>
+						<ShareIcon size="1.7em" link={window.location.href} />
+					</div>
 				</div>
 				<div className={styles.sessionContainer}>
 					<SessionList
@@ -114,10 +113,31 @@ const Session = () => {
 								</Dropdown.Item>
 							</Dropdown.Menu>
 						</Dropdown>
-						<div>{qtype === "custom" && <CustomQuestionForm notifyDocumentUpdate={notifyDocumentUpdate}/>}</div>
-						<div>{qtype === "leetcode" && <LeetcodeQuestionForm setFetching={setFetching} notifyDocumentUpdate={notifyDocumentUpdate}/>}</div>
-						{fetching===2 && <Spinner animation="border" variant="secondary" className="mt-5" />}
-						{fetching===3 && <div className='text-danger mt-3'>Invalid Link!</div>}
+						<div>
+							{qtype === "custom" && (
+								<CustomQuestionForm
+									notifyDocumentUpdate={notifyDocumentUpdate}
+								/>
+							)}
+						</div>
+						<div>
+							{qtype === "leetcode" && (
+								<LeetcodeQuestionForm
+									setFetching={setFetching}
+									notifyDocumentUpdate={notifyDocumentUpdate}
+								/>
+							)}
+						</div>
+						{fetching === 2 && (
+							<Spinner
+								animation="border"
+								variant="secondary"
+								className="mt-5"
+							/>
+						)}
+						{fetching === 3 && (
+							<div className="text-danger mt-3">Invalid Link!</div>
+						)}
 					</div>
 				</div>
 			</div>
