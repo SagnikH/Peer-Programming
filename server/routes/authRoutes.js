@@ -1,19 +1,15 @@
 const router = require("express").Router();
-const {
-	googleCallbackHandler,
-} = require("../controllers/authGoogleCallbackHandler");
-const { googleCallback } = require("../middlewares/authMiddleware");
-const { getGoogleAuthURL } = require("../utils/googleUtils");
-
+const { googleCallbackHandler } = require("../controllers/authGoogleCallbackHandler");
+const { redirectToGoogleAuth, googleCallback } = require("../middlewares/authMiddleware");
 require("dotenv").config();
 
-router.get("/google", (req, res) => {
-	console.log(req.query);
-	res.redirect(getGoogleAuthURL(req.query));
-});
+
+router.get("/google", redirectToGoogleAuth);
 
 router.get("/google/callback", googleCallback, googleCallbackHandler);
 
+
+// TODO: use clearCookie??
 router.get("/logout", (req, res) => {
 	res
 		.cookie("jwtToken", "", {

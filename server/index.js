@@ -7,21 +7,20 @@ const authRoutes = require("./routes/authRoutes");
 const apiRoutes = require("./routes/apiRoutes");
 const { DatabaseError, UserFacingError } = require("./utils/errors/baseErrors");
 const { verifyJWT } = require("./middlewares/authMiddleware");
-require("dotenv").config();
-
 const { DBManager } = require("./utils/DBManager");
 const SessionManager = require("./utils/SessionManager");
+require("dotenv").config();
 
 const URI = process.env.MONGODB_URI;
 const PORT = process.env.PORT;
 
 (async () => {
 	try {
-		const connection = await mongoose.connect(URI);
-
-		console.log("connected to db");
+		await mongoose.connect(URI);
+		console.log("Connected to db");
 	} catch (e) {
-		console.log(e);
+		// TODO: handle connection failure 
+		console.error("Error in connecting to db", e);
 	}
 })();
 
@@ -34,29 +33,28 @@ const io = require("socket.io")(server, {
 	},
 });
 
-const [notifyDocListUpdated] = SessionManager(io, new DBManager());
-// TODO: when new document added to session or document deleted
-// from session call notifyDocListUpdated(sessionId);
+SessionManager(io, new DBManager());
 
 app.use(express.json());
 app.use(cookieParser());
 
 app.use(
 	cors({
-		origin: process.env.CLIENT_URL, // "http://localhost:3000"
+		origin: process.env.CLIENT_URL, 
 		methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-		credentials: true, // allow session cookie from browser to pass through
+		credentials: true, 		// for authentication
 	})
 );
 
 app.use("/auth", authRoutes);
-//TODO: checkUser middleware implement later
 app.use("/api", verifyJWT, apiRoutes);
 
 app.get("/", (req, res) => {
-	res.send("homepage");
+	res.send("Dummy response");
 });
 
+
+// TODO: understand this mess: 
 //error handler should be handled at the end
 app.use((err, req, res, next) => {
 	// console.log("error handler", err);
@@ -72,9 +70,4 @@ app.use((err, req, res, next) => {
 	}
 });
 
-// replacing
-// app.listen(PORT, () => {
-// 	console.log("connected to port 4000");
-// });
-// by server.listen to allow socket.io to listen on same port
 server.listen(PORT);

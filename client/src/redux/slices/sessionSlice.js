@@ -107,7 +107,8 @@ export const deleteDocument = createAsyncThunk(
 	async (documentId, { rejectWithValue }) => {
 		try {
 			const delDocument = await axios.delete(
-				`${process.env.REACT_APP_SERVER_URL}/api/document/${documentId}`
+				`${process.env.REACT_APP_SERVER_URL}/api/document/${documentId}`,
+				{ withCredentials: true }
 			);
 
 			console.log("deleting session", delDocument.data);

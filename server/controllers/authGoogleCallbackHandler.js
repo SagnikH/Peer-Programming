@@ -1,22 +1,19 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-//gets the db id now set the jwt token cookie
+// using the userid (_id) to create jwtToken and 
+// setting it as a cookie then redirecting
 const googleCallbackHandler = (req, res) => {
 	const _id = res.locals._id;
-  const redirect = res.locals.redirect;
-
-	console.log("id in auth handler", _id);
-  console.log("redirect url", redirect);
+	const redirect = res.locals.redirect;
 
 	const jwtToken = jwt.sign({ _id }, process.env.JWT_PRIVATE_KEY);
-	console.log("jwt token", jwtToken);
 
 	res
 		.cookie("jwtToken", jwtToken, {
-			httpOnly: true,
-			secure: true,
-			sameSite: "none",
+			httpOnly: true,		// accessible only by web servers
+			secure: true,		// to be used with https only
+			sameSite: "none",	// ??
 		})
 		.redirect(process.env.CLIENT_URL + redirect);
 };
