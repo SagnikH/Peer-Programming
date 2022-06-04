@@ -49,7 +49,7 @@ const googleCallback = async (req, res, next) => {
 
 	// code sent by google oauth is used to get access token
 	const code = req.query.code;
-	
+
 	try {
 		const { tokens } = await oauth2Client.getToken(code);
 		const googleUser = await getGoogleUser(tokens);
@@ -86,6 +86,14 @@ const verifyJWT = async (req, res, next) => {
 		const decoded = jwt.verify(jwtToken, process.env.JWT_PRIVATE_KEY);
 		res.locals._id = decoded._id;
 
+		// extending expires date of a cookie on every request 
+		res.cookie("jwtToken", jwtToken, {
+			httpOnly: true,		// accessible only by web servers
+			secure: true,		// to be used with https only
+			sameSite: "none",	// ??
+			expires: new Date(Date.now() + 2592000000),	// 30 * 24 * 60 * 60 * 1000 ms  
+		})
+
 		next();
 	} catch (e) {
 		console.error("ERROR in verify jwt", e);
@@ -101,8 +109,8 @@ const verifyJWT = async (req, res, next) => {
 // Use access token to fetch user's profile
 async function getGoogleUser(tokens) {
 	// Fetch the user's profile with the access token and bearer
-	const googleUser = await axios
-		.get(
+	try {
+		const res = await axios.get(
 			`https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${tokens.access_token}`,
 			{
 				headers: {
@@ -110,13 +118,12 @@ async function getGoogleUser(tokens) {
 				},
 			}
 		)
-		.then((res) => res.data)
-		.catch((error) => {
-			console.log("Error in obtaining user's google profile");
-			next(new Error(error.message));		
-		});
+		return res.data;
 
-	return googleUser;
+	} catch (e) {
+		console.log("Error in obtaining user's google profile", e);
+		throw e;
+	}
 }
 
 

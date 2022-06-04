@@ -14,6 +14,7 @@ const googleCallbackHandler = (req, res) => {
 			httpOnly: true,		// accessible only by web servers
 			secure: true,		// to be used with https only
 			sameSite: "none",	// ??
+			expires: new Date(Date.now() + 2592000000),	// 30 * 24 * 60 * 60 * 1000 ms  
 		})
 		.redirect(process.env.CLIENT_URL + redirect);
 };

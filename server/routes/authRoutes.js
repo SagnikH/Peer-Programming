@@ -9,12 +9,10 @@ router.get("/google", redirectToGoogleAuth);
 router.get("/google/callback", googleCallback, googleCallbackHandler);
 
 
-// TODO: use clearCookie??
 router.get("/logout", (req, res) => {
 	res
-		.cookie("jwtToken", "", {
+		.clearCookie("jwtToken", {
 			httpOnly: true,
-			expires: new Date(0),
 			secure: true,
 			sameSite: "none",
 		})
