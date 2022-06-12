@@ -14,8 +14,6 @@ config();
 const Doc = () => {
 	// const user = useSelector((state) => state.user);
 	const { id, did } = useParams();
-
-	const [editorData, setEditorData] = useState("");
 	const [error, setError] = useState(null);
 	const [loading, setLoading] = useState(true);
   	const [question, setQuestion] = useState("");
@@ -36,7 +34,6 @@ const Doc = () => {
 				);
 
 				console.log("saved code in doc", doc.data);
-				setEditorData(doc.data.savedCode);
         		setQuestion(doc.data.question);
 				setTitle(doc.data.title);
 			} catch (e) {
@@ -47,26 +44,6 @@ const Doc = () => {
 			}
 		})();
 	}, []);
-
-	const handleTextAreaChange = (e) => {
-		setEditorData(e.target.value);
-	};
-
-	const handleDocSave = async (e) => {
-		e.preventDefault();
-
-		try {
-			const savedDoc = await axios.patch(
-				`${process.env.REACT_APP_SERVER_URL}/api/document/${did}`,
-				{ savedCode: editorData },
-				{ withCredentials: true }
-			);
-
-			console.log("after saving doc ", savedDoc);
-		} catch (e) {
-			console.log("error in doc", e);
-		}
-	};
 
 	const goBackHandler = () => {
 		let currentUrl = window.location + "";

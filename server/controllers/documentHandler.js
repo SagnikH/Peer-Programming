@@ -3,21 +3,22 @@ const Document = require("../models/documentModel");
 const Session = require("../models/sessionModel");
 const { getNewDoc, serializeDoc } = require("../utils/automergeUtils");
 const Leetcode = require("../utils/Leetcode");
-const { NotFoundError } = require("../utils/errors/databaseFacingErrors");
-const { NotFoundLinkError } = require("../utils/errors/userFacingError");
 const ObjectId = mongoose.Types.ObjectId;
 
 const createDocument = async (req, res) => {
-	const { title, type, question, link, userId, sessionId } = req.body;
-	//TODO: add validity checker
-	//TODO: check if question link is valid -> ask fetcher team
-	//TODO: check to see if session id exists
-
-	// adding initial savedCode for Automerge
-	const savedCode = serializeDoc(getNewDoc('//Enter Code Here:'));
+	const { title, type, question, link, sessionId } = req.body;
+	const userId = res.locals._id;
 
 	try {
-		//TODO: check session id exists here if not throw error
+		const session = await Session.findById(sessionId);
+		if (!session) {
+			res.status(403).json("Session does not exist");
+			return;
+		}
+
+		// adding initial savedCode for Automerge
+		const savedCode = serializeDoc(getNewDoc('//Enter Code Here:'));
+
 		const document = await Document.create({
 			title,
 			type,
@@ -33,36 +34,45 @@ const createDocument = async (req, res) => {
 			title,
 			createdAt: document.createdAt,
 		};
-		//TODO: don't send document as response -> socket stuff ask SUBODH
-		const session = await Session.findByIdAndUpdate(
+
+		await Session.findByIdAndUpdate(
 			sessionId,
 			{
 				$addToSet: { documents: documentObj },
-			},
-			{ new: true }
+			}
 		);
 
 		res.status(200).json(document);
 	} catch (e) {
-		console.log(e.message);
-		res.status(403).json(e.message);
+		console.error("Error in createDocument", e);
+		res.status(500).json("Error in createDocument");
 	}
 };
 
 const createLeetcodeDocument = async (req, res, next) => {
-  console.log("fetching leetcode");
-	const { link, type, userId, sessionId } = req.body;
-	const savedCode = serializeDoc(getNewDoc());
-
-	const leetcode = new Leetcode(link);
-	const leetcodeRes = await leetcode.fetch();
-  // console.log("after fetching", leetcodeRes);
-	if (!leetcodeRes) return next(new NotFoundLinkError("error in fetching leetcode"));
-
-	const title = leetcode.getTitle();
-	const question = leetcode.getQuestion();
+	const { link, type, sessionId } = req.body;
+	const userId = res.locals._id;
 
 	try {
+
+		const session = await Session.findById(sessionId);
+		if (!session) {
+			res.status(403).json("Session does not exist");
+			return;
+		}
+
+		const leetcode = new Leetcode(link);
+		const leetcodeRes = await leetcode.fetch();
+		if (!leetcodeRes) {
+			res.status(404).json("Invalid leetcode link");
+			return;
+		}
+
+		const title = leetcode.getTitle();
+		const question = leetcode.getQuestion();
+
+		const savedCode = serializeDoc(getNewDoc());
+
 		const document = await Document.create({
 			title,
 			type,
@@ -79,93 +89,72 @@ const createLeetcodeDocument = async (req, res, next) => {
 			createdAt: document.createdAt,
 		};
 
-		const session = await Session.findByIdAndUpdate(
+		await Session.findByIdAndUpdate(
 			sessionId,
 			{
 				$addToSet: { documents: documentObj },
-			},
-			{ new: true }
+			}
 		);
 
 		res.status(200).json(document);
 	} catch (e) {
-		console.log(e.message);
-		res.status(403).json(e.message);
+		console.error("Error in createLeetcodeDocument", e);
+		res.status(500).json("Error in createLeetcodeDocument");
 	}
 };
 
 const getDocument = async (req, res, next) => {
 	const _id = req.params.id;
-	if (!ObjectId.isValid(_id))
-		return next(new NotFoundError("no document with id found"));
+
+	if (!ObjectId.isValid(_id)) {
+		res.status(404).json("Invalid document id");
+		return;
+	}
 
 	try {
 		const documentInfo = await Document.findById(_id);
 
-		if (!documentInfo)
-			return next(
-				new NotFoundError("no document found with given document id")
-			);
+		if (!documentInfo) {
+			res.status(404).json("Document not found");
+			return;
+		}
 
 		res.status(200).json(documentInfo);
 	} catch (e) {
-		console.log(e);
-		res.status(500).json(e);
-	}
-};
-
-const updateDocument = async (req, res, next) => {
-	const _id = req.params.id;
-	if (!ObjectId.isValid(_id))
-		return next(new NotFoundError("invalid document id"));
-
-	const { savedCode } = req.body;
-
-	try {
-		const document = await Document.findByIdAndUpdate(
-			_id,
-			{ savedCode },
-			{ new: true }
-		);
-
-		res.status(200).json(document);
-	} catch (e) {
-		console.log(e);
-		res.status(500).json(e);
+		console.error("Error in getDocument", e);
+		res.status(500).json("Error in getDocument");
 	}
 };
 
 const deleteDocument = async (req, res, next) => {
 	const _id = req.params.id;
-	if (!ObjectId.isValid(_id))
-		return next(new NotFoundError("invalid document id"));
+
+	if (!ObjectId.isValid(_id)) {
+		res.status(404).json("Invalid document id");
+		return;
+	}
 
 	try {
 		const deletedDocument = await Document.findByIdAndDelete(_id);
-		console.log(deletedDocument);
 		const { sessionId } = deletedDocument;
-		// TODO: delete from the session as well
 
-		const session = await Session.findByIdAndUpdate(
+		await Session.findByIdAndUpdate(
 			sessionId,
 			{
 				$pull: { documents: { documentId: deletedDocument._id } },
-			},
-			{ new: true, safe: true }
+			}
 		);
 
-		console.log(session);
 		res.status(202).json(deletedDocument);
 	} catch (e) {
-		console.log(e);
-		res.status(500).json(e);
+		console.error("Error in deleteDocument", e);
+		res.status(500).json("Error in deleteDocument");
 	}
 };
 
 module.exports = {
 	createDocument,
 	getDocument,
-	updateDocument,
 	deleteDocument,
 	createLeetcodeDocument,
 };
