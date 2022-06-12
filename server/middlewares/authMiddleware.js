@@ -105,7 +105,6 @@ const verifyJWT = async (req, res, next) => {
 
 
 // ----- Util Functions ----=
-// TODO: understand the catch and error part
 // Use access token to fetch user's profile
 async function getGoogleUser(tokens) {
 	// Fetch the user's profile with the access token and bearer
