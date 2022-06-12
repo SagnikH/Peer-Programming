@@ -3,6 +3,6 @@ const { verifyJWT } = require("../middlewares/authMiddleware");
 
 const router = require("express").Router();
 
-router.get("/", verifyJWT, userHandler);
+router.get("/", userHandler);
 
 module.exports = router;

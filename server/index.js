@@ -24,6 +24,7 @@ const PORT = process.env.PORT;
 	}
 })();
 
+// TODO: https in deployment
 const server = require("http").createServer(app);
 
 const io = require("socket.io")(server, {

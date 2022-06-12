@@ -2,17 +2,13 @@ const mongoose = require("mongoose");
 const Session = require("../models/sessionModel");
 const User = require("../models/userModel");
 const Document = require("../models/documentModel");
-const { NotFoundError } = require("../utils/errors/databaseFacingErrors");
 const ObjectId = mongoose.Types.ObjectId;
 
 const createSession = async (req, res) => {
-	const { name, userId } = req.body;
-	console.log("creating session", { name, userId });
-	// documents.documentId = mongoose.Types.ObjectId(documents.documentId);
-	// console.log(documents.documentId);
+	const name = req.body.name;
+	const userId = res.locals._id;
 
 	try {
-		//TODO: check userid validity
 		const session = await Session.create({ name, userId });
 
 		const userSession = {
@@ -20,30 +16,97 @@ const createSession = async (req, res) => {
 			sessionId: session._id,
 			createdAt: session.createdAt,
 		};
-		console.log("server userSession", userSession);
 
-		const user = await User.findByIdAndUpdate(
+		await User.findByIdAndUpdate(
 			userId,
-			{ $addToSet: { userSessions: userSession } },
-			{ new: true }
+			{ $addToSet: { userSessions: userSession } }
 		);
-
-		console.log(user);
 
 		res.status(200).json(session);
 	} catch (e) {
-		console.log("error in session", e.message);
-		res.status(403).json(e.message);
+		console.error("Error in createSession", e);
+		res.status(500).json("Error in createSession");	
 	}
 };
 
+
+const getSession = async (req, res, next) => {
+	const _id = req.params.id;
+
+	try {
+		const sessionInfo = await Session.findById(_id);
+
+		//in case we dont find a document it sends null
+		if (!sessionInfo) {
+			res.status(404).json("Session not found");
+			return;
+		}
+
+		res.status(200).json(sessionInfo);
+	} catch (e) {
+		console.error("Error in getSession", e);
+		res.status(500).json("Error in getSession");
+	}
+};
+
+
+const deleteSession = async (req, res, next) => {
+	const _id = req.params.id;
+
+	// TODO: These updates should be a single transaction!
+	try {
+		const deletedSession = await Session.findByIdAndDelete(_id);
+
+		// if session doesnot exist it returns null -> so throw a custom error
+		if (deletedSession === null) {
+			res.status(404).json("Session to delete not found");
+			return;
+		}
+
+		const { userId } = deletedSession;
+
+		// find session in user model & update accordingly
+		await User.findByIdAndUpdate(
+			userId,
+			{
+				$pull: { userSessions: { sessionId: deletedSession._id } },
+			}
+		);
+
+		// remove the documents once a session is removed
+		const deleteDocs = deletedSession.documents;
+
+		deleteDocs.forEach(async (doc) => {
+			const _id = doc.documentId;
+			await Document.findByIdAndDelete(_id);
+		});
+
+		// use this user to update frontend state (maybe)
+		res.status(202).json(deletedSession);
+	} catch (e) {
+		console.error("Error in deleteSession", e);
+		res.status(500).json("Error in deleteSession");	
+	}
+};
+
+
+
 const addSharedSession = async (req, res) => {
 	const _id = req.params.id;
-	const { userId } = req.body;
+	const  userId = res.locals._id;
+
+	if (!ObjectId.isValid(_id)) {
+		res.status(404).json("Invalid session id");
+		return;
+	}
 
 	try {
 		const session = await Session.findById(_id);
-		// console.log(session);
+
+		if (!session) {
+			res.status(404).json("No such session");
+			return;
+		}
 
 		const sharedSession = {
 			name: session.name,
@@ -51,154 +114,64 @@ const addSharedSession = async (req, res) => {
 			createdAt: session.createdAt,
 		};
 
+		// check if the session belongs to the user
 		const dbRes = await User.find({
 			_id: userId,
 			"userSessions.sessionId": session._id,
 		});
 
-		if (dbRes.length === 0) {
-			const user = await User.findByIdAndUpdate(
+		if (dbRes.length === 0) {	
+			// session not created by user, add to sharedSessions
+			await User.findByIdAndUpdate(
 				userId,
-				{ $addToSet: { sharedSessions: sharedSession } },
-				{ new: true }
+				{ $addToSet: { sharedSessions: sharedSession } }
 			);
-
-			console.log(user);
-
 			res.status(200).json(session);
 			return;
 		}
-
-		console.log("shared session dbRes", dbRes);
-		//shared session already present
+		// session was created by user, no need to add to shared session
 		res.status(200).json(null);
 	} catch (e) {
-		console.error(e);
-		res.status(500).json("error in shared sessions checking");
+		console.error(`Error in addSharedSession ${_id}`, e);
+		res.status(500).json("Error in addSharedSession");
 	}
 };
 
-const getSession = async (req, res, next) => {
-	const _id = req.params.id;
-	if (!ObjectId.isValid(_id))
-		return next(new NotFoundError("invalid session id"));
-
-	try {
-		const sessionInfo = await Session.findById(_id);
-
-		//in case we dont find a document it sends null
-		if (!sessionInfo)
-			return next(new NotFoundError("no session with given session id"));
-
-		res.status(200).json(sessionInfo);
-	} catch (e) {
-		//404 -> data not found
-		console.log(e);
-		res.status(500).json(e);
-	}
-};
-
-const updateSession = async (req, res, next) => {
-	const _id = req.params.id;
-	if (!ObjectId.isValid(_id))
-		return next(new NotFoundError("invalid session id"));
-
-	const { documentId, title } = req.body;
-	const document = { documentId, title };
-	// console.log(document);
-	if (!ObjectId.isValid(documentId))
-		return next(new NotFoundError("invalid document id"));
-
-	try {
-		const session = await Session.findByIdAndUpdate(
-			_id,
-			{
-				$addToSet: { documents: document },
-			},
-			{ new: true }
-		);
-
-		res.status(200).json(session);
-	} catch (e) {
-		console.log(e);
-		res.status(500).json(e);
-	}
-};
-
-const deleteSession = async (req, res, next) => {
-	const _id = req.params.id;
-
-	if (!ObjectId.isValid(_id))
-		return next(new NotFoundError("invalid document id"));
-
-	try {
-		const deletedSession = await Session.findByIdAndDelete(_id);
-		console.log("deleted session", deletedSession);
-
-		//if session doesnot exist it returns null -> so throw a custom error
-		if (deletedSession === null)
-			return next(new NotFoundError("session not found"));
-
-		const { userId } = deletedSession;
-
-		//find session in user model & update accordingly
-		const user = await User.findByIdAndUpdate(
-			userId,
-			{
-				$pull: { userSessions: { sessionId: deletedSession._id } },
-			},
-			{ new: true }
-		);
-
-		//remove the documents once a session is removed
-		const deleteDocs = deletedSession.documents;
-
-		deleteDocs.forEach(async (doc) => {
-			const _id = doc.documentId;
-
-			const deletedDoc = await Document.findByIdAndDelete(_id);
-			console.log("Session handler -> deleted doc", deletedDoc);
-		});
-
-		//use this user to update frontend state (maybe)
-		res.status(202).json(deletedSession);
-	} catch (e) {
-		console.log(e);
-		res.status(500).json(e);
-	}
-};
 
 const deleteSharedSession = async (req, res, next) => {
 	const _id = req.params.id;
 	const { userId } = req.body;
-  console.log("shared", userId);
 
-	if (!ObjectId.isValid(_id))
-		return next(new NotFoundError("invalid document id"));
+	if (!ObjectId.isValid(_id)) {
+		res.status(404).json("Invalid session id");
+		return;
+	}
 
 	try {
 		const deletedSharedSession = await Session.findById(_id);
-		console.log("deleted shared session", deletedSharedSession);
 
-		const user = await User.findByIdAndUpdate(
+		if (!deleteSharedSession) {
+			res.status(404).json("No such session");
+			return;
+		}
+
+		await User.findByIdAndUpdate(
 			userId,
 			{
 				$pull: { sharedSessions: { sessionId: deletedSharedSession._id } },
-			},
-			{ new: true }
+			}
 		);
 
 		res.status(202).json(deletedSharedSession);
 	} catch (e) {
-		console.log(e);
-		res.status(500).json(e);
+		console.error("Error in deleteSharedSession", e);
+		res.status(500).json("Error in deleteSharedSession");
 	}
 };
 
 module.exports = {
 	createSession,
 	getSession,
-	updateSession,
 	deleteSession,
 	addSharedSession,
 	deleteSharedSession,
