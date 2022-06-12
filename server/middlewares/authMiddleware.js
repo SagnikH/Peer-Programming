@@ -67,7 +67,7 @@ const googleCallback = async (req, res, next) => {
 		next();
 	} catch (e) {
 		console.error("Error in googleCallback", e);
-		res.status(500).json(e);	// TODO: change this in deployment
+		res.status(500).json("Error in googleCallback");	
 	}
 };
 
@@ -97,7 +97,7 @@ const verifyJWT = async (req, res, next) => {
 		next();
 	} catch (e) {
 		console.error("ERROR in verify jwt", e);
-		res.status(403).json(e);	// TODO: change this in deployment
+		res.status(403).json("ERROR in verify jwt");	
 	}
 };
 

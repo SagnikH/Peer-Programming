@@ -28,7 +28,7 @@ const userHandler = async (req, res) => {
 		res.status(200).json(userData);
 	} catch (e) {
 		console.error("Error in userHandler", e);
-		res.status(500).json(e);	// TODO: change this in deployment
+		res.status(500).json("Error in userHandler");	
 	}
 };
 

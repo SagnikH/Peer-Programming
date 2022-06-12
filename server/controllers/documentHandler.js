@@ -136,6 +136,12 @@ const deleteDocument = async (req, res, next) => {
 
 	try {
 		const deletedDocument = await Document.findByIdAndDelete(_id);
+
+		if (!deletedDocument) {
+			res.status(403).json("Document not found");
+			return;
+		}
+
 		const { sessionId } = deletedDocument;
 
 		await Session.findByIdAndUpdate(

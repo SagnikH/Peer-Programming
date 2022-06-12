@@ -5,7 +5,6 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/authRoutes");
 const apiRoutes = require("./routes/apiRoutes");
-const { DatabaseError, UserFacingError } = require("./utils/errors/baseErrors");
 const { verifyJWT } = require("./middlewares/authMiddleware");
 const { DBManager } = require("./utils/DBManager");
 const SessionManager = require("./utils/SessionManager");
@@ -54,20 +53,13 @@ app.get("/", (req, res) => {
 	res.send("Dummy response");
 });
 
-
-// TODO: understand this mess: 
 //error handler should be handled at the end
 app.use((err, req, res, next) => {
-	// console.log("error handler", err);
 	if (res.headersSent) {
 		return next(err);
 	}
-	if (err instanceof DatabaseError) {
-		res.status(err.statusCode).json(err.message);
-	} else if (err instanceof UserFacingError) {
-		res.status(err.statusCode).json(err.message);
-	} else {
-		res.status(500).json(err.message);
+	else {
+		res.status(500).json("An error occurred!");
 	}
 });
 
