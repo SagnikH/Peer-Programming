@@ -111,8 +111,6 @@ Start the client ( PORT : 3000 )
 - [@Sattam Bandyopadhyay](https://github.com/bsattam)
 - [@Ronak Sanpui](https://github.com/SanpuiRonak)
 
-## Special thanks
-- [@Soumitri Chattopadhyay](https://github.com/soumitri2001)
 
 ## Feedback
 
